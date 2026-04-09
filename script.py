@@ -6,9 +6,11 @@ import shutil
 import subprocess
 from pathlib import Path
 
-# ========= CONFIG =========
 MAX_NAME = 80
-# ==========================
+
+# ------------------------
+# Helpers
+# ------------------------
 
 def slugify(text):
     text = text.lower().strip()
@@ -16,12 +18,15 @@ def slugify(text):
     text = re.sub(r'[\s_-]+', '-', text)
     return text[:MAX_NAME].strip("-") or "note"
 
-def extract_title(md_text, fallback):
-    # First heading
-    m = re.search(r'^\s*#\s+(.+)', md_text, re.MULTILINE)
-    if m:
-        return m.group(1).strip()
-    return fallback
+
+def extract_title(text, fallback):
+    m = re.search(r'^\s*#\s+(.+)', text, re.MULTILINE)
+    return m.group(1).strip() if m else fallback
+
+
+# ------------------------
+# Build mapping
+# ------------------------
 
 def build_file_map(src_root):
     file_map = {}
@@ -33,35 +38,38 @@ def build_file_map(src_root):
 
         rel = file.relative_to(src_root)
 
-        # Handle markdown
         if file.suffix.lower() == ".md":
             content = file.read_text(errors="ignore")
             title = extract_title(content, file.stem)
-            name = slugify(title) + ".md"
+            new_name = slugify(title) + ".md"
         else:
-            name = slugify(file.stem) + file.suffix.lower()
+            new_name = slugify(file.stem) + file.suffix.lower()
 
-        # Keep folder structure (slugified)
         new_parts = [slugify(p) for p in rel.parts[:-1]]
-        new_path = Path(*new_parts) / name
+        new_rel = Path(*new_parts) / new_name
 
-        # Avoid collisions
-        counter = 1
-        base = new_path
-        while str(new_path) in used:
-            new_path = base.with_name(f"{base.stem}-{counter}{base.suffix}")
-            counter += 1
+        # prevent collisions
+        base = new_rel
+        i = 1
+        while str(new_rel) in used:
+            new_rel = base.with_name(f"{base.stem}-{i}{base.suffix}")
+            i += 1
 
-        used.add(str(new_path))
-        file_map[str(rel)] = str(new_path)
+        used.add(str(new_rel))
+        file_map[str(rel)] = str(new_rel)
 
     return file_map
+
+
+# ------------------------
+# Rewrite links
+# ------------------------
 
 def rewrite_links(text, src_file, src_root, file_map, dst_file):
     def repl(match):
         prefix, url, suffix = match.groups()
 
-        if url.startswith("http") or url.startswith("#"):
+        if url.startswith(("http://", "https://", "#", "mailto:")):
             return match.group(0)
 
         target = (src_file.parent / url).resolve()
@@ -71,12 +79,11 @@ def rewrite_links(text, src_file, src_root, file_map, dst_file):
         except:
             return match.group(0)
 
-        new_rel = file_map.get(str(rel))
-        if not new_rel:
+        mapped = file_map.get(str(rel))
+        if not mapped:
             return match.group(0)
 
-        # Compute relative path
-        new_target = Path(new_rel)
+        new_target = Path(mapped)
         rel_path = os.path.relpath(dst_file.parent / new_target, dst_file.parent)
         rel_path = rel_path.replace("\\", "/")
 
@@ -84,50 +91,69 @@ def rewrite_links(text, src_file, src_root, file_map, dst_file):
 
     return re.sub(r'(!?\[.*?\]\()([^\)]+)(\))', repl, text)
 
-def generate_nav(docs_dir):
-    def walk(folder):
+
+# ------------------------
+# NAV GENERATION (FIXED)
+# ------------------------
+
+def build_nav(docs_dir):
+    nav = []
+
+    for root, dirs, files in os.walk(docs_dir):
+        root_path = Path(root)
+        rel_root = root_path.relative_to(docs_dir)
+
         items = []
-        for p in sorted(folder.iterdir()):
-            if p.is_dir():
-                items.append({p.name: walk(p)})
-            elif p.suffix == ".md":
+
+        for file in sorted(files):
+            if file.endswith(".md"):
+                p = root_path / file
                 title = p.stem.replace("-", " ").title()
                 rel = p.relative_to(docs_dir).as_posix()
                 items.append({title: rel})
-        return items
 
-    return walk(docs_dir)
+        if items:
+            if rel_root == Path("."):
+                nav.extend(items)
+            else:
+                nav.append({rel_root.as_posix(): items})
+
+    return nav
+
 
 def write_mkdocs_yml(docs_dir):
-    nav = generate_nav(docs_dir)
+    nav = build_nav(docs_dir)
 
-    yml = f"""site_name: Joplin Notes
-theme:
-  name: material
-docs_dir: docs
+    # fallback so MkDocs NEVER crashes
+    if not nav:
+        nav = [{"Home": "index.md"}]
 
-nav:
-"""
+    import yaml
 
-    def write_nav(items, indent=2):
-        lines = []
-        for item in items:
-            for k, v in item.items():
-                if isinstance(v, list):
-                    lines.append(" " * indent + f"- {k}:")
-                    lines += write_nav(v, indent + 2)
-                else:
-                    lines.append(" " * indent + f"- {k}: {v}")
-        return lines
+    config = {
+        "site_name": "Joplin Notes",
+        "theme": {"name": "material"},
+        "docs_dir": "docs",
+        "nav": nav
+    }
 
-    yml += "\n".join(write_nav(nav))
+    with open("mkdocs.yml", "w") as f:
+        yaml.safe_dump(config, f, sort_keys=False)
 
-    Path("mkdocs.yml").write_text(yml)
+
+# ------------------------
+# Git
+# ------------------------
 
 def run_git():
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", "Sync notes"], check=False)
     subprocess.run(["git", "push"], check=True)
+
+
+# ------------------------
+# Main
+# ------------------------
 
 def main():
     import sys
@@ -163,13 +189,13 @@ def main():
                 text = frontmatter + text
 
             text = rewrite_links(text, src_file, src, file_map, dst_file)
-
             dst_file.write_text(text)
 
     write_mkdocs_yml(docs)
     run_git()
 
-    print("✅ Done. Now run: mkdocs gh-deploy")
+    print("✅ Done. Now run: mkdocs serve")
+
 
 if __name__ == "__main__":
     main()

@@ -1,3 +1,3 @@
 # Home
 
-Welcome to your notes.
+Notes

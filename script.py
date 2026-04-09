@@ -3,18 +3,32 @@
 import os
 import re
 import shutil
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
-# ---------------------------
+# -----------------------
 # CONFIG
-# ---------------------------
+# -----------------------
 
-MAX_NAME = 80
+MAX_NAME = 120
 
-# ---------------------------
-# UTIL
-# ---------------------------
+# -----------------------
+# CLEAN FILENAME LOGIC
+# -----------------------
+
+def clean_name(filename):
+    name = Path(filename).stem
+
+    # remove ordering prefixes:
+    # "1. ", "01 - ", "2-", etc.
+    name = re.sub(r'^\d+[\.\-\)\s]+', '', name)
+
+    # clean weird chars
+    name = name.replace("-", " ")
+    name = name.strip()
+
+    return name.title()
+
 
 def slugify(text):
     text = text.lower().strip()
@@ -23,14 +37,9 @@ def slugify(text):
     return text[:MAX_NAME].strip("-") or "note"
 
 
-def extract_title(md, fallback):
-    m = re.search(r'^\s*#\s+(.+)', md, re.MULTILINE)
-    return m.group(1).strip() if m else fallback
-
-
-# ---------------------------
-# STEP 1: FILE MAPPING
-# ---------------------------
+# -----------------------
+# BUILD MAP
+# -----------------------
 
 def build_map(src):
     mapping = {}
@@ -42,12 +51,8 @@ def build_map(src):
 
         rel = f.relative_to(src)
 
-        if f.suffix == ".md":
-            content = f.read_text(errors="ignore")
-            title = extract_title(content, f.stem)
-            new_name = slugify(title) + ".md"
-        else:
-            new_name = slugify(f.stem) + f.suffix
+        # ONLY filename-based naming
+        new_name = slugify(clean_name(f.name)) + f.suffix.lower()
 
         new_path = Path(*[slugify(p) for p in rel.parts[:-1]]) / new_name
 
@@ -63,17 +68,16 @@ def build_map(src):
     return mapping
 
 
-# ---------------------------
-# STEP 2: WRITE FILES
-# ---------------------------
+# -----------------------
+# WRITE FILES
+# -----------------------
 
 def write_docs(src, docs, mapping):
     if docs.exists():
         shutil.rmtree(docs)
     docs.mkdir()
 
-    # homepage
-    (docs / "index.md").write_text("# Home\n\nWelcome to your notes.")
+    (docs / "index.md").write_text("# Home\n\nNotes")
 
     for orig, new in mapping.items():
         src_file = src / orig
@@ -83,53 +87,39 @@ def write_docs(src, docs, mapping):
         shutil.copy2(src_file, dst_file)
 
         if dst_file.suffix == ".md":
-            txt = dst_file.read_text(errors="ignore")
-            title = extract_title(txt, dst_file.stem)
-
-            if not txt.startswith("---"):
-                txt = f"---\ntitle: {title}\n---\n\n" + txt
-
-            dst_file.write_text(txt)
+            # DO NOT touch content anymore
+            pass
 
 
-# ---------------------------
-# STEP 3: CREATE FOLDER INDEXES (KEY FIX 🔥)
-# ---------------------------
+# -----------------------
+# FOLDER INDEXES
+# -----------------------
 
-def create_folder_indexes(docs):
+def create_indexes(docs):
     for root, dirs, files in os.walk(docs):
-
         root = Path(root)
 
-        # skip root
         if root == docs:
             continue
 
-        has_md = any(f.endswith(".md") for f in os.listdir(root))
-
-        # ALWAYS create index.md for folder
         index = root / "index.md"
 
         if not index.exists():
-            title = root.name.replace("-", " ").title()
+            folder_name = root.name.replace("-", " ").title()
 
             index.write_text(f"""---
-title: {title}
+title: {folder_name}
 ---
 
-# {title}
+# {folder_name}
 
-This section contains notes for {title}.
+Folder section.
 """)
 
-        # ensure folder is discoverable in nav
-        if not has_md:
-            continue
 
-
-# ---------------------------
-# STEP 4: CLEAN NAV (FIXED TREE)
-# ---------------------------
+# -----------------------
+# NAV TREE (CLEAN)
+# -----------------------
 
 def build_nav(docs):
     def walk(folder):
@@ -139,6 +129,7 @@ def build_nav(docs):
             if p.is_dir():
                 if (p / "index.md").exists():
                     items.append({p.name.replace("-", " ").title(): walk(p)})
+
             elif p.suffix == ".md":
                 if p.name != "index.md":
                     title = p.stem.replace("-", " ").title()
@@ -169,19 +160,19 @@ def write_mkdocs(docs):
         yaml.safe_dump(config, f, sort_keys=False)
 
 
-# ---------------------------
-# STEP 5: RUN GIT
-# ---------------------------
+# -----------------------
+# GIT
+# -----------------------
 
 def git_push():
     subprocess.run(["git", "add", "."], check=True)
-    subprocess.run(["git", "commit", "-m", "sync"], check=False)
+    subprocess.run(["git", "commit", "-m", "sync notes"], check=False)
     subprocess.run(["git", "push"], check=True)
 
 
-# ---------------------------
+# -----------------------
 # MAIN
-# ---------------------------
+# -----------------------
 
 def main():
     import sys
@@ -191,11 +182,11 @@ def main():
 
     mapping = build_map(src)
     write_docs(src, docs, mapping)
-    create_folder_indexes(docs)
+    create_indexes(docs)
     write_mkdocs(docs)
     git_push()
 
-    print("✅ Done → run: mkdocs serve")
+    print("✅ Done → mkdocs serve")
 
 
 if __name__ == "__main__":

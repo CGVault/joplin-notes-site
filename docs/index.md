@@ -1,3 +1,3 @@
 # Home
 
-Notes Wiki
+Vault Wiki

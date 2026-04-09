@@ -1,6 +1,16 @@
-site_name: Joplin Notes Wiki
+site_name: Vault Wiki
 theme:
   name: material
+  features:
+  - navigation.instant
+  - navigation.tracking
+  - navigation.expand
+  - navigation.sections
+  - search.suggest
+  - search.highlight
+  - content.code.copy
+  palette:
+    scheme: slate
 docs_dir: docs
 nav:
 - Home: index.md
@@ -41,9 +51,9 @@ nav:
     - 6 Subqueries:
       - Introduction: sql/sql-basics-in-ms-sql-server/6-subqueries/1-introduction.md
       - Very Simple Subqueries: sql/sql-basics-in-ms-sql-server/6-subqueries/2-very-simple-subqueries.md
-      - 3Subqueries With Multiple Results: sql/sql-basics-in-ms-sql-server/6-subqueries/3subqueries-with-multiple-results.md
       - Correlated Subqueries: sql/sql-basics-in-ms-sql-server/6-subqueries/4-correlated-subqueries.md
       - Other Subqueries: sql/sql-basics-in-ms-sql-server/6-subqueries/5-other-subqueries.md
+      - 3Subqueries With Multiple Results: sql/sql-basics-in-ms-sql-server/6-subqueries/3subqueries-with-multiple-results.md
     - 7 Set Operations:
       - Introduction: sql/sql-basics-in-ms-sql-server/7-set-operations/1-introduction.md
       - Union: sql/sql-basics-in-ms-sql-server/7-set-operations/2-union.md

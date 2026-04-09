@@ -14,17 +14,26 @@ IGNORE_DIRS = {"resources", "_resources", ".obsidian", ".trash"}
 MAX_NAME = 120
 
 # ----------------------
-# NAME CLEANING
+# ORDER + NAME PARSING
 # ----------------------
 
-def clean_display_name(filename):
-    name = Path(filename).stem
+def parse_order(name):
+    """
+    Extracts ordering number from:
+    1. Name
+    01 - Name
+    10.Name
+    """
+    match = re.match(r'^(\d+)[\.\-\s]+(.+)$', name)
+    if match:
+        return int(match.group(1)), match.group(2)
+    return 9999, name
 
-    # remove numbering ONLY for display
-    name = re.sub(r'^\d+[\.\-\)\s]+', '', name)
 
-    name = name.replace("-", " ").strip()
-    return name.title()
+def clean_display(name):
+    _, title = parse_order(Path(name).stem)
+    title = title.replace("-", " ").strip()
+    return title.title()
 
 
 def slugify(text):
@@ -33,8 +42,9 @@ def slugify(text):
     text = re.sub(r'[\s_-]+', '-', text)
     return text[:MAX_NAME].strip("-") or "note"
 
+
 # ----------------------
-# FILE MAPPING
+# BUILD FILE MAP
 # ----------------------
 
 def build_map(src):
@@ -47,7 +57,6 @@ def build_map(src):
 
         rel = f.relative_to(src)
 
-        # IGNORE unwanted folders
         if any(part in IGNORE_DIRS for part in rel.parts):
             continue
 
@@ -68,7 +77,7 @@ def build_map(src):
 
 
 # ----------------------
-# WRITE FILES
+# WRITE DOCS
 # ----------------------
 
 def write_docs(src, docs, mapping):
@@ -76,7 +85,7 @@ def write_docs(src, docs, mapping):
         shutil.rmtree(docs)
     docs.mkdir()
 
-    (docs / "index.md").write_text("# Home\n\nNotes Wiki")
+    (docs / "index.md").write_text("# Home\n\nVault Wiki")
 
     for orig, new in mapping.items():
         src_file = src / orig
@@ -87,19 +96,16 @@ def write_docs(src, docs, mapping):
 
 
 # ----------------------
-# CREATE CLEAN FOLDER INDEXES
+# CREATE FOLDER INDEXES
 # ----------------------
 
 def create_indexes(docs):
     for root, dirs, files in os.walk(docs):
-
         root = Path(root)
 
-        # skip root
         if root == docs:
             continue
 
-        # skip ignored folders
         if any(part in IGNORE_DIRS for part in root.parts):
             continue
 
@@ -119,25 +125,32 @@ Section: {name}
 
 
 # ----------------------
-# BUILD CONTROLLED NAV (FIXED ORDER)
+# NAV BUILDER (FIXED ORDER + CLEAN TITLES)
 # ----------------------
 
 def build_nav(docs):
     def walk(folder):
         items = []
 
-        # SORT BY FILENAME (THIS FIXES ORDERING)
-        for p in sorted(folder.iterdir(), key=lambda x: x.name):
+        def sort_key(p):
+            order, _ = parse_order(p.stem)
+            return order, p.name.lower()
+
+        for p in sorted(folder.iterdir(), key=sort_key):
 
             if any(part in IGNORE_DIRS for part in p.parts):
                 continue
 
+            # folders
             if p.is_dir():
                 if (p / "index.md").exists():
-                    items.append({p.name.replace("-", " ").title(): walk(p)})
+                    items.append({
+                        p.name.replace("-", " ").title(): walk(p)
+                    })
 
+            # markdown files
             elif p.suffix == ".md" and p.name != "index.md":
-                title = clean_display_name(p.name)
+                title = clean_display(p.name)
                 rel = p.relative_to(docs).as_posix()
                 items.append({title: rel})
 
@@ -146,15 +159,31 @@ def build_nav(docs):
     return walk(docs)
 
 
+# ----------------------
+# MKDOCS CONFIG (UI UPGRADE)
+# ----------------------
+
 def write_mkdocs(docs):
     import yaml
 
     nav = build_nav(docs)
 
     config = {
-        "site_name": "Joplin Notes Wiki",
+        "site_name": "Vault Wiki",
         "theme": {
-            "name": "material"
+            "name": "material",
+            "features": [
+                "navigation.instant",
+                "navigation.tracking",
+                "navigation.expand",
+                "navigation.sections",
+                "search.suggest",
+                "search.highlight",
+                "content.code.copy"
+            ],
+            "palette": {
+                "scheme": "slate"
+            }
         },
         "docs_dir": "docs",
         "nav": [
@@ -168,13 +197,16 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# GIT
+# GIT + DEPLOY
 # ----------------------
 
-def git_push():
+def deploy():
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", "sync wiki"], check=False)
     subprocess.run(["git", "push"], check=True)
+
+    # optional but recommended if you already set it up
+    subprocess.run(["mkdocs", "gh-deploy"], check=True)
 
 
 # ----------------------
@@ -191,9 +223,9 @@ def main():
     write_docs(src, docs, mapping)
     create_indexes(docs)
     write_mkdocs(docs)
-    git_push()
+    deploy()
 
-    print("✅ Done → mkdocs serve")
+    print("✅ Done → wiki updated")
 
 
 if __name__ == "__main__":

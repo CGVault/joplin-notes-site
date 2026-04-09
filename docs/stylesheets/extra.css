@@ -1,29 +1,59 @@
 
-/* WHITE THEME TEST - VERY OBVIOUS */
+/* ================================
+   MICROSOFT FLUENT STYLE THEME
+   ================================ */
 
-body {
-    background-color: white !important;
-    color: black !important;
+:root {
+    --ms-blue: #0078D4;
+    --ms-blue-light: #2B88D8;
+    --ms-red: #D83B01;
+    --ms-green: #107C10;
+    --ms-yellow: #FFB900;
 }
 
-/* Sidebar */
-.md-nav {
-    background: #f5f5f5;
+/* Base */
+body {
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+    font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 /* Header */
 .md-header {
-    background: #ffffff !important;
-    border-bottom: 2px solid #ddd;
+    background: var(--ms-blue) !important;
+    color: white !important;
+    border-bottom: 3px solid var(--ms-blue-light);
+}
+
+/* Sidebar */
+.md-nav {
+    background: #f3f3f3;
+    border-right: 1px solid #e1e1e1;
+}
+
+/* Links */
+a {
+    color: var(--ms-blue);
+}
+
+a:hover {
+    color: var(--ms-blue-light);
 }
 
 /* Code blocks */
 pre, code {
-    background: #f0f0f0 !important;
+    background: #f4f4f4 !important;
+    border-radius: 6px;
 }
 
-/* Make it VERY obvious CSS is loaded */
+/* Content area */
 .md-content {
-    border-left: 4px solid red;
+    border-left: 4px solid var(--ms-blue);
     padding-left: 20px;
+}
+
+/* Buttons / accents */
+.md-button {
+    background: var(--ms-blue);
+    color: white;
 }

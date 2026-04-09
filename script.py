@@ -25,7 +25,7 @@ def parse_order(name):
 
 
 # ----------------------
-# DISPLAY CLEANING (NO LOWERCASE, NO TITLE CASE)
+# DISPLAY CLEANING
 # ----------------------
 
 def clean_display(name):
@@ -39,14 +39,29 @@ def clean_folder(name):
 
 
 # ----------------------
-# FILE SYSTEM SAFE SLUG (ONLY FOR STORAGE)
+# FILE SYSTEM SAFE SLUG (PROPER CASE PRESERVED)
 # ----------------------
 
 def slugify(text):
-    text = text.lower().strip()
+    """
+    Creates filesystem-safe names BUT keeps Proper Case instead of forcing lowercase.
+    Example: "hello world" -> "Hello-World"
+    """
+    text = text.strip()
+
+    # remove invalid characters
     text = re.sub(r'[^\w\s-]', '', text)
-    text = re.sub(r'[\s_-]+', '-', text)
-    return text[:MAX_NAME].strip("-") or "note"
+
+    # replace separators with spaces
+    text = re.sub(r'[\s_-]+', ' ', text)
+
+    # Proper Case each word
+    text = text.title()
+
+    # convert spaces to hyphens
+    text = text.replace(" ", "-")
+
+    return text[:MAX_NAME].strip("-") or "Note"
 
 
 # ----------------------
@@ -67,7 +82,6 @@ def build_map(src):
             continue
 
         new_name = slugify(f.stem) + f.suffix.lower()
-
         new_path = Path(*[slugify(p) for p in rel.parts[:-1]]) / new_name
 
         base = new_path
@@ -132,7 +146,7 @@ Section: {name}
 
 
 # ----------------------
-# NAV BUILDER (ORDERED + CLEAN)
+# NAV BUILDER
 # ----------------------
 
 def build_nav(docs):
@@ -165,7 +179,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (WHITE THEME TEST)
+# MKDOCS CONFIG
 # ----------------------
 
 def write_mkdocs(docs):
@@ -195,8 +209,8 @@ def write_mkdocs(docs):
                 }
             ],
             "font": {
-                "text": "Inter",
-                "code": "JetBrains Mono"
+                "text": "Segoe UI",
+                "code": "Consolas"
             }
         },
         "markdown_extensions": [
@@ -218,7 +232,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS FILE CREATION (AUTO)
+# CSS (MICROSOFT FLUENT STYLE)
 # ----------------------
 
 def write_css():
@@ -226,33 +240,63 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-/* WHITE THEME TEST - VERY OBVIOUS */
+/* ================================
+   MICROSOFT FLUENT STYLE THEME
+   ================================ */
 
-body {
-    background-color: white !important;
-    color: black !important;
+:root {
+    --ms-blue: #0078D4;
+    --ms-blue-light: #2B88D8;
+    --ms-red: #D83B01;
+    --ms-green: #107C10;
+    --ms-yellow: #FFB900;
 }
 
-/* Sidebar */
-.md-nav {
-    background: #f5f5f5;
+/* Base */
+body {
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+    font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 /* Header */
 .md-header {
-    background: #ffffff !important;
-    border-bottom: 2px solid #ddd;
+    background: var(--ms-blue) !important;
+    color: white !important;
+    border-bottom: 3px solid var(--ms-blue-light);
+}
+
+/* Sidebar */
+.md-nav {
+    background: #f3f3f3;
+    border-right: 1px solid #e1e1e1;
+}
+
+/* Links */
+a {
+    color: var(--ms-blue);
+}
+
+a:hover {
+    color: var(--ms-blue-light);
 }
 
 /* Code blocks */
 pre, code {
-    background: #f0f0f0 !important;
+    background: #f4f4f4 !important;
+    border-radius: 6px;
 }
 
-/* Make it VERY obvious CSS is loaded */
+/* Content area */
 .md-content {
-    border-left: 4px solid red;
+    border-left: 4px solid var(--ms-blue);
     padding-left: 20px;
+}
+
+/* Buttons / accents */
+.md-button {
+    background: var(--ms-blue);
+    color: white;
 }
 """)
 
@@ -285,7 +329,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Vault Wiki rebuilt (white test theme active)")
+    print("✅ Vault Wiki rebuilt (Microsoft Fluent theme + Proper Case filenames)")
 
 
 if __name__ == "__main__":

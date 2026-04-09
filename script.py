@@ -14,40 +14,32 @@ IGNORE_DIRS = {"resources", "_resources", ".obsidian", ".trash"}
 MAX_NAME = 120
 
 # ----------------------
-# ORDER + DISPLAY CLEANING
+# ORDER PARSING
 # ----------------------
 
 def parse_order(name):
-    """
-    Extracts numeric ordering prefix:
-    1. Intro
-    01 - Intro
-    10.Intro
-    """
     match = re.match(r'^(\d+)[\.\-\s]+(.+)$', name)
     if match:
         return int(match.group(1)), match.group(2)
     return 9999, name
 
 
+# ----------------------
+# DISPLAY CLEANING (NO LOWERCASE, NO TITLE CASE)
+# ----------------------
+
 def clean_display(name):
-    """
-    REMOVE ONLY ordering prefix, preserve ORIGINAL CASE
-    """
     _, title = parse_order(Path(name).stem)
     return title.replace("-", " ").strip()
 
 
 def clean_folder(name):
-    """
-    Folder display cleanup (same logic as files)
-    """
     _, title = parse_order(name)
     return title.replace("-", " ").strip()
 
 
 # ----------------------
-# SLUGIFY (SAFE FILE SYSTEM NAMES ONLY)
+# FILE SYSTEM SAFE SLUG (ONLY FOR STORAGE)
 # ----------------------
 
 def slugify(text):
@@ -97,6 +89,7 @@ def build_map(src):
 def write_docs(src, docs, mapping):
     if docs.exists():
         shutil.rmtree(docs)
+
     docs.mkdir()
 
     (docs / "index.md").write_text("# Home\n\nVault Wiki")
@@ -139,7 +132,7 @@ Section: {name}
 
 
 # ----------------------
-# NAV BUILDER (ORDERED + CLEAN UI)
+# NAV BUILDER (ORDERED + CLEAN)
 # ----------------------
 
 def build_nav(docs):
@@ -155,18 +148,16 @@ def build_nav(docs):
             if any(part in IGNORE_DIRS for part in p.parts):
                 continue
 
-            # folders
             if p.is_dir():
                 if (p / "index.md").exists():
                     items.append({
                         clean_folder(p.name): walk(p)
                     })
 
-            # markdown files
             elif p.suffix == ".md" and p.name != "index.md":
-                title = clean_display(p.name)
-                rel = p.relative_to(docs).as_posix()
-                items.append({title: rel})
+                items.append({
+                    clean_display(p.name): p.relative_to(docs).as_posix()
+                })
 
         return items
 
@@ -174,7 +165,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (MODERN DARK UI)
+# MKDOCS CONFIG (WHITE THEME TEST)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -198,9 +189,9 @@ def write_mkdocs(docs):
             ],
             "palette": [
                 {
-                    "scheme": "slate",
-                    "primary": "indigo",
-                    "accent": "blue"
+                    "scheme": "default",
+                    "primary": "blue",
+                    "accent": "indigo"
                 }
             ],
             "font": {
@@ -227,6 +218,46 @@ def write_mkdocs(docs):
 
 
 # ----------------------
+# CSS FILE CREATION (AUTO)
+# ----------------------
+
+def write_css():
+    css_dir = Path("docs/stylesheets")
+    css_dir.mkdir(parents=True, exist_ok=True)
+
+    (css_dir / "extra.css").write_text("""
+/* WHITE THEME TEST - VERY OBVIOUS */
+
+body {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Sidebar */
+.md-nav {
+    background: #f5f5f5;
+}
+
+/* Header */
+.md-header {
+    background: #ffffff !important;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Code blocks */
+pre, code {
+    background: #f0f0f0 !important;
+}
+
+/* Make it VERY obvious CSS is loaded */
+.md-content {
+    border-left: 4px solid red;
+    padding-left: 20px;
+}
+""")
+
+
+# ----------------------
 # DEPLOY
 # ----------------------
 
@@ -250,10 +281,11 @@ def main():
     mapping = build_map(src)
     write_docs(src, docs, mapping)
     create_indexes(docs)
+    write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Vault Wiki updated")
+    print("✅ Vault Wiki rebuilt (white test theme active)")
 
 
 if __name__ == "__main__":

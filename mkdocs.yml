@@ -11,9 +11,9 @@ theme:
   - search.highlight
   - content.code.copy
   palette:
-  - scheme: slate
-    primary: indigo
-    accent: blue
+  - scheme: default
+    primary: blue
+    accent: indigo
   font:
     text: Inter
     code: JetBrains Mono

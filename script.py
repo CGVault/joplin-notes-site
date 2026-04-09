@@ -8,9 +8,9 @@ from pathlib import Path
 
 MAX_NAME = 80
 
-# ------------------------
+# ----------------------------
 # Helpers
-# ------------------------
+# ----------------------------
 
 def slugify(text):
     text = text.lower().strip()
@@ -24,9 +24,9 @@ def extract_title(text, fallback):
     return m.group(1).strip() if m else fallback
 
 
-# ------------------------
-# Build mapping
-# ------------------------
+# ----------------------------
+# Build file mapping
+# ----------------------------
 
 def build_file_map(src_root):
     file_map = {}
@@ -48,7 +48,7 @@ def build_file_map(src_root):
         new_parts = [slugify(p) for p in rel.parts[:-1]]
         new_rel = Path(*new_parts) / new_name
 
-        # prevent collisions
+        # avoid collisions
         base = new_rel
         i = 1
         while str(new_rel) in used:
@@ -61,9 +61,9 @@ def build_file_map(src_root):
     return file_map
 
 
-# ------------------------
-# Rewrite links
-# ------------------------
+# ----------------------------
+# Fix links inside markdown
+# ----------------------------
 
 def rewrite_links(text, src_file, src_root, file_map, dst_file):
     def repl(match):
@@ -85,54 +85,62 @@ def rewrite_links(text, src_file, src_root, file_map, dst_file):
 
         new_target = Path(mapped)
         rel_path = os.path.relpath(dst_file.parent / new_target, dst_file.parent)
-        rel_path = rel_path.replace("\\", "/")
-
-        return f"{prefix}{rel_path}{suffix}"
+        return f"{prefix}{rel_path.replace(os.sep, '/')}{suffix}"
 
     return re.sub(r'(!?\[.*?\]\()([^\)]+)(\))', repl, text)
 
 
-# ------------------------
-# NAV GENERATION (FIXED)
-# ------------------------
+# ----------------------------
+# NAV (FIXED: clean labels, no raw paths)
+# ----------------------------
 
 def build_nav(docs_dir):
     nav = []
 
-    for root, dirs, files in os.walk(docs_dir):
+    for root, _, files in os.walk(docs_dir):
         root_path = Path(root)
         rel_root = root_path.relative_to(docs_dir)
 
         items = []
 
         for file in sorted(files):
-            if file.endswith(".md"):
-                p = root_path / file
-                title = p.stem.replace("-", " ").title()
-                rel = p.relative_to(docs_dir).as_posix()
-                items.append({title: rel})
+            if not file.endswith(".md"):
+                continue
+
+            path = root_path / file
+            title = extract_title(path.read_text(errors="ignore"), path.stem)
+
+            rel = path.relative_to(docs_dir).as_posix()
+
+            # CLEAN LABEL (no paths shown)
+            items.append({title: rel})
 
         if items:
             if rel_root == Path("."):
                 nav.extend(items)
             else:
-                nav.append({rel_root.as_posix(): items})
+                nav.append({rel_root.as_posix().replace("-", " ").title(): items})
 
     return nav
 
 
+# ----------------------------
+# MkDocs config (FIXED + HOMEPAGE)
+# ----------------------------
+
 def write_mkdocs_yml(docs_dir):
     nav = build_nav(docs_dir)
 
-    # fallback so MkDocs NEVER crashes
-    if not nav:
-        nav = [{"Home": "index.md"}]
+    # ALWAYS add homepage to avoid 404
+    nav.insert(0, {"Home": "index.md"})
 
     import yaml
 
     config = {
         "site_name": "Joplin Notes",
-        "theme": {"name": "material"},
+        "theme": {
+            "name": "material"
+        },
         "docs_dir": "docs",
         "nav": nav
     }
@@ -141,9 +149,9 @@ def write_mkdocs_yml(docs_dir):
         yaml.safe_dump(config, f, sort_keys=False)
 
 
-# ------------------------
+# ----------------------------
 # Git
-# ------------------------
+# ----------------------------
 
 def run_git():
     subprocess.run(["git", "add", "."], check=True)
@@ -151,9 +159,9 @@ def run_git():
     subprocess.run(["git", "push"], check=True)
 
 
-# ------------------------
-# Main
-# ------------------------
+# ----------------------------
+# MAIN
+# ----------------------------
 
 def main():
     import sys
@@ -171,6 +179,9 @@ def main():
     docs.mkdir()
 
     file_map = build_file_map(src)
+
+    # Ensure homepage exists (FIX FOR YOUR 404)
+    (docs / "index.md").write_text("# Home\n\nWelcome to your Joplin notes.")
 
     for orig, new in file_map.items():
         src_file = src / orig
@@ -194,7 +205,7 @@ def main():
     write_mkdocs_yml(docs)
     run_git()
 
-    print("✅ Done. Now run: mkdocs serve")
+    print("✅ Done. Run: mkdocs serve")
 
 
 if __name__ == "__main__":

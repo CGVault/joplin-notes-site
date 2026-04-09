@@ -1,10 +1,4 @@
 ---
-title: "1. Get to know the data"
----
-
-# 1. Get to know the data
-
----
 title: 1. Get to know the data
 updated: 2026-04-06 03:07:59Z
 created: 2026-04-04 05:45:39Z

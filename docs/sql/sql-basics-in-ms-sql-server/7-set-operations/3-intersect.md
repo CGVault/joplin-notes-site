@@ -1,10 +1,4 @@
 ---
-title: "3. INTERSECT"
----
-
-# 3. INTERSECT
-
----
 title: 3. INTERSECT
 updated: 2026-04-04 05:48:18Z
 created: 2026-04-04 05:48:13Z

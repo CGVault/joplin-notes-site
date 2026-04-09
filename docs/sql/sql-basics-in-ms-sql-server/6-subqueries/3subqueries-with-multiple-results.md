@@ -1,10 +1,4 @@
 ---
-title: "3.Subqueries with multiple results"
----
-
-# 3.Subqueries with multiple results
-
----
 title: 3.Subqueries with multiple results
 updated: 2026-04-04 05:47:34Z
 created: 2026-04-04 05:47:08Z

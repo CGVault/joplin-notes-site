@@ -1,10 +1,4 @@
 ---
-title: "1. Introduction"
----
-
-# 1. Introduction
-
----
 title: 1. Introduction
 updated: 2026-04-04 05:48:08Z
 created: 2026-04-04 05:48:04Z

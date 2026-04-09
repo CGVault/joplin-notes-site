@@ -1,10 +1,4 @@
 ---
-title: "2. UNION"
----
-
-# 2. UNION
-
----
 title: 2. UNION
 updated: 2026-04-04 05:48:12Z
 created: 2026-04-04 05:48:09Z

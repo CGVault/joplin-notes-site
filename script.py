@@ -1,287 +1,175 @@
 #!/usr/bin/env python3
-"""
-sync_joplin_to_mkdocs.py
-Usage: python sync_joplin_to_mkdocs.py /path/to/joplin-export
 
-Behavior:
-- Walks the export folder and sanitizes filenames based on titles inside .md files.
-- Rewrites image links to the new names.
-- Copies sanitized tree to ./docs/<export_root_name> inside current git repo.
-- Generates mkdocs.yml (basic) and a sidebar nav based on folder structure and titles.
-- Commits & pushes changes to the repo (git must be configured).
-- Writes docs/_mapping.json mapping original relative paths -> new relative paths.
-
-Dependencies: Python 3.8+, standard library only.
-"""
-import sys, os, re, shutil, json, subprocess, datetime
+import os
+import re
+import shutil
+import subprocess
 from pathlib import Path
-from urllib.parse import unquote
 
-if len(sys.argv) < 2:
-    print("Usage: python sync_joplin_to_mkdocs.py /path/to/joplin-export")
-    sys.exit(1)
+# ========= CONFIG =========
+MAX_NAME = 80
+# ==========================
 
-SRC = Path(sys.argv[1]).expanduser().resolve()
-REPO = Path.cwd().resolve()
-DOCS_DIR = REPO / "docs"
-if not SRC.exists():
-    print("Source export folder does not exist:", SRC)
-    sys.exit(1)
+def slugify(text):
+    text = text.lower().strip()
+    text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r'[\s_-]+', '-', text)
+    return text[:MAX_NAME].strip("-") or "note"
 
-# Settings
-MAX_SLUG_LEN = 64
-SAFE_RE = re.compile(r"[^a-z0-9._-]")
-TITLE_RE = re.compile(r'^\s{0,3}#{1,6}\s+(.*\S)', flags=re.MULTILINE)
-MD_LINK_RE = re.compile(r'(!?\[.*?\]\()([^\)\s]+)(\))')  # captures ![](url) and [](...)
-IMG_EXTS = {'.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.bmp'}
+def extract_title(md_text, fallback):
+    # First heading
+    m = re.search(r'^\s*#\s+(.+)', md_text, re.MULTILINE)
+    if m:
+        return m.group(1).strip()
+    return fallback
 
-def slugify(name, max_len=MAX_SLUG_LEN):
-    name = unquote(name)
-    name = name.lower().strip()
-    name = name.replace(" ", "-")
-    name = re.sub(r'[-_]+', '-', name)
-    name = SAFE_RE.sub('-', name)
-    if len(name) > max_len:
-        base, dot, ext = name.rpartition(".")
-        if dot:
-            ext = ext[:10]
-            base = base[:max_len - 1 - len(ext)]
-            name = f"{base}.{ext}"
+def build_file_map(src_root):
+    file_map = {}
+    used = set()
+
+    for file in src_root.rglob("*"):
+        if not file.is_file():
+            continue
+
+        rel = file.relative_to(src_root)
+
+        # Handle markdown
+        if file.suffix.lower() == ".md":
+            content = file.read_text(errors="ignore")
+            title = extract_title(content, file.stem)
+            name = slugify(title) + ".md"
         else:
-            name = name[:max_len]
-    name = name.strip("-")
-    return name or "file"
+            name = slugify(file.stem) + file.suffix.lower()
 
-# Build list of files
-all_files = [p for p in SRC.rglob("*") if p.is_file()]
+        # Keep folder structure (slugified)
+        new_parts = [slugify(p) for p in rel.parts[:-1]]
+        new_path = Path(*new_parts) / name
 
-# mapping original -> new relative path under docs/<root>
-root_name = SRC.name
-OUT_ROOT = DOCS_DIR / root_name
+        # Avoid collisions
+        counter = 1
+        base = new_path
+        while str(new_path) in used:
+            new_path = base.with_name(f"{base.stem}-{counter}{base.suffix}")
+            counter += 1
 
-original_to_new = {}
-collision_counters = {}
+        used.add(str(new_path))
+        file_map[str(rel)] = str(new_path)
 
-def unique_path_for(desired_path):
-    """Ensure no collision: append -n if exists."""
-    p = Path(desired_path)
-    key = str(p.parent / p.name)
-    if key not in collision_counters:
-        collision_counters[key] = 0
-    candidate = p
-    while candidate.exists() or str(candidate) in original_to_new.values():
-        collision_counters[key] += 1
-        stem = p.stem
-        ext = p.suffix
-        candidate = p.parent / f"{stem}-{collision_counters[key]}{ext}"
-    return candidate
+    return file_map
 
-# First pass: determine new filenames
-for src_file in all_files:
-    rel = src_file.relative_to(SRC)
-    rel_parts = rel.parts
-    # If markdown, try to extract title
-    if src_file.suffix.lower() == ".md":
-        text = src_file.read_text(encoding="utf-8", errors="ignore")
-        m = TITLE_RE.search(text)
-        if m:
-            title = m.group(1).strip()
-        else:
-            title = src_file.stem
-        # create slug filename from title
-        slug_base = slugify(title)
-        slug_name = f"{slug_base}.md" if not slug_base.endswith(".md") else slug_base
-    else:
-        # resource: slugify original filename
-        slug_name = slugify(src_file.name)
-        # preserve extension if lost
-        if not Path(slug_name).suffix and src_file.suffix:
-            slug_name = slug_name + src_file.suffix.lower()
-    # Build new relative path preserving intermediate directories (slugify dirs)
-    new_parts = []
-    for i, part in enumerate(rel_parts[:-1]):
-        new_parts.append(slugify(part))
-    new_parts.append(slug_name)
-    new_rel = Path(*new_parts)
-    out_path = OUT_ROOT / new_rel
-    # ensure unique on disk
-    unique_out = unique_path_for(out_path)
-    # store mapping as relative to OUT_ROOT
-    original_to_new[str(rel)] = str(unique_out.relative_to(OUT_ROOT))
+def rewrite_links(text, src_file, src_root, file_map, dst_file):
+    def repl(match):
+        prefix, url, suffix = match.groups()
 
-# Prepare output folder: remove existing OUT_ROOT then recreate
-if OUT_ROOT.exists():
-    print("Removing existing output folder:", OUT_ROOT)
-    shutil.rmtree(OUT_ROOT)
-OUT_ROOT.mkdir(parents=True, exist_ok=True)
+        if url.startswith("http") or url.startswith("#"):
+            return match.group(0)
 
-# Second pass: copy files and rewrite markdown links
-def find_new_for(original_rel_str):
-    return original_to_new.get(original_rel_str)
+        target = (src_file.parent / url).resolve()
 
-for src_file in all_files:
-    rel = src_file.relative_to(SRC)
-    new_rel = find_new_for(str(rel))
-    if not new_rel:
-        continue
-    dst = OUT_ROOT / new_rel
-    dst.parent.mkdir(parents=True, exist_ok=True)
-    # Copy file
-    shutil.copy2(src_file, dst)
-    # If markdown, ensure frontmatter title and rewrite image links
-    if dst.suffix.lower() == ".md":
-        txt = dst.read_text(encoding="utf-8", errors="ignore")
-        m = TITLE_RE.search(txt)
-        if m:
-            title = m.group(1).strip()
-        else:
-            # infer from original filename (original rel may include directories)
-            title = src_file.stem
-            # prepend H1 if missing
-            txt = f"# {title}\n\n" + txt
-        # add YAML frontmatter with title if not present
-        if txt.lstrip().startswith("---"):
-            # basic check: if frontmatter present, try to inject title if missing
-            # naive: skip; assume user didn't have frontmatter
-            pass
-        else:
-            front = f"---\ntitle: \"{title.replace('\"','\\\"')}\"\n---\n\n"
-            txt = front + txt if not txt.startswith(front) else txt
-        # rewrite local links/images
-        def repl(mobj):
-            prefix, url, suffix = mobj.group(1), mobj.group(2), mobj.group(3)
-            # ignore URLs that are absolute (http:// or https:// or mailto:)
-            if re.match(r'^[a-z]+://', url) or url.startswith("mailto:") or url.startswith("#"):
-                return mobj.group(0)
-            # strip fragment/query for mapping lookup
-            url_clean = url.split("#")[0].split("?")[0]
-            # If url is relative, attempt to resolve against src_file parent
-            candidate = (src_file.parent / url_clean).resolve() if not Path(url_clean).is_absolute() else Path(url_clean)
-            try:
-                rel_to_src = candidate.relative_to(SRC)
-                rel_key = str(rel_to_src)
-                mapped = find_new_for(rel_key)
-                if mapped:
-                    # compute new relative path from dst parent to OUT_ROOT/mapped
-                    new_target = Path(mapped)
-                    new_rel_path = os.path.relpath(OUT_ROOT / new_target, start=dst.parent)
-                    new_rel_path = new_rel_path.replace(os.path.sep, "/")
-                    # preserve fragment/query
-                    frag = ""
-                    if "#" in url:
-                        frag = "#" + url.split("#",1)[1]
-                    if "?" in url:
-                        frag = "?" + url.split("?",1)[1]
-                    return f"{prefix}{new_rel_path}{frag}{suffix}"
-            except Exception:
-                # can't map; leave as-is
-                return mobj.group(0)
-            return mobj.group(0)
-        new_txt = MD_LINK_RE.sub(repl, txt)
-        dst.write_text(new_txt, encoding="utf-8")
+        try:
+            rel = target.relative_to(src_root)
+        except:
+            return match.group(0)
 
-# Generate mkdocs.yml with nav
-def build_nav_tree(mapping):
-    """
-    mapping: original_to_new values keyed by original rel (unused here)
-    Build nested dict from OUT_ROOT structure to create nav entries.
-    """
-    nav = []
-    # Walk OUT_ROOT
-    for dirpath, dirnames, filenames in os.walk(OUT_ROOT):
-        # sort to give stable order
-        dirpath_p = Path(dirpath)
-    # We'll build nav by walking OUT_ROOT and mapping to nested structure
-    def build_node(path):
+        new_rel = file_map.get(str(rel))
+        if not new_rel:
+            return match.group(0)
+
+        # Compute relative path
+        new_target = Path(new_rel)
+        rel_path = os.path.relpath(dst_file.parent / new_target, dst_file.parent)
+        rel_path = rel_path.replace("\\", "/")
+
+        return f"{prefix}{rel_path}{suffix}"
+
+    return re.sub(r'(!?\[.*?\]\()([^\)]+)(\))', repl, text)
+
+def generate_nav(docs_dir):
+    def walk(folder):
         items = []
-        # list directories first
-        children = sorted([p for p in path.iterdir() if p.is_dir()])
-        files = sorted([p for p in path.iterdir() if p.is_file() and p.suffix.lower() == ".md"])
-        for f in files:
-            # read title from frontmatter or H1
-            content = f.read_text(encoding="utf-8", errors="ignore")
-            title = None
-            fm = re.match(r'^\s*---\s*\n(.*?)\n---\s*\n', content, flags=re.S)
-            if fm:
-                # try to find title: title: "..."
-                m = re.search(r'title:\s*["\']?(.*?)["\']?\s*$', fm.group(1), flags=re.M)
-                if m:
-                    title = m.group(1).strip()
-            if not title:
-                m2 = TITLE_RE.search(content)
-                if m2:
-                    title = m2.group(1).strip()
-            if not title:
-                title = f.stem
-            rel = f.relative_to(OUT_ROOT).as_posix()
-            items.append({title: rel})
-        for c in children:
-            sub = build_node(c)
-            if sub:
-                items.append({c.name: sub})
+        for p in sorted(folder.iterdir()):
+            if p.is_dir():
+                items.append({p.name: walk(p)})
+            elif p.suffix == ".md":
+                title = p.stem.replace("-", " ").title()
+                rel = p.relative_to(docs_dir).as_posix()
+                items.append({title: rel})
         return items
-    nav = [{root_name: build_node(OUT_ROOT)}]
-    return nav
 
-nav = build_nav_tree(original_to_new)
+    return walk(docs_dir)
 
-mk = {
-    "site_name": f"{root_name} Notes",
-    "docs_dir": "docs",
-    "site_url": "",
-    "theme": {"name": "material"},
-    "nav": nav
-}
+def write_mkdocs_yml(docs_dir):
+    nav = generate_nav(docs_dir)
 
-# Write mkdocs.yml
-import yaml  # attempt import, but we'll fallback if pyyaml not present
-try:
-    import yaml as _yaml
-    with open(REPO / "mkdocs.yml", "w", encoding="utf-8") as f:
-        _yaml.safe_dump(mk, f, sort_keys=False)
-except Exception:
-    # fallback: produce a simple yaml via json->yaml naive
-    with open(REPO / "mkdocs.yml", "w", encoding="utf-8") as f:
-        f.write("site_name: \"{}\"\n".format(mk["site_name"]))
-        f.write("docs_dir: \"docs\"\n")
-        f.write("theme:\n  name: material\n")
-        f.write("nav:\n")
-        def write_nav(items, indent=2):
-            for it in items:
-                if isinstance(it, dict):
-                    for k,v in it.items():
-                        f.write(" " * indent + "- {}:\n".format(k))
-                        if isinstance(v, list):
-                            write_nav(v, indent+2)
-                        else:
-                            f.write(" "*(indent+2) + "- {}\n".format(v))
+    yml = f"""site_name: Joplin Notes
+theme:
+  name: material
+docs_dir: docs
+
+nav:
+"""
+
+    def write_nav(items, indent=2):
+        lines = []
+        for item in items:
+            for k, v in item.items():
+                if isinstance(v, list):
+                    lines.append(" " * indent + f"- {k}:")
+                    lines += write_nav(v, indent + 2)
                 else:
-                    f.write(" " * indent + "- {}\n".format(it))
-        write_nav(mk["nav"], indent=2)
+                    lines.append(" " * indent + f"- {k}: {v}")
+        return lines
 
-# Write mapping file into OUT_ROOT
-with open(OUT_ROOT / "_mapping.json", "w", encoding="utf-8") as mf:
-    json.dump(original_to_new, mf, indent=2, ensure_ascii=False)
+    yml += "\n".join(write_nav(nav))
 
-# Git operations: replace files under docs/<root_name>
-# The script already wrote to docs/<root_name>. Now commit & push.
-def run(cmd, check=True):
-    print(">", " ".join(cmd))
-    r = subprocess.run(cmd, cwd=REPO)
-    if check and r.returncode != 0:
-        print("Command failed:", cmd)
-        sys.exit(1)
+    Path("mkdocs.yml").write_text(yml)
 
-# Stage changes
-run(["git", "add", "--all", "docs", "mkdocs.yml"])
-# Commit
-ts = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-commit_msg = f"Sync Joplin export -> mkdocs: {root_name} @ {ts}"
-run(["git", "commit", "-m", commit_msg])
-# Push
-run(["git", "push", "origin", "HEAD"])
+def run_git():
+    subprocess.run(["git", "add", "."], check=True)
+    subprocess.run(["git", "commit", "-m", "Sync notes"], check=False)
+    subprocess.run(["git", "push"], check=True)
 
-print("Sync complete.")
-print("Docs available under docs/{}".format(root_name))
-print("mkdocs.yml written to repo root.")
-print("Mapping file at:", OUT_ROOT / "_mapping.json")
+def main():
+    import sys
+
+    if len(sys.argv) < 2:
+        print("Usage: python sync_joplin_to_mkdocs.py <export_folder>")
+        return
+
+    src = Path(sys.argv[1]).resolve()
+    docs = Path("docs")
+
+    if docs.exists():
+        shutil.rmtree(docs)
+
+    docs.mkdir()
+
+    file_map = build_file_map(src)
+
+    for orig, new in file_map.items():
+        src_file = src / orig
+        dst_file = docs / new
+
+        dst_file.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src_file, dst_file)
+
+        if dst_file.suffix == ".md":
+            text = dst_file.read_text(errors="ignore")
+
+            title = extract_title(text, dst_file.stem)
+            frontmatter = f"---\ntitle: \"{title}\"\n---\n\n"
+
+            if not text.startswith("---"):
+                text = frontmatter + text
+
+            text = rewrite_links(text, src_file, src, file_map, dst_file)
+
+            dst_file.write_text(text)
+
+    write_mkdocs_yml(docs)
+    run_git()
+
+    print("✅ Done. Now run: mkdocs gh-deploy")
+
+if __name__ == "__main__":
+    main()

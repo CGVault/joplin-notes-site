@@ -1,10 +1,4 @@
 ---
-title: "1. Quiz"
----
-
-# 1. Quiz
-
----
 title: 1. Quiz
 updated: 2026-04-04 05:48:33Z
 created: 2026-04-04 05:48:30Z

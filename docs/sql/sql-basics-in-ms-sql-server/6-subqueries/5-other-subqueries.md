@@ -1,10 +1,4 @@
 ---
-title: "5. Other subqueries"
----
-
-# 5. Other subqueries
-
----
 title: 5. Other subqueries
 updated: 2026-04-04 05:47:55Z
 created: 2026-04-04 05:47:48Z

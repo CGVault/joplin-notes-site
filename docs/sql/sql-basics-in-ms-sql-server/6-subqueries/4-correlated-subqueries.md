@@ -1,10 +1,4 @@
 ---
-title: "4. Correlated subqueries"
----
-
-# 4. Correlated subqueries
-
----
 title: 4. Correlated subqueries
 updated: 2026-04-04 05:47:46Z
 created: 2026-04-04 05:47:38Z

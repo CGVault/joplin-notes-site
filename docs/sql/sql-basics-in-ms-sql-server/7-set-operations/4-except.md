@@ -1,10 +1,4 @@
 ---
-title: "4. EXCEPT"
----
-
-# 4. EXCEPT
-
----
 title: 4. EXCEPT
 updated: 2026-04-04 05:48:24Z
 created: 2026-04-04 05:48:20Z

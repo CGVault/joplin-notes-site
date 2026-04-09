@@ -1,0 +1,29 @@
+
+/* WHITE THEME TEST - VERY OBVIOUS */
+
+body {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Sidebar */
+.md-nav {
+    background: #f5f5f5;
+}
+
+/* Header */
+.md-header {
+    background: #ffffff !important;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Code blocks */
+pre, code {
+    background: #f0f0f0 !important;
+}
+
+/* Make it VERY obvious CSS is loaded */
+.md-content {
+    border-left: 4px solid red;
+    padding-left: 20px;
+}

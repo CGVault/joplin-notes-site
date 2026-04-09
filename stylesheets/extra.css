@@ -1,29 +1,131 @@
 
-/* SIMPLE CLEAN BASE THEME */
+/* =========================================
+   MICROSOFT FLUENT STYLE (LIGHT THEME)
+   ========================================= */
 
-body {
-    background: #ffffff;
-    color: #1a1a1a;
-    font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+:root {
+    --ms-blue: #0078D4;
+    --ms-blue-hover: #106EBE;
+    --ms-border: #E1E1E1;
+    --ms-bg: #FFFFFF;
+    --ms-sidebar: #F5F5F5;
+    --ms-text: #1A1A1A;
 }
 
-/* Top bar */
+/* Base */
+body {
+    background: var(--ms-bg) !important;
+    color: var(--ms-text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+}
+
+/* Top header (Fluent bar) */
 .md-header {
-    background: #ffffff !important;
-    border-bottom: 1px solid #e5e5e5;
+    background: var(--ms-blue) !important;
+    color: white !important;
+    border-bottom: none;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+/* Header title */
+.md-header__title {
+    font-weight: 600;
+    letter-spacing: 0.2px;
 }
 
 /* Sidebar */
 .md-nav {
-    background: #f7f7f7;
+    background: var(--ms-sidebar);
+    border-right: 1px solid var(--ms-border);
+}
+
+/* Sidebar links */
+.md-nav__link {
+    color: var(--ms-text);
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+/* Hover state (Fluent feel) */
+.md-nav__link:hover {
+    background: rgba(0,120,212,0.08);
+    color: var(--ms-blue);
+}
+
+/* Active page */
+.md-nav__link--active {
+    color: var(--ms-blue);
+    font-weight: 600;
+}
+
+/* Main content area */
+.md-content {
+    background: white;
+    padding: 24px 32px;
+    max-width: 900px;
+    margin: auto;
+}
+
+/* Headings (clean Microsoft Docs feel) */
+h1, h2, h3 {
+    font-family: "Segoe UI", system-ui;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+h1 {
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
 }
 
 /* Links */
 a {
-    color: #1565c0;
+    color: var(--ms-blue);
+    text-decoration: none;
 }
 
-/* Content spacing */
-.md-content {
-    padding-left: 16px;
+a:hover {
+    color: var(--ms-blue-hover);
+    text-decoration: underline;
+}
+
+/* Code blocks */
+pre {
+    background: #f6f6f6 !important;
+    border: 1px solid var(--ms-border);
+    border-radius: 6px;
+}
+
+/* Inline code */
+code {
+    background: #f3f3f3;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+/* Tables */
+table {
+    border: 1px solid var(--ms-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+th {
+    background: #f3f3f3;
+    font-weight: 600;
+}
+
+/* Scrollbar (subtle Fluent touch) */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c8c8c8;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a6a6a6;
 }

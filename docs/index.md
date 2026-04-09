@@ -1,3 +1,3 @@
-# Home
+# Vault Wiki
 
-Vault Wiki
+Welcome

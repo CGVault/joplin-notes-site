@@ -1,59 +1,37 @@
 
-/* ================================
-   MICROSOFT FLUENT STYLE THEME
-   ================================ */
-
-:root {
-    --ms-blue: #0078D4;
-    --ms-blue-light: #2B88D8;
-    --ms-red: #D83B01;
-    --ms-green: #107C10;
-    --ms-yellow: #FFB900;
-}
-
-/* Base */
 body {
-    background-color: #ffffff !important;
-    color: #1a1a1a !important;
+    background: #ffffff;
     font-family: "Segoe UI", system-ui, sans-serif;
+    color: #1a1a1a;
 }
 
-/* Header */
 .md-header {
-    background: var(--ms-blue) !important;
-    color: white !important;
-    border-bottom: 3px solid var(--ms-blue-light);
+    background: #0078D4 !important;
 }
 
-/* Sidebar */
 .md-nav {
-    background: #f3f3f3;
+    background: #f5f5f5;
     border-right: 1px solid #e1e1e1;
 }
 
-/* Links */
 a {
-    color: var(--ms-blue);
+    color: #0078D4;
 }
 
-a:hover {
-    color: var(--ms-blue-light);
-}
-
-/* Code blocks */
-pre, code {
-    background: #f4f4f4 !important;
-    border-radius: 6px;
-}
-
-/* Content area */
 .md-content {
-    border-left: 4px solid var(--ms-blue);
-    padding-left: 20px;
+    padding: 24px 32px;
+    max-width: 900px;
+    margin: auto;
 }
 
-/* Buttons / accents */
-.md-button {
-    background: var(--ms-blue);
-    color: white;
+/* HEADINGS */
+h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    border-bottom: 3px solid #0078D4;
+    padding-bottom: 10px;
+}
+
+h2, h3 {
+    font-weight: 800;
 }

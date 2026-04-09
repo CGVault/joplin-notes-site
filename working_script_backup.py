@@ -25,6 +25,10 @@ def parse_order(name):
     return 9999, name
 
 
+# ----------------------
+# CLEAN DISPLAY
+# ----------------------
+
 def clean_display(name):
     _, title = parse_order(Path(name).stem)
     return title.replace("-", " ").strip()
@@ -36,7 +40,7 @@ def clean_folder(name):
 
 
 # ----------------------
-# SLUGIFY (PROPER CASE SAFE)
+# PROPER CASE SLUG (SAFE FILE NAMES)
 # ----------------------
 
 def slugify(text):
@@ -101,10 +105,10 @@ def write_docs(src, docs, mapping):
 
 
 # ----------------------
-# FOLDER LANDING PAGES
+# CREATE INDEXES
 # ----------------------
 
-def generate_folder_indexes(docs):
+def create_indexes(docs):
     for root, _, _ in os.walk(docs):
         root = Path(root)
 
@@ -114,50 +118,21 @@ def generate_folder_indexes(docs):
         if any(part in IGNORE_DIRS for part in root.parts):
             continue
 
-        subfolders = []
-        notes = []
+        index = root / "index.md"
 
-        for item in sorted(root.iterdir()):
-            if any(part in IGNORE_DIRS for part in item.parts):
-                continue
+        if not index.exists():
+            name = clean_folder(root.name)
 
-            if item.is_dir():
-                if (item / "index.md").exists():
-                    subfolders.append(item)
-
-            elif item.suffix == ".md" and item.name != "index.md":
-                notes.append(item)
-
-        folder_name = clean_folder(root.name)
-
-        content = f"""---
-title: {folder_name}
+            index.write_text(f"""---
+title: {name}
 ---
 
-# {folder_name}
-
-"""
-
-        if subfolders:
-            content += "## Sections\n\n"
-            for sf in subfolders:
-                name = clean_folder(sf.name)
-                rel = sf.relative_to(docs).as_posix()
-                content += f"- [{name}]({rel}/)\n"
-            content += "\n"
-
-        if notes:
-            content += "## Notes\n\n"
-            for nf in notes:
-                name = clean_display(nf.name)
-                rel = nf.relative_to(docs).as_posix()
-                content += f"- [{name}]({rel})\n"
-
-        (root / "index.md").write_text(content)
+# {name}
+""")
 
 
 # ----------------------
-# BUILD NAV TREE (CRITICAL FIX)
+# NAV BUILDER
 # ----------------------
 
 def build_nav(docs):
@@ -186,7 +161,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (FIXED SIDEBAR + NAV RESTORED)
+# MKDOCS CONFIG
 # ----------------------
 
 def write_mkdocs(docs):
@@ -204,12 +179,17 @@ def write_mkdocs(docs):
                 "navigation.instant",
                 "navigation.tracking",
                 "navigation.sections",
+                "navigation.prune",
                 "search.suggest",
                 "search.highlight",
                 "content.code.copy"
             ],
             "palette": [
-                {"scheme": "default", "primary": "blue", "accent": "indigo"}
+                {
+                    "scheme": "default",
+                    "primary": "blue",
+                    "accent": "indigo"
+                }
             ],
             "font": {
                 "text": "Segoe UI",
@@ -226,7 +206,6 @@ def write_mkdocs(docs):
 
         "extra_css": ["stylesheets/extra.css"],
 
-        # ✅ FULL NAV RESTORED (THIS FIXES YOUR SIDEBAR)
         "nav": [
             {"Home": "index.md"},
             *nav
@@ -238,7 +217,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (UNCHANGED - SAFE)
+# MICROSOFT FLUENT CSS (UPGRADED + FIXED HEADINGS)
 # ----------------------
 
 def write_css():
@@ -246,41 +225,102 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
+/* =========================================
+   MICROSOFT FLUENT UI (WHITE THEME)
+   ========================================= */
+
+:root {
+    --ms-blue: #0078D4;
+    --ms-bg: #ffffff;
+    --ms-sidebar: #f5f5f5;
+    --ms-text: #1a1a1a;
+    --ms-border: #e1e1e1;
+}
+
+/* BASE */
 body {
-    background: #ffffff;
+    background: var(--ms-bg) !important;
+    color: var(--ms-text);
     font-family: "Segoe UI", system-ui, sans-serif;
-    color: #1a1a1a;
+    line-height: 1.6;
 }
 
+/* HEADER */
 .md-header {
-    background: #0078D4 !important;
+    background: var(--ms-blue) !important;
+    color: white !important;
 }
 
+/* SIDEBAR */
 .md-nav {
-    background: #f5f5f5;
-    border-right: 1px solid #e1e1e1;
+    background: var(--ms-sidebar);
+    border-right: 1px solid var(--ms-border);
 }
 
+/* LINKS */
 a {
-    color: #0078D4;
+    color: var(--ms-blue);
 }
 
+/* CONTENT AREA */
 .md-content {
     padding: 24px 32px;
     max-width: 900px;
     margin: auto;
 }
 
-/* HEADINGS */
+/* =========================================
+   STRONG HEADING SYSTEM (FIXED VISIBILITY)
+   ========================================= */
+
 h1 {
     font-size: 2.2rem;
     font-weight: 800;
-    border-bottom: 3px solid #0078D4;
+    color: #1a1a1a;
+    border-bottom: 3px solid var(--ms-blue);
     padding-bottom: 10px;
+    margin-bottom: 16px;
 }
 
-h2, h3 {
+h2 {
+    font-size: 1.6rem;
     font-weight: 800;
+    margin-top: 24px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+/* Force MkDocs override issues */
+.md-content h1,
+.md-content h2,
+.md-content h3 {
+    font-weight: 800 !important;
+}
+
+/* SIDEBAR EMPHASIS */
+.md-nav__link {
+    font-weight: 500;
+}
+
+.md-nav__link--active {
+    font-weight: 700;
+    color: var(--ms-blue) !important;
+}
+
+/* CODE */
+pre {
+    background: #f6f6f6 !important;
+    border: 1px solid var(--ms-border);
+}
+
+code {
+    background: #f3f3f3;
+    padding: 2px 5px;
+    border-radius: 4px;
 }
 """)
 
@@ -290,19 +330,7 @@ h2, h3 {
 # ----------------------
 
 def deploy():
-    # STEP 1: ensure git is tracking deletions properly
-    subprocess.run(["git", "add", "-A"], check=True)
-
-    # STEP 2: commit EVERYTHING in repo (not just docs changes)
-    subprocess.run(
-        ["git", "commit", "-m", "sync full vault + docs"],
-        check=False
-    )
-
-    # STEP 3: push full repo state
-    subprocess.run(["git", "push"], check=True)
-
-    # STEP 4: deploy mkdocs site (gh-pages branch)
+    subprocess.run(["mkdocs", "build"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
 
@@ -318,12 +346,12 @@ def main():
 
     mapping = build_map(src)
     write_docs(src, docs, mapping)
-    generate_folder_indexes(docs)
+    create_indexes(docs)
     write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Sidebar fixed + navigation restored + folder pages working")
+    print("✅ Microsoft Fluent MkDocs site deployed successfully")
 
 
 if __name__ == "__main__":

@@ -4,4 +4,4 @@ title: Sql
 
 # Sql
 
-Folder section.
+Section: Sql

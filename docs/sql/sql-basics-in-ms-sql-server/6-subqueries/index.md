@@ -4,4 +4,4 @@ title: 6 Subqueries
 
 # 6 Subqueries
 
-Folder section.
+Section: 6 Subqueries

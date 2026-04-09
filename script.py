@@ -6,27 +6,24 @@ import shutil
 import subprocess
 from pathlib import Path
 
-# -----------------------
+# ----------------------
 # CONFIG
-# -----------------------
+# ----------------------
 
+IGNORE_DIRS = {"resources", "_resources", ".obsidian", ".trash"}
 MAX_NAME = 120
 
-# -----------------------
-# CLEAN FILENAME LOGIC
-# -----------------------
+# ----------------------
+# NAME CLEANING
+# ----------------------
 
-def clean_name(filename):
+def clean_display_name(filename):
     name = Path(filename).stem
 
-    # remove ordering prefixes:
-    # "1. ", "01 - ", "2-", etc.
+    # remove numbering ONLY for display
     name = re.sub(r'^\d+[\.\-\)\s]+', '', name)
 
-    # clean weird chars
-    name = name.replace("-", " ")
-    name = name.strip()
-
+    name = name.replace("-", " ").strip()
     return name.title()
 
 
@@ -36,10 +33,9 @@ def slugify(text):
     text = re.sub(r'[\s_-]+', '-', text)
     return text[:MAX_NAME].strip("-") or "note"
 
-
-# -----------------------
-# BUILD MAP
-# -----------------------
+# ----------------------
+# FILE MAPPING
+# ----------------------
 
 def build_map(src):
     mapping = {}
@@ -51,8 +47,11 @@ def build_map(src):
 
         rel = f.relative_to(src)
 
-        # ONLY filename-based naming
-        new_name = slugify(clean_name(f.name)) + f.suffix.lower()
+        # IGNORE unwanted folders
+        if any(part in IGNORE_DIRS for part in rel.parts):
+            continue
+
+        new_name = slugify(f.stem) + f.suffix.lower()
 
         new_path = Path(*[slugify(p) for p in rel.parts[:-1]]) / new_name
 
@@ -68,16 +67,16 @@ def build_map(src):
     return mapping
 
 
-# -----------------------
+# ----------------------
 # WRITE FILES
-# -----------------------
+# ----------------------
 
 def write_docs(src, docs, mapping):
     if docs.exists():
         shutil.rmtree(docs)
     docs.mkdir()
 
-    (docs / "index.md").write_text("# Home\n\nNotes")
+    (docs / "index.md").write_text("# Home\n\nNotes Wiki")
 
     for orig, new in mapping.items():
         src_file = src / orig
@@ -86,55 +85,61 @@ def write_docs(src, docs, mapping):
         dst_file.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src_file, dst_file)
 
-        if dst_file.suffix == ".md":
-            # DO NOT touch content anymore
-            pass
 
-
-# -----------------------
-# FOLDER INDEXES
-# -----------------------
+# ----------------------
+# CREATE CLEAN FOLDER INDEXES
+# ----------------------
 
 def create_indexes(docs):
     for root, dirs, files in os.walk(docs):
+
         root = Path(root)
 
+        # skip root
         if root == docs:
+            continue
+
+        # skip ignored folders
+        if any(part in IGNORE_DIRS for part in root.parts):
             continue
 
         index = root / "index.md"
 
         if not index.exists():
-            folder_name = root.name.replace("-", " ").title()
+            name = root.name.replace("-", " ").title()
 
             index.write_text(f"""---
-title: {folder_name}
+title: {name}
 ---
 
-# {folder_name}
+# {name}
 
-Folder section.
+Section: {name}
 """)
 
 
-# -----------------------
-# NAV TREE (CLEAN)
-# -----------------------
+# ----------------------
+# BUILD CONTROLLED NAV (FIXED ORDER)
+# ----------------------
 
 def build_nav(docs):
     def walk(folder):
         items = []
 
-        for p in sorted(folder.iterdir()):
+        # SORT BY FILENAME (THIS FIXES ORDERING)
+        for p in sorted(folder.iterdir(), key=lambda x: x.name):
+
+            if any(part in IGNORE_DIRS for part in p.parts):
+                continue
+
             if p.is_dir():
                 if (p / "index.md").exists():
                     items.append({p.name.replace("-", " ").title(): walk(p)})
 
-            elif p.suffix == ".md":
-                if p.name != "index.md":
-                    title = p.stem.replace("-", " ").title()
-                    rel = p.relative_to(docs).as_posix()
-                    items.append({title: rel})
+            elif p.suffix == ".md" and p.name != "index.md":
+                title = clean_display_name(p.name)
+                rel = p.relative_to(docs).as_posix()
+                items.append({title: rel})
 
         return items
 
@@ -142,13 +147,15 @@ def build_nav(docs):
 
 
 def write_mkdocs(docs):
-    nav = build_nav(docs)
-
     import yaml
 
+    nav = build_nav(docs)
+
     config = {
-        "site_name": "Joplin Notes",
-        "theme": {"name": "material"},
+        "site_name": "Joplin Notes Wiki",
+        "theme": {
+            "name": "material"
+        },
         "docs_dir": "docs",
         "nav": [
             {"Home": "index.md"},
@@ -160,19 +167,19 @@ def write_mkdocs(docs):
         yaml.safe_dump(config, f, sort_keys=False)
 
 
-# -----------------------
+# ----------------------
 # GIT
-# -----------------------
+# ----------------------
 
 def git_push():
     subprocess.run(["git", "add", "."], check=True)
-    subprocess.run(["git", "commit", "-m", "sync notes"], check=False)
+    subprocess.run(["git", "commit", "-m", "sync wiki"], check=False)
     subprocess.run(["git", "push"], check=True)
 
 
-# -----------------------
+# ----------------------
 # MAIN
-# -----------------------
+# ----------------------
 
 def main():
     import sys

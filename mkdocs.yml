@@ -1,54 +1,53 @@
-site_name: Joplin Notes
+site_name: Joplin Notes Wiki
 theme:
   name: material
 docs_dir: docs
 nav:
 - Home: index.md
-- Resources: []
 - Sql:
   - Sql Basics In Ms Sql Server:
     - 1 A Primer On Databases:
-      - Introduction: sql/sql-basics-in-ms-sql-server/1-a-primer-on-databases/introduction.md
+      - Introduction: sql/sql-basics-in-ms-sql-server/1-a-primer-on-databases/1-introduction.md
     - 2 Selecting Data From One Table:
-      - A Bit Of Mathematics: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/a-bit-of-mathematics.md
-      - Filtering Rows: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/filtering-rows.md
-      - Lets Practice: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/lets-practice.md
-      - Logic: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/logic.md
-      - Returning All Data From A Table: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/returning-all-data-from-a-table.md
-      - Select Some Columns: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/select-some-columns.md
-      - Text Patterns: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/text-patterns.md
-      - To Be Or Null To Be: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/to-be-or-null-to-be.md
+      - Returning All Data From A Table: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/1-returning-all-data-from-a-table.md
+      - Select Some Columns: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/2-select-some-columns.md
+      - Filtering Rows: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/3-filtering-rows.md
+      - Logic: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/4-logic.md
+      - Text Patterns: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/5-text-patterns.md
+      - To Be Or Null To Be: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/6-to-be-or-null-to-be.md
+      - A Bit Of Mathematics: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/7-a-bit-of-mathematics.md
+      - Lets Practice: sql/sql-basics-in-ms-sql-server/2-selecting-data-from-one-table/8-lets-practice.md
     - 3 Querying More Than One Table:
-      - Creating Joins: sql/sql-basics-in-ms-sql-server/3-querying-more-than-one-table/creating-joins.md
-      - How To Query More Than One Table: sql/sql-basics-in-ms-sql-server/3-querying-more-than-one-table/how-to-query-more-than-one-table.md
-      - Lets Practice: sql/sql-basics-in-ms-sql-server/3-querying-more-than-one-table/lets-practice.md
-      - Referencing Columns: sql/sql-basics-in-ms-sql-server/3-querying-more-than-one-table/referencing-columns.md
+      - How To Query More Than One Table: sql/sql-basics-in-ms-sql-server/3-querying-more-than-one-table/1-how-to-query-more-than-one-table.md
+      - Creating Joins: sql/sql-basics-in-ms-sql-server/3-querying-more-than-one-table/2-creating-joins.md
+      - Referencing Columns: sql/sql-basics-in-ms-sql-server/3-querying-more-than-one-table/3-referencing-columns.md
+      - Lets Practice: sql/sql-basics-in-ms-sql-server/3-querying-more-than-one-table/4-lets-practice.md
     - 4 Aggregation And Grouping:
-      - Aggregation: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/aggregation.md
-      - Eliminating Duplicate Records: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/eliminating-duplicate-records.md
-      - Grouping: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/grouping.md
-      - Having Filtering And Ordering Groups: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/having-filtering-and-ordering-groups.md
-      - Lets Practice: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/lets-practice.md
-      - Limiting The Output: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/limiting-the-output.md
-      - Ordering: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/ordering.md
+      - Ordering: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/1-ordering.md
+      - Limiting The Output: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/2-limiting-the-output.md
+      - Eliminating Duplicate Records: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/3-eliminating-duplicate-records.md
+      - Aggregation: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/4-aggregation.md
+      - Grouping: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/5-grouping.md
+      - Having Filtering And Ordering Groups: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/6-having-filtering-and-ordering-groups.md
+      - Lets Practice: sql/sql-basics-in-ms-sql-server/4-aggregation-and-grouping/7-lets-practice.md
     - 5 More On Joins:
-      - Aliases For Tables: sql/sql-basics-in-ms-sql-server/5-more-on-joins/aliases-for-tables.md
-      - Full Join: sql/sql-basics-in-ms-sql-server/5-more-on-joins/full-join.md
-      - Get To Know The Data: sql/sql-basics-in-ms-sql-server/5-more-on-joins/get-to-know-the-data.md
-      - Join Revisited: sql/sql-basics-in-ms-sql-server/5-more-on-joins/join-revisited.md
-      - Left Join: sql/sql-basics-in-ms-sql-server/5-more-on-joins/left-join.md
-      - Outer Join: sql/sql-basics-in-ms-sql-server/5-more-on-joins/outer-join.md
-      - Right Join: sql/sql-basics-in-ms-sql-server/5-more-on-joins/right-join.md
+      - Get To Know The Data: sql/sql-basics-in-ms-sql-server/5-more-on-joins/1-get-to-know-the-data.md
+      - Join Revisited: sql/sql-basics-in-ms-sql-server/5-more-on-joins/2-join-revisited.md
+      - Left Join: sql/sql-basics-in-ms-sql-server/5-more-on-joins/3-left-join.md
+      - Right Join: sql/sql-basics-in-ms-sql-server/5-more-on-joins/4-right-join.md
+      - Full Join: sql/sql-basics-in-ms-sql-server/5-more-on-joins/5-full-join.md
+      - Outer Join: sql/sql-basics-in-ms-sql-server/5-more-on-joins/6-outer-join.md
+      - Aliases For Tables: sql/sql-basics-in-ms-sql-server/5-more-on-joins/7-aliases-for-tables.md
     - 6 Subqueries:
-      - Correlated Subqueries: sql/sql-basics-in-ms-sql-server/6-subqueries/correlated-subqueries.md
-      - Introduction: sql/sql-basics-in-ms-sql-server/6-subqueries/introduction.md
-      - Other Subqueries: sql/sql-basics-in-ms-sql-server/6-subqueries/other-subqueries.md
-      - Subqueries With Multiple Results: sql/sql-basics-in-ms-sql-server/6-subqueries/subqueries-with-multiple-results.md
-      - Very Simple Subqueries: sql/sql-basics-in-ms-sql-server/6-subqueries/very-simple-subqueries.md
+      - Introduction: sql/sql-basics-in-ms-sql-server/6-subqueries/1-introduction.md
+      - Very Simple Subqueries: sql/sql-basics-in-ms-sql-server/6-subqueries/2-very-simple-subqueries.md
+      - 3Subqueries With Multiple Results: sql/sql-basics-in-ms-sql-server/6-subqueries/3subqueries-with-multiple-results.md
+      - Correlated Subqueries: sql/sql-basics-in-ms-sql-server/6-subqueries/4-correlated-subqueries.md
+      - Other Subqueries: sql/sql-basics-in-ms-sql-server/6-subqueries/5-other-subqueries.md
     - 7 Set Operations:
-      - Except: sql/sql-basics-in-ms-sql-server/7-set-operations/except.md
-      - Intersect: sql/sql-basics-in-ms-sql-server/7-set-operations/intersect.md
-      - Introduction: sql/sql-basics-in-ms-sql-server/7-set-operations/introduction.md
-      - Union: sql/sql-basics-in-ms-sql-server/7-set-operations/union.md
+      - Introduction: sql/sql-basics-in-ms-sql-server/7-set-operations/1-introduction.md
+      - Union: sql/sql-basics-in-ms-sql-server/7-set-operations/2-union.md
+      - Intersect: sql/sql-basics-in-ms-sql-server/7-set-operations/3-intersect.md
+      - Except: sql/sql-basics-in-ms-sql-server/7-set-operations/4-except.md
     - 8 Quiz:
-      - Quiz: sql/sql-basics-in-ms-sql-server/8-quiz/quiz.md
+      - Quiz: sql/sql-basics-in-ms-sql-server/8-quiz/1-quiz.md

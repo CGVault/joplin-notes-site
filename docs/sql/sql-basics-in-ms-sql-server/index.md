@@ -4,4 +4,4 @@ title: Sql Basics In Ms Sql Server
 
 # Sql Basics In Ms Sql Server
 
-Folder section.
+Section: Sql Basics In Ms Sql Server

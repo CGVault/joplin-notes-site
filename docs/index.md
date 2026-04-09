@@ -1,3 +1,3 @@
 # Home
 
-Notes
+Notes Wiki

@@ -157,7 +157,7 @@ title: {folder_name}
 
 
 # ----------------------
-# BUILD NAV TREE (CRITICAL FIX)
+# BUILD NAV TREE
 # ----------------------
 
 def build_nav(docs):
@@ -186,7 +186,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (FIXED SIDEBAR + NAV RESTORED)
+# MKDOCS CONFIG
 # ----------------------
 
 def write_mkdocs(docs):
@@ -226,7 +226,6 @@ def write_mkdocs(docs):
 
         "extra_css": ["stylesheets/extra.css"],
 
-        # ✅ FULL NAV RESTORED (THIS FIXES YOUR SIDEBAR)
         "nav": [
             {"Home": "index.md"},
             *nav
@@ -238,7 +237,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (UNCHANGED - SAFE)
+# CSS (UPDATED HEADINGS ONLY)
 # ----------------------
 
 def write_css():
@@ -271,16 +270,51 @@ a {
     margin: auto;
 }
 
-/* HEADINGS */
+/* =========================
+   UPGRADED HEADINGS
+   ========================= */
+
+/* H1 = Page title (very strong) */
 h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    border-bottom: 3px solid #0078D4;
-    padding-bottom: 10px;
+    font-size: 2.6rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    border-bottom: 4px solid #0078D4;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
 }
 
-h2, h3 {
+/* H2 = Section headers */
+h2 {
+    font-size: 1.9rem;
     font-weight: 800;
+    margin-top: 28px;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+}
+
+/* H3 = Subsections */
+h3 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-top: 20px;
+}
+
+/* Ensure MkDocs doesn't override */
+.md-content h1,
+.md-content h2,
+.md-content h3 {
+    font-weight: 900 !important;
+}
+
+/* Slight visual hierarchy boost */
+h2::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: #0078D4;
+    margin-bottom: 8px;
 }
 """)
 
@@ -290,19 +324,14 @@ h2, h3 {
 # ----------------------
 
 def deploy():
-    # STEP 1: ensure git is tracking deletions properly
     subprocess.run(["git", "add", "-A"], check=True)
 
-    # STEP 2: commit EVERYTHING in repo (not just docs changes)
     subprocess.run(
         ["git", "commit", "-m", "sync full vault + docs"],
         check=False
     )
 
-    # STEP 3: push full repo state
     subprocess.run(["git", "push"], check=True)
-
-    # STEP 4: deploy mkdocs site (gh-pages branch)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
 
@@ -323,7 +352,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Sidebar fixed + navigation restored + folder pages working")
+    print("✅ Headings upgraded (H1/H2/H3 Microsoft-style hierarchy improved)")
 
 
 if __name__ == "__main__":

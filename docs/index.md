@@ -1,3 +1,3 @@
 # Home
 
-Welcome to your Joplin notes.
+Welcome to your notes.

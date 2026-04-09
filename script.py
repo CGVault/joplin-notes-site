@@ -14,15 +14,15 @@ IGNORE_DIRS = {"resources", "_resources", ".obsidian", ".trash"}
 MAX_NAME = 120
 
 # ----------------------
-# ORDER + NAME PARSING
+# ORDER + DISPLAY CLEANING
 # ----------------------
 
 def parse_order(name):
     """
-    Extracts ordering number from:
-    1. Name
-    01 - Name
-    10.Name
+    Extracts numeric ordering prefix:
+    1. Intro
+    01 - Intro
+    10.Intro
     """
     match = re.match(r'^(\d+)[\.\-\s]+(.+)$', name)
     if match:
@@ -31,10 +31,24 @@ def parse_order(name):
 
 
 def clean_display(name):
+    """
+    REMOVE ONLY ordering prefix, preserve ORIGINAL CASE
+    """
     _, title = parse_order(Path(name).stem)
-    title = title.replace("-", " ").strip()
-    return title.title()
+    return title.replace("-", " ").strip()
 
+
+def clean_folder(name):
+    """
+    Folder display cleanup (same logic as files)
+    """
+    _, title = parse_order(name)
+    return title.replace("-", " ").strip()
+
+
+# ----------------------
+# SLUGIFY (SAFE FILE SYSTEM NAMES ONLY)
+# ----------------------
 
 def slugify(text):
     text = text.lower().strip()
@@ -100,7 +114,7 @@ def write_docs(src, docs, mapping):
 # ----------------------
 
 def create_indexes(docs):
-    for root, dirs, files in os.walk(docs):
+    for root, _, _ in os.walk(docs):
         root = Path(root)
 
         if root == docs:
@@ -112,7 +126,7 @@ def create_indexes(docs):
         index = root / "index.md"
 
         if not index.exists():
-            name = root.name.replace("-", " ").title()
+            name = clean_folder(root.name)
 
             index.write_text(f"""---
 title: {name}
@@ -125,7 +139,7 @@ Section: {name}
 
 
 # ----------------------
-# NAV BUILDER (FIXED ORDER + CLEAN TITLES)
+# NAV BUILDER (ORDERED + CLEAN UI)
 # ----------------------
 
 def build_nav(docs):
@@ -145,7 +159,7 @@ def build_nav(docs):
             if p.is_dir():
                 if (p / "index.md").exists():
                     items.append({
-                        p.name.replace("-", " ").title(): walk(p)
+                        clean_folder(p.name): walk(p)
                     })
 
             # markdown files
@@ -160,7 +174,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (UI UPGRADE)
+# MKDOCS CONFIG (MODERN DARK UI)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -177,14 +191,30 @@ def write_mkdocs(docs):
                 "navigation.tracking",
                 "navigation.expand",
                 "navigation.sections",
+                "navigation.indexes",
                 "search.suggest",
                 "search.highlight",
                 "content.code.copy"
             ],
-            "palette": {
-                "scheme": "slate"
+            "palette": [
+                {
+                    "scheme": "slate",
+                    "primary": "indigo",
+                    "accent": "blue"
+                }
+            ],
+            "font": {
+                "text": "Inter",
+                "code": "JetBrains Mono"
             }
         },
+        "markdown_extensions": [
+            "toc",
+            "tables",
+            "fenced_code",
+            "admonition"
+        ],
+        "extra_css": ["stylesheets/extra.css"],
         "docs_dir": "docs",
         "nav": [
             {"Home": "index.md"},
@@ -197,15 +227,13 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# GIT + DEPLOY
+# DEPLOY
 # ----------------------
 
 def deploy():
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", "sync wiki"], check=False)
     subprocess.run(["git", "push"], check=True)
-
-    # optional but recommended if you already set it up
     subprocess.run(["mkdocs", "gh-deploy"], check=True)
 
 
@@ -225,7 +253,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Done → wiki updated")
+    print("✅ Vault Wiki updated")
 
 
 if __name__ == "__main__":

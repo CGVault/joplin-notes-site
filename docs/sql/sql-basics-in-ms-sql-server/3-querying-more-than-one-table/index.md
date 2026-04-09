@@ -1,7 +1,7 @@
 ---
-title: 3 Querying More Than One Table
+title: querying more than one table
 ---
 
-# 3 Querying More Than One Table
+# querying more than one table
 
-Section: 3 Querying More Than One Table
+Section: querying more than one table

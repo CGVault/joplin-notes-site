@@ -1,7 +1,7 @@
 ---
-title: 7 Set Operations
+title: set operations
 ---
 
-# 7 Set Operations
+# set operations
 
-Section: 7 Set Operations
+Section: set operations

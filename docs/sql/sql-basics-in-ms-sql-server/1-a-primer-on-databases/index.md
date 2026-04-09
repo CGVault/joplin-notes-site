@@ -1,7 +1,7 @@
 ---
-title: 1 A Primer On Databases
+title: a primer on databases
 ---
 
-# 1 A Primer On Databases
+# a primer on databases
 
-Section: 1 A Primer On Databases
+Section: a primer on databases

@@ -1,7 +1,7 @@
 ---
-title: 8 Quiz
+title: quiz
 ---
 
-# 8 Quiz
+# quiz
 
-Section: 8 Quiz
+Section: quiz

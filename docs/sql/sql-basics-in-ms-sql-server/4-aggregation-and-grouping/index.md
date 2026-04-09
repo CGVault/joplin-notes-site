@@ -1,7 +1,7 @@
 ---
-title: 4 Aggregation And Grouping
+title: aggregation and grouping
 ---
 
-# 4 Aggregation And Grouping
+# aggregation and grouping
 
-Section: 4 Aggregation And Grouping
+Section: aggregation and grouping

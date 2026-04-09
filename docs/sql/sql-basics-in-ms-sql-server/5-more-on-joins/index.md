@@ -1,7 +1,7 @@
 ---
-title: 5 More On Joins
+title: more on joins
 ---
 
-# 5 More On Joins
+# more on joins
 
-Section: 5 More On Joins
+Section: more on joins

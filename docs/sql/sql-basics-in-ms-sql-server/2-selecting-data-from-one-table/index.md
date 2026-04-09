@@ -1,7 +1,7 @@
 ---
-title: 2 Selecting Data From One Table
+title: selecting data from one table
 ---
 
-# 2 Selecting Data From One Table
+# selecting data from one table
 
-Section: 2 Selecting Data From One Table
+Section: selecting data from one table

@@ -1,7 +1,7 @@
 ---
-title: Sql Basics In Ms Sql Server
+title: sql basics in ms sql server
 ---
 
-# Sql Basics In Ms Sql Server
+# sql basics in ms sql server
 
-Section: Sql Basics In Ms Sql Server
+Section: sql basics in ms sql server

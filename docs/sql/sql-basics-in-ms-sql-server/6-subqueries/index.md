@@ -1,7 +1,7 @@
 ---
-title: 6 Subqueries
+title: subqueries
 ---
 
-# 6 Subqueries
+# subqueries
 
-Section: 6 Subqueries
+Section: subqueries

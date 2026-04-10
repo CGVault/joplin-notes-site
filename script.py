@@ -330,47 +330,78 @@ def write_js():
 
     (js_dir / "toc-fix.js").write_text("""
 (function () {
-    const OFFSET = 120;
+    const OFFSET = 140;
 
     function getHeadings() {
-        return Array.from(document.querySelectorAll("h1, h2, h3, h4"));
+        return Array.from(document.querySelectorAll(".md-content h1, .md-content h2, .md-content h3, .md-content h4"));
     }
 
-    function getLinks() {
-        return Array.from(document.querySelectorAll(".md-nav--secondary a"));
+    function getTOCLinks() {
+        return Array.from(document.querySelectorAll(".md-sidebar--secondary a, .md-nav--secondary a"));
     }
 
-    function setActive(link) {
-        getLinks().forEach(l => l.classList.remove("toc-active"));
-        if (link) link.classList.add("toc-active");
+    function clear() {
+        getTOCLinks().forEach(a => a.classList.remove("toc-active"));
     }
 
-    function onScroll() {
-        const scrollPos = window.scrollY + OFFSET;
-        const headings = getHeadings();
+    function activate(link) {
+        if (!link) return;
+        link.classList.add("toc-active");
+    }
 
+    function findLinkById(id) {
+        if (!id) return null;
+        return document.querySelector(
+            `.md-sidebar--secondary a[href="#${id}"], .md-nav--secondary a[href="#${id}"]`
+        );
+    }
+
+    function getCurrentHeading(headings, scrollPos) {
         let current = headings[0];
 
         for (let h of headings) {
-            if (h.offsetTop <= scrollPos) current = h;
+            const top = h.getBoundingClientRect().top + window.scrollY;
+            if (top - OFFSET <= scrollPos) {
+                current = h;
+            }
         }
 
-        const id = current.id;
-        const link = document.querySelector(`.md-nav--secondary a[href="#${id}"]`);
-        setActive(link);
+        return current;
+    }
 
-        // FORCE LAST HEADING ACTIVE AT BOTTOM
-        const bottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
+    function onScroll() {
+        const headings = getHeadings();
+        if (!headings.length) return;
 
-        if (bottom && headings.length > 0) {
+        const scrollPos = window.scrollY;
+
+        const current = getCurrentHeading(headings, scrollPos);
+
+        clear();
+        activate(findLinkById(current.id));
+
+        // 🔥 FIX: robust bottom detection (not fragile scrollHeight check)
+        const docHeight = Math.max(
+            document.body.scrollHeight,
+            document.documentElement.scrollHeight
+        );
+
+        const atBottom = (window.innerHeight + window.scrollY) >= (docHeight - 10);
+
+        if (atBottom) {
             const last = headings[headings.length - 1];
-            const lastLink = document.querySelector(`.md-nav--secondary a[href="#${last.id}"]`);
-            setActive(lastLink);
+            clear();
+            activate(findLinkById(last.id));
         }
     }
 
+    // run often enough for Material instant navigation
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("load", onScroll);
+    window.addEventListener("resize", onScroll);
+
+    // 🔥 FIX: Material instant reload support
+    document.addEventListener("DOMContentLoaded", onScroll);
 })();
 """, encoding="utf-8")
 

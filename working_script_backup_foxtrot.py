@@ -10,7 +10,7 @@ from pathlib import Path
 # CONFIG
 # ----------------------
 
-IGNORE_DIRS = {"_resources", "resources", ".obsidian", ".trash"}
+IGNORE_DIRS = {"resources", ".obsidian", ".trash"}
 MAX_NAME = 120
 
 
@@ -62,7 +62,6 @@ def build_map(src):
 
         rel = f.relative_to(src)
 
-        # FULL IGNORE FIX
         if any(part in IGNORE_DIRS for part in rel.parts):
             continue
 
@@ -96,7 +95,7 @@ def fix_content(content):
 
 
 # ----------------------
-# COPY RESOURCES
+# RESOURCES
 # ----------------------
 
 def copy_all_resources(src, docs):
@@ -115,69 +114,80 @@ def copy_all_resources(src, docs):
 
 
 # ----------------------
-# SAMPLE PAGE (EXCLUDED FROM AUTO NAV)
+# SAMPLE PAGE
 # ----------------------
 
 def create_sample_page(docs):
     sample = docs / "sample-page.md"
 
-    sample.write_text("""# Sample Page
+    if not sample.exists():
+        sample.write_text("""# Sample Page
 
-This page demonstrates how notes are structured.
+This page shows how notes will look in your vault.
 
-## Headings
-Used for automatic table of contents.
+## Structure Example
 
-## Content Types
-- text
-- images
+### Headings
+Use headings to automatically build the table of contents.
+
+### Example Block
+
+You can write anything here:
+- notes
+- ideas
 - code
-- links
+- images
 
-This is the reference template for all notes.
+## Why this exists
+
+This is your reference template for all future notes.
 """, encoding="utf-8")
 
 
 # ----------------------
-# HOME PAGE
+# HOME PAGE (IMPROVED UX)
 # ----------------------
 
 def create_home_page(docs):
 
-    docs.mkdir(parents=True, exist_ok=True)
+    home = docs / "index.md"
 
-    (docs / "index.md").write_text("""# 🧠 Vault Wiki
+    home.write_text("""# 🧠 Vault Wiki
 
-Welcome to your knowledge system.
+Welcome to your personal knowledge system.
 
 ---
 
 ## 🚀 Start Here
 
-👉 Recommended:
+This vault is automatically generated from your Joplin notes.
+
+👉 Recommended first step:
 - Open the **Sample Page** to understand structure
 
 ---
 
-## 🧪 Example
+## 📘 Example Page
 
-- [Sample Page](sample-page.md)
+- 🧪 [Sample Page](sample-page.md)
 
 ---
 
-## 📂 Navigation
+## 📂 Explore
 
-Use the sidebar to browse all notes and folders.
+Use the sidebar to browse your notes, folders, and topics.
 
-Everything is automatically generated from your Joplin vault.
+Everything is auto-generated from your vault structure.
 
 ---
 
 ## ✨ Tips
 
-- Use headings for TOC
-- Prefix folders with numbers for ordering
-- Attach images in Joplin → they will auto work here
+- Use headings in Joplin for automatic TOC generation
+- Prefix folders with numbers (e.g. `01 - Basics`) to control order
+- Images are supported automatically
+
+---
 
 """, encoding="utf-8")
 
@@ -209,11 +219,18 @@ def write_docs(src, docs, mapping):
 
 
 # ----------------------
+# SAMPLE PAGE HOOK
+# ----------------------
+
+def ensure_sample_page(docs):
+    create_sample_page(docs)
+
+
+# ----------------------
 # FOLDER INDEXES
 # ----------------------
 
 def generate_folder_indexes(docs):
-
     for root, _, _ in os.walk(docs):
         root = Path(root)
 
@@ -233,10 +250,6 @@ def generate_folder_indexes(docs):
                     subfolders.append(item)
 
             elif item.suffix == ".md" and item.name != "index.md":
-                # FIX: prevent sample page duplication
-                if item.name == "sample-page.md":
-                    continue
-
                 notes.append(item)
 
         folder_name = clean_folder(root.name)
@@ -262,7 +275,7 @@ def generate_folder_indexes(docs):
 
 
 # ----------------------
-# NAV TREE (FULL FIX)
+# NAV TREE
 # ----------------------
 
 def build_nav(docs):
@@ -272,22 +285,12 @@ def build_nav(docs):
 
         for p in sorted(folder.iterdir()):
 
-            # FULL RESOURCE EXCLUSION FIX
-            if any(part in IGNORE_DIRS for part in p.parts):
-                continue
-
             if p.is_dir():
                 if (p / "index.md").exists():
                     items.append({clean_folder(p.name): walk(p)})
 
-            elif p.suffix == ".md":
-
-                # FIX: prevent sample page duplication in nav
-                if p.name == "sample-page.md":
-                    continue
-
-                if p.name != "index.md":
-                    items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
+            elif p.suffix == ".md" and p.name != "index.md":
+                items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
 
         return items
 
@@ -355,7 +358,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: clean navigation + remove resource clutter"], check=False)
+    subprocess.run(["git", "commit", "-m", "improve home page + stable vault UI"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -375,14 +378,15 @@ def main():
 
     write_docs(src, docs, mapping)
     generate_folder_indexes(docs)
-    create_sample_page(docs)
+    ensure_sample_page(docs)
+
     create_home_page(docs)
 
     write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FULL FIX COMPLETE (no duplicate sample page + no resources in sidebar)")
+    print("✅ FULL FIX COMPLETE (home page improved + sample page linked)")
 
 
 if __name__ == "__main__":

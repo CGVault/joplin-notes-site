@@ -18,7 +18,6 @@ extra_css:
 nav:
 - "\U0001F3E0 Home": index.md
 - "\U0001F9EA Sample Page": sample-page.md
-- Resources: []
 - Sql:
   - Sql Basics In Ms Sql Server:
     - A Primer On Databases:
@@ -66,4 +65,3 @@ nav:
       - Except: Sql/Sql-Basics-In-Ms-Sql-Server/7-Set-Operations/4-Except.md
     - Quiz:
       - Quiz: Sql/Sql-Basics-In-Ms-Sql-Server/8-Quiz/1-Quiz.md
-- sample page: sample-page.md

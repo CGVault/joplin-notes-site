@@ -10,7 +10,7 @@ from pathlib import Path
 # CONFIG
 # ----------------------
 
-IGNORE_DIRS = {"resources", ".obsidian", ".trash"}
+IGNORE_DIRS = {"resources", "_resources", ".obsidian", ".trash"}
 MAX_NAME = 120
 
 
@@ -36,7 +36,7 @@ def clean_folder(name):
 
 
 # ----------------------
-# SLUGIFY
+# SLUGIFY (PROPER CASE SAFE)
 # ----------------------
 
 def slugify(text):
@@ -81,115 +81,27 @@ def build_map(src):
 
 
 # ----------------------
-# CONTENT FIX
-# ----------------------
-
-def fix_content(content):
-    content = re.sub(
-        r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
-        r'![\1](resources/\2)',
-        content
-    )
-
-    content = content.replace("_resources/", "resources/")
-    return content
-
-
-# ----------------------
-# COPY RESOURCES
-# ----------------------
-
-def copy_all_resources(src, docs):
-    for res in src.rglob("_resources"):
-        if not res.is_dir():
-            continue
-
-        rel_parent = res.parent.relative_to(src)
-        dst = docs / rel_parent / "resources"
-
-        dst.mkdir(parents=True, exist_ok=True)
-
-        for file in res.iterdir():
-            if file.is_file():
-                shutil.copy2(file, dst / file.name)
-
-
-# ----------------------
-# SAMPLE PAGE (FIXED)
-# ----------------------
-
-def create_sample_page(docs):
-    sample = docs / "sample-page.md"
-
-    if not sample.exists():
-        sample.write_text("""# Sample Page
-
-This is a template page for new notes.
-
-## Usage
-
-- Add new notes in Joplin
-- They will appear automatically here
-- Use headings for TOC support
-
-## Example Section
-
-### Subheading Example
-
-Write your content here.
-""", encoding="utf-8")
-
-
-# ----------------------
 # WRITE DOCS
 # ----------------------
 
 def write_docs(src, docs, mapping):
-
     if docs.exists():
         shutil.rmtree(docs)
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    # HOME PAGE
-    (docs / "index.md").write_text("""
-# Vault Wiki
+    (docs / "index.md").write_text("# Vault Wiki\n\nWelcome")
 
-Welcome to your knowledge base.
-
-## Start Here
-
-- Sample Page included in navigation
-- Use sidebar to explore notes
-""", encoding="utf-8")
-
-    # COPY RESOURCES FIRST
-    copy_all_resources(src, docs)
-
-    # WRITE FILES
     for orig, new in mapping.items():
-
         src_file = src / orig
         dst_file = docs / new
 
         dst_file.parent.mkdir(parents=True, exist_ok=True)
-
-        content = src_file.read_text(encoding="utf-8", errors="ignore")
-        content = fix_content(content)
-
-        dst_file.write_text(content, encoding="utf-8")
+        shutil.copy2(src_file, dst_file)
 
 
 # ----------------------
-# SAMPLE PAGE HOOK (IMPORTANT)
-# ----------------------
-
-def ensure_sample_page(docs):
-    create_sample_page(docs)
-
-
-# ----------------------
-# FOLDER INDEXES
+# FOLDER LANDING PAGES
 # ----------------------
 
 def generate_folder_indexes(docs):
@@ -206,6 +118,8 @@ def generate_folder_indexes(docs):
         notes = []
 
         for item in sorted(root.iterdir()):
+            if any(part in IGNORE_DIRS for part in item.parts):
+                continue
 
             if item.is_dir():
                 if (item / "index.md").exists():
@@ -216,7 +130,13 @@ def generate_folder_indexes(docs):
 
         folder_name = clean_folder(root.name)
 
-        content = f"# {folder_name}\n\n"
+        content = f"""---
+title: {folder_name}
+---
+
+# {folder_name}
+
+"""
 
         if subfolders:
             content += "## Sections\n\n"
@@ -233,19 +153,25 @@ def generate_folder_indexes(docs):
                 rel = nf.relative_to(docs).as_posix()
                 content += f"- [{name}]({rel})\n"
 
-        (root / "index.md").write_text(content, encoding="utf-8")
+        (root / "index.md").write_text(content)
 
 
 # ----------------------
-# NAV TREE
+# BUILD NAV TREE
 # ----------------------
 
 def build_nav(docs):
-
     def walk(folder):
         items = []
 
-        for p in sorted(folder.iterdir()):
+        def sort_key(p):
+            order, _ = parse_order(p.stem)
+            return order, p.name.lower()
+
+        for p in sorted(folder.iterdir(), key=sort_key):
+
+            if any(part in IGNORE_DIRS for part in p.parts):
+                continue
 
             if p.is_dir():
                 if (p / "index.md").exists():
@@ -264,40 +190,46 @@ def build_nav(docs):
 # ----------------------
 
 def write_mkdocs(docs):
-
     import yaml
 
-    sample_exists = (docs / "sample-page.md").exists()
-
-    nav = [
-        {"🏠 Home": "index.md"},
-    ]
-
-    if sample_exists:
-        nav.append({"🧪 Sample Page": "sample-page.md"})
-
-    nav.extend(build_nav(docs))
+    nav = build_nav(docs)
 
     config = {
         "site_name": "Vault Wiki",
+        "site_url": "https://cgvault.github.io/joplin-notes-site/",
+
         "theme": {
             "name": "material",
             "features": [
                 "navigation.instant",
+                "navigation.tracking",
                 "navigation.sections",
-                "navigation.path",
-                "navigation.top",
-                "navigation.indexes",
-                "toc.follow"
-            ]
+                "search.suggest",
+                "search.highlight",
+                "content.code.copy"
+            ],
+            "palette": [
+                {"scheme": "default", "primary": "blue", "accent": "indigo"}
+            ],
+            "font": {
+                "text": "Segoe UI",
+                "code": "Consolas"
+            }
         },
+
         "markdown_extensions": [
-            {"toc": {"permalink": True}},
+            "toc",
             "tables",
-            "fenced_code"
+            "fenced_code",
+            "admonition"
         ],
+
         "extra_css": ["stylesheets/extra.css"],
-        "nav": nav
+
+        "nav": [
+            {"Home": "index.md"},
+            *nav
+        ]
     }
 
     with open("mkdocs.yml", "w") as f:
@@ -305,7 +237,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS
+# CSS (UPDATED HEADINGS ONLY)
 # ----------------------
 
 def write_css():
@@ -313,10 +245,78 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-.md-typeset h1 { font-weight: 900; }
-.md-typeset h2 { font-weight: 900; font-size: 2rem; }
-.md-typeset h3 { font-weight: 800; }
-""", encoding="utf-8")
+body {
+    background: #ffffff;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    color: #1a1a1a;
+}
+
+.md-header {
+    background: #0078D4 !important;
+}
+
+.md-nav {
+    background: #f5f5f5;
+    border-right: 1px solid #e1e1e1;
+}
+
+a {
+    color: #0078D4;
+}
+
+.md-content {
+    padding: 24px 32px;
+    max-width: 900px;
+    margin: auto;
+}
+
+/* =========================
+   UPGRADED HEADINGS
+   ========================= */
+
+/* H1 = Page title (very strong) */
+h1 {
+    font-size: 2.6rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    border-bottom: 4px solid #0078D4;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+/* H2 = Section headers */
+h2 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    margin-top: 28px;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+}
+
+/* H3 = Subsections */
+h3 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-top: 20px;
+}
+
+/* Ensure MkDocs doesn't override */
+.md-content h1,
+.md-content h2,
+.md-content h3 {
+    font-weight: 900 !important;
+}
+
+/* Slight visual hierarchy boost */
+h2::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: #0078D4;
+    margin-bottom: 8px;
+}
+""")
 
 
 # ----------------------
@@ -325,7 +325,12 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: stable Joplin export + sample page"], check=False)
+
+    subprocess.run(
+        ["git", "commit", "-m", "sync full vault + docs"],
+        check=False
+    )
+
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -335,22 +340,19 @@ def deploy():
 # ----------------------
 
 def main():
-
     import sys
 
     src = Path(sys.argv[1]).resolve()
     docs = Path("docs")
 
     mapping = build_map(src)
-
     write_docs(src, docs, mapping)
     generate_folder_indexes(docs)
-    ensure_sample_page(docs)
     write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FULL FIX COMPLETE (images + sample page + nav stable)")
+    print("✅ Headings upgraded (H1/H2/H3 Microsoft-style hierarchy improved)")
 
 
 if __name__ == "__main__":

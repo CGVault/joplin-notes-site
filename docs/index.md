@@ -1,37 +1,33 @@
 # 🧠 Vault Wiki
 
-Welcome to your personal knowledge system.
+Welcome to your knowledge system.
 
 ---
 
 ## 🚀 Start Here
 
-This vault is automatically generated from your Joplin notes.
-
-👉 Recommended first step:
+👉 Recommended:
 - Open the **Sample Page** to understand structure
 
 ---
 
-## 📘 Example Page
+## 🧪 Example
 
-- 🧪 [Sample Page](sample-page.md)
+- [Sample Page](sample-page.md)
 
 ---
 
-## 📂 Explore
+## 📂 Navigation
 
-Use the sidebar to browse your notes, folders, and topics.
+Use the sidebar to browse all notes and folders.
 
-Everything is auto-generated from your vault structure.
+Everything is automatically generated from your Joplin vault.
 
 ---
 
 ## ✨ Tips
 
-- Use headings in Joplin for automatic TOC generation
-- Prefix folders with numbers (e.g. `01 - Basics`) to control order
-- Images are supported automatically
-
----
+- Use headings for TOC
+- Prefix folders with numbers for ordering
+- Attach images in Joplin → they will auto work here
 

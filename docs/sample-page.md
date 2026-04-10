@@ -1,20 +1,14 @@
 # Sample Page
 
-This page shows how notes will look in your vault.
+This page demonstrates how notes are structured.
 
-## Structure Example
+## Headings
+Used for automatic table of contents.
 
-### Headings
-Use headings to automatically build the table of contents.
-
-### Example Block
-
-You can write anything here:
-- notes
-- ideas
-- code
+## Content Types
+- text
 - images
+- code
+- links
 
-## Why this exists
-
-This is your reference template for all future notes.
+This is the reference template for all notes.

@@ -1,28 +1,22 @@
 site_name: Vault Wiki
-site_url: https://cgvault.github.io/joplin-notes-site/
 theme:
   name: material
   features:
-  - navigation.instant
   - navigation.sections
   - navigation.top
   - navigation.indexes
   - toc.follow
-  - toc.integrate
 markdown_extensions:
-- toc
+- toc:
+    permalink: true
+    toc_depth: 2-4
 - tables
 - fenced_code
 - admonition
-extra:
-  toc:
-    depth: 3
 extra_css:
 - stylesheets/extra.css
-extra_javascript:
-- js/analytics.js
 nav:
-- "\U0001F3E0 Home Dashboard": index.md
+- "\U0001F3E0 Home": index.md
 - "\U0001F9EA Sample Page": sample-page.md
 - Sql:
   - Sql Basics In Ms Sql Server:
@@ -61,9 +55,9 @@ nav:
     - Subqueries:
       - Introduction: Sql/Sql-Basics-In-Ms-Sql-Server/6-Subqueries/1-Introduction.md
       - Very Simple Subqueries: Sql/Sql-Basics-In-Ms-Sql-Server/6-Subqueries/2-Very-Simple-Subqueries.md
+      - 3Subqueries With Multiple Results: Sql/Sql-Basics-In-Ms-Sql-Server/6-Subqueries/3Subqueries-With-Multiple-Results.md
       - Correlated Subqueries: Sql/Sql-Basics-In-Ms-Sql-Server/6-Subqueries/4-Correlated-Subqueries.md
       - Other Subqueries: Sql/Sql-Basics-In-Ms-Sql-Server/6-Subqueries/5-Other-Subqueries.md
-      - 3Subqueries With Multiple Results: Sql/Sql-Basics-In-Ms-Sql-Server/6-Subqueries/3Subqueries-With-Multiple-Results.md
     - Set Operations:
       - Introduction: Sql/Sql-Basics-In-Ms-Sql-Server/7-Set-Operations/1-Introduction.md
       - Union: Sql/Sql-Basics-In-Ms-Sql-Server/7-Set-Operations/2-Union.md

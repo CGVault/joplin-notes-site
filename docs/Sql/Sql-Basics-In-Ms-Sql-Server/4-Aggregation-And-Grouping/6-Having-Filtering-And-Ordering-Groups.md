@@ -48,3 +48,7 @@ This examples group's total employee salaries, and then it filters the total sal
 `ORDER BY SUM(salary) desc;`
 
 &nbsp;
+
+## Overview
+
+Additional details.

@@ -21,3 +21,7 @@ Example for returning all kettles regardless if assigned to a room or not:
 `WHERE e.Name='kettle';`
 
 &nbsp;
+
+## Overview
+
+Additional details.

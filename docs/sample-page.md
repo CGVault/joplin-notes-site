@@ -2,10 +2,10 @@
 # Sample Page
 
 ## Section One
-Some example content.
+Example content.
 
 ## Section Two
-More example content.
+More structured content.
 
 ### Subsection
-Even deeper content.
+Deep content.

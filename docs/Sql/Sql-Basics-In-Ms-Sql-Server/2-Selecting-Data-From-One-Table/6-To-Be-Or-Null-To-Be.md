@@ -17,3 +17,7 @@ In SQL, because NULL doesn't equal 0, records with a 0, like a price for example
 Filtering NULLs uses the clause IS, NOT, NULL, to get NULL values we can use IS NULL. The clauses IS, NOT and NULL are separate clauses but are used together in this instance. IS can be used for IS IN, NOT flips other results too, etc.
 
 `select * from student where result IS NOT NULL` finds all the students that have results. Using IS NULL will find records where the results column hasn't been filled in.
+
+## Overview
+
+Additional details.

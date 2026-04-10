@@ -1,10 +1,6 @@
 
----
-title: More On Joins
----
-
 # More On Joins
 
-## 📂 Contents
+## Overview
 
-Browse notes in this section using the sidebar.
+This section contains related notes.

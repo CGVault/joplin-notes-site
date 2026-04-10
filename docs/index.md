@@ -1,26 +1,14 @@
 
 # Vault Wiki
 
+## Overview
+
 Welcome to your knowledge base.
 
----
-
-## 📌 Start Here
+## Navigation
 
 Use the sidebar to explore your notes.
 
----
-
-## 🧪 Example
+## Example
 
 - [Sample Page](sample-page/)
-
----
-
-## 🚀 About
-
-This site is automatically generated from your Joplin vault.
-
-- Folders become sections
-- Notes are organized automatically
-- Navigation is fully dynamic

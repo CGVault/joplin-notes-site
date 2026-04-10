@@ -1,10 +1,6 @@
 
----
-title: A Primer On Databases
----
-
 # A Primer On Databases
 
-## 📂 Contents
+## Overview
 
-Browse notes in this section using the sidebar.
+This section contains related notes.

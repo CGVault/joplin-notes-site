@@ -16,3 +16,8 @@ Rows - The rows in a table represent one record or instance of whatever the tabl
 Columns - Each table has many columns, these describe a specific attribute of the records stored. So a student named Mathew will store his name under this column in the students table.  
 Queries - instruction set used to ask the database for information
 
+
+
+## Overview
+
+Additional details.

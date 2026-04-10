@@ -22,3 +22,7 @@ Remember, DISTINCT removes duplicate rows. So using it across multiple columns w
 Another use case for distinct is select all the unique combinations of two columns such as all the positions in each department.
 
 &nbsp;
+
+## Overview
+
+Additional details.

@@ -1,10 +1,6 @@
 
----
-title: Selecting Data From One Table
----
-
 # Selecting Data From One Table
 
-## 📂 Contents
+## Overview
 
-Browse notes in this section using the sidebar.
+This section contains related notes.

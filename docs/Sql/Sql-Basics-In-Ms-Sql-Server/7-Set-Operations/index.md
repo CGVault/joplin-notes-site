@@ -1,10 +1,6 @@
 
----
-title: Set Operations
----
-
 # Set Operations
 
-## 📂 Contents
+## Overview
 
-Browse notes in this section using the sidebar.
+This section contains related notes.

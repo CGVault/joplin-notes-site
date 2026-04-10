@@ -26,3 +26,7 @@ IS isn't not required for every clause, using between should not be is between w
 When using clauses like OR/AND inside the same comparison like in the third last line, mention the column again after OR/AND to make a second comparison. If not it usually throws a "this isn't a boolean decision" error. This may not happen with pure mathematical statements but it will happen for string filters.
 
 Most improvements surround thinking in SQL, easy to mistake good looking syntax with what looks logical when speaking English.
+
+## Overview
+
+Additional details.

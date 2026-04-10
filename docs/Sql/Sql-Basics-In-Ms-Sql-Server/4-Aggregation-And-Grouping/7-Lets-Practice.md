@@ -22,3 +22,7 @@ The following query utilities the commands, ordering and grouping we learned in 
 `order by avg(salary) desc;`
 
 This finds employees that have worked 2 or more years at the company, ordered by average salary descending.
+
+## Overview
+
+Additional details.

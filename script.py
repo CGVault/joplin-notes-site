@@ -83,6 +83,22 @@ def build_map(src):
 
 
 # ----------------------
+# FORCE STRUCTURED HEADINGS
+# ----------------------
+
+def enhance_content(content, title):
+    # Ensure H1 exists
+    if not re.search(r'^# ', content, re.MULTILINE):
+        content = f"# {title}\n\n" + content
+
+    # Ensure at least one H2 exists → forces TOC to render
+    if not re.search(r'^## ', content, re.MULTILINE):
+        content += "\n\n## Overview\n\nAdditional details.\n"
+
+    return content
+
+
+# ----------------------
 # WRITE DOCS
 # ----------------------
 
@@ -96,29 +112,17 @@ def write_docs(src, docs, mapping):
     (docs / "index.md").write_text("""
 # Vault Wiki
 
+## Overview
+
 Welcome to your knowledge base.
 
----
-
-## 📌 Start Here
+## Navigation
 
 Use the sidebar to explore your notes.
 
----
-
-## 🧪 Example
+## Example
 
 - [Sample Page](sample-page/)
-
----
-
-## 🚀 About
-
-This site is automatically generated from your Joplin vault.
-
-- Folders become sections
-- Notes are organized automatically
-- Navigation is fully dynamic
 """)
 
     # SAMPLE PAGE
@@ -126,16 +130,16 @@ This site is automatically generated from your Joplin vault.
 # Sample Page
 
 ## Section One
-Some example content.
+Example content.
 
 ## Section Two
-More example content.
+More structured content.
 
 ### Subsection
-Even deeper content.
+Deep content.
 """)
 
-    # COPY + ENSURE HEADINGS (important for TOC)
+    # COPY + FIX CONTENT
     for orig, new in mapping.items():
         src_file = src / orig
         dst_file = docs / new
@@ -143,11 +147,9 @@ Even deeper content.
         dst_file.parent.mkdir(parents=True, exist_ok=True)
 
         content = src_file.read_text(encoding="utf-8", errors="ignore")
+        title = clean_display(Path(new).name)
 
-        # Ensure file has at least one H1 for TOC to work nicely
-        if not re.search(r'^# ', content, re.MULTILINE):
-            title = clean_display(Path(new).name)
-            content = f"# {title}\n\n" + content
+        content = enhance_content(content, title)
 
         dst_file.write_text(content, encoding="utf-8")
 
@@ -172,15 +174,11 @@ def ensure_folder_indexes(docs):
             name = clean_folder(root.name)
 
             index.write_text(f"""
----
-title: {name}
----
-
 # {name}
 
-## 📂 Contents
+## Overview
 
-Browse notes in this section using the sidebar.
+This section contains related notes.
 """)
 
 
@@ -192,12 +190,7 @@ def build_nav(docs):
     def walk(folder):
         items = []
 
-        def sort_key(p):
-            order, _ = parse_order(p.stem)
-            return order, p.name.lower()
-
-        for p in sorted(folder.iterdir(), key=sort_key):
-
+        for p in sorted(folder.iterdir()):
             if any(part in IGNORE_DIRS for part in p.parts):
                 continue
 
@@ -214,7 +207,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (TOC ENABLED)
+# MKDOCS CONFIG (FORCED TOC)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -224,38 +217,33 @@ def write_mkdocs(docs):
 
     config = {
         "site_name": "Vault Wiki",
-        "site_url": "https://cgvault.github.io/joplin-notes-site/",
 
         "theme": {
             "name": "material",
             "features": [
-                "navigation.instant",
                 "navigation.sections",
                 "navigation.top",
                 "navigation.indexes",
-                "toc.follow",          # 👈 sticky TOC
-                "toc.integrate"        # 👈 better integration
+                "toc.follow"
             ]
         },
 
         "markdown_extensions": [
-            "toc",
+            {
+                "toc": {
+                    "permalink": True,
+                    "toc_depth": "2-4"
+                }
+            },
             "tables",
             "fenced_code",
             "admonition"
         ],
 
-        "extra": {
-            "toc": {
-                "depth": 3  # 👈 controls heading depth
-            }
-        },
-
         "extra_css": ["stylesheets/extra.css"],
-        "extra_javascript": ["js/analytics.js"],
 
         "nav": [
-            {"🏠 Home Dashboard": "index.md"},
+            {"🏠 Home": "index.md"},
             {"🧪 Sample Page": "sample-page.md"},
             *nav
         ]
@@ -266,7 +254,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS
+# PROFESSIONAL CSS (MICROSOFT-STYLE)
 # ----------------------
 
 def write_css():
@@ -274,32 +262,54 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
+:root {
+    --md-text-font: "Segoe UI", system-ui, sans-serif;
+}
+
+/* Content width */
 .md-content {
-    max-width: 900px;
+    max-width: 920px;
     margin: auto;
 }
-""")
 
+/* Headings - Microsoft style */
+h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-top: 1.2em;
+    border-bottom: 2px solid #e5e5e5;
+    padding-bottom: 0.3em;
+}
 
-# ----------------------
-# ANALYTICS
-# ----------------------
+h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-top: 1.5em;
+}
 
-def write_analytics(docs):
-    js_dir = docs / "js"
-    js_dir.mkdir(parents=True, exist_ok=True)
+h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 1.2em;
+}
 
-    if not CF_TOKEN:
-        return
+/* Improve readability */
+p {
+    line-height: 1.7;
+    font-size: 1rem;
+}
 
-    (js_dir / "analytics.js").write_text(f"""
-(function() {{
-    var script = document.createElement('script');
-    script.defer = true;
-    script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
-    script.setAttribute('data-cf-beacon', '{{"token": "{CF_TOKEN}"}}');
-    document.head.appendChild(script);
-}})();
+/* Sidebar polish */
+.md-nav__link--active {
+    font-weight: 600;
+}
+
+/* TOC styling */
+.md-sidebar--secondary {
+    border-left: 1px solid #eee;
+    padding-left: 10px;
+}
 """)
 
 
@@ -309,7 +319,7 @@ def write_analytics(docs):
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "feat: enable TOC on all pages"], check=False)
+    subprocess.run(["git", "commit", "-m", "feat: enforce TOC + professional styling"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -328,11 +338,10 @@ def main():
     write_docs(src, docs, mapping)
     ensure_folder_indexes(docs)
     write_css()
-    write_analytics(docs)
     write_mkdocs(docs)
     deploy()
 
-    print("✅ TOC enabled across all pages")
+    print("✅ TOC fixed + professional styling applied")
 
 
 if __name__ == "__main__":

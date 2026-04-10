@@ -13,8 +13,6 @@ from pathlib import Path
 IGNORE_DIRS = {".obsidian", ".trash"}
 MAX_NAME = 120
 
-CF_TOKEN = os.getenv("CF_TOKEN", "")
-
 
 # ----------------------
 # SLUGIFY
@@ -24,8 +22,7 @@ def slugify(text):
     text = text.strip()
     text = re.sub(r'[^\w\s-]', '', text)
     text = re.sub(r'[\s_-]+', ' ', text)
-    text = text.title().replace(" ", "-")
-    return text[:MAX_NAME].strip("-") or "Note"
+    return text.title().replace(" ", "-")[:MAX_NAME]
 
 
 # ----------------------
@@ -44,8 +41,7 @@ def build_map(src):
         if any(part in IGNORE_DIRS for part in rel.parts):
             continue
 
-        new_name = slugify(f.stem) + f.suffix.lower()
-        new_path = Path(*[slugify(p) for p in rel.parts[:-1]]) / new_name
+        new_path = Path(*[slugify(p) for p in rel.parts])
 
         mapping[str(rel)] = str(new_path)
 
@@ -53,7 +49,7 @@ def build_map(src):
 
 
 # ----------------------
-# FIX JOPLIN CONTENT
+# FIX CONTENT
 # ----------------------
 
 def fix_content(content):
@@ -63,21 +59,18 @@ def fix_content(content):
     first_h1 = False
 
     for line in lines:
-        # Fix headings
         if line.startswith("#"):
             if not first_h1:
-                fixed.append(line)  # keep first H1
+                fixed.append(line)
                 first_h1 = True
             else:
-                # downgrade all other H1 → H2
                 fixed.append(re.sub(r'^# ', '## ', line))
-            continue
-
-        fixed.append(line)
+        else:
+            fixed.append(line)
 
     content = "\n".join(fixed)
 
-    # Fix Joplin image links :/abc123 → resources/abc123.*
+    # Fix images
     content = re.sub(
         r'!\[.*?\]\(:/([a-zA-Z0-9]+)\)',
         r'![image](resources/\1.png)',
@@ -97,35 +90,28 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    # Copy resources folder directly
-    resources_src = src / "resources"
-    if resources_src.exists():
-        shutil.copytree(resources_src, docs / "resources")
+    # Copy resources
+    if (src / "resources").exists():
+        shutil.copytree(src / "resources", docs / "resources")
 
-    # HOMEPAGE
+    # Homepage
     (docs / "index.md").write_text("""
 # Vault Wiki
 
 Welcome to your knowledge base.
 
 Use the sidebar to explore your notes.
-
-## Example
-- [Sample Page](sample-page/)
 """)
 
-    # SAMPLE PAGE
+    # Sample page
     (docs / "sample-page.md").write_text("""
 # Sample Page
 
 ## Section One
 Example content.
-
-## Section Two
-More content.
 """)
 
-    # COPY FILES WITH FIXES
+    # Copy notes
     for orig, new in mapping.items():
         src_file = src / orig
         dst_file = docs / new
@@ -139,7 +125,24 @@ More content.
 
 
 # ----------------------
-# BUILD NAV
+# ENSURE FOLDER INDEXES
+# ----------------------
+
+def ensure_folder_indexes(docs):
+    for root, _, _ in os.walk(docs):
+        root = Path(root)
+
+        if root == docs:
+            continue
+
+        index = root / "index.md"
+
+        if not index.exists():
+            index.write_text(f"# {root.name}\n")
+
+
+# ----------------------
+# BUILD NAV (THIS FIXES YOUR ISSUE)
 # ----------------------
 
 def build_nav(docs):
@@ -147,8 +150,12 @@ def build_nav(docs):
         items = []
 
         for p in sorted(folder.iterdir()):
+            if p.name in IGNORE_DIRS:
+                continue
+
             if p.is_dir():
-                items.append({p.name: walk(p)})
+                if (p / "index.md").exists():
+                    items.append({p.name: walk(p)})
 
             elif p.suffix == ".md" and p.name not in {"index.md", "sample-page.md"}:
                 items.append({p.stem: p.relative_to(docs).as_posix()})
@@ -162,8 +169,10 @@ def build_nav(docs):
 # MKDOCS CONFIG
 # ----------------------
 
-def write_mkdocs():
+def write_mkdocs(docs):
     import yaml
+
+    nav = build_nav(docs)
 
     config = {
         "site_name": "Vault Wiki",
@@ -173,16 +182,13 @@ def write_mkdocs():
             "features": [
                 "navigation.sections",
                 "navigation.top",
+                "navigation.indexes",
                 "toc.follow"
             ]
         },
 
         "markdown_extensions": [
-            {
-                "toc": {
-                    "permalink": True
-                }
-            },
+            {"toc": {"permalink": True}},
             "tables",
             "fenced_code"
         ],
@@ -190,8 +196,9 @@ def write_mkdocs():
         "extra_css": ["stylesheets/extra.css"],
 
         "nav": [
-            {"Home": "index.md"},
-            {"Sample": "sample-page.md"}
+            {"🏠 Home": "index.md"},
+            {"🧪 Sample": "sample-page.md"},
+            *nav   # ✅ THIS RESTORES YOUR SIDEBAR
         ]
     }
 
@@ -200,7 +207,7 @@ def write_mkdocs():
 
 
 # ----------------------
-# CSS (FORCE BOLD + CLEAN)
+# CSS
 # ----------------------
 
 def write_css():
@@ -208,15 +215,15 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-h1, .md-typeset h1 {
+.md-typeset h1 {
     font-weight: 800 !important;
 }
 
-h2, .md-typeset h2 {
+.md-typeset h2 {
     font-weight: 700 !important;
 }
 
-h3, .md-typeset h3 {
+.md-typeset h3 {
     font-weight: 600 !important;
 }
 """)
@@ -228,7 +235,7 @@ h3, .md-typeset h3 {
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: toc + images + headings"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: restore nav + toc + images"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -245,11 +252,12 @@ def main():
 
     mapping = build_map(src)
     write_docs(src, docs, mapping)
+    ensure_folder_indexes(docs)
     write_css()
-    write_mkdocs()
+    write_mkdocs(docs)
     deploy()
 
-    print("✅ TOC, images, and headings fully fixed")
+    print("✅ Navigation restored + TOC working + images fixed")
 
 
 if __name__ == "__main__":

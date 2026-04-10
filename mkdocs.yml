@@ -4,6 +4,7 @@ theme:
   features:
   - navigation.sections
   - navigation.top
+  - navigation.indexes
   - toc.follow
 markdown_extensions:
 - toc:
@@ -13,5 +14,16 @@ markdown_extensions:
 extra_css:
 - stylesheets/extra.css
 nav:
-- Home: index.md
-- Sample: sample-page.md
+- "\U0001F3E0 Home": index.md
+- "\U0001F9EA Sample": sample-page.md
+- -Resources: []
+- Sql:
+  - Sql-Basics-In-Ms-Sql-Server:
+    - 1-A-Primer-On-Databases: []
+    - 2-Selecting-Data-From-One-Table: []
+    - 3-Querying-More-Than-One-Table: []
+    - 4-Aggregation-And-Grouping: []
+    - 5-More-On-Joins: []
+    - 6-Subqueries: []
+    - 7-Set-Operations: []
+    - 8-Quiz: []

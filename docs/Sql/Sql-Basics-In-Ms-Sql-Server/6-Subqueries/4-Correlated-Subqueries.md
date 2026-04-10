@@ -1,3 +1,5 @@
+# Correlated Subqueries
+
 ---
 title: 4. Correlated subqueries
 updated: 2026-04-04 05:47:46Z

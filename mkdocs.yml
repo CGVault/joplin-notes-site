@@ -4,26 +4,19 @@ theme:
   name: material
   features:
   - navigation.instant
-  - navigation.tracking
   - navigation.sections
-  - navigation.path
   - navigation.top
   - navigation.indexes
-  - search.suggest
-  - search.highlight
-  - content.code.copy
-  palette:
-  - scheme: default
-    primary: blue
-    accent: indigo
-  font:
-    text: Segoe UI
-    code: Consolas
+  - toc.follow
+  - toc.integrate
 markdown_extensions:
 - toc
 - tables
 - fenced_code
 - admonition
+extra:
+  toc:
+    depth: 3
 extra_css:
 - stylesheets/extra.css
 extra_javascript:

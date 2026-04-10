@@ -1,3 +1,5 @@
+# Very Simple Subqueries
+
 ---
 title: 2. Very simple subqueries
 updated: 2026-04-04 05:47:31Z

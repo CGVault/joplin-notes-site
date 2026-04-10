@@ -1,3 +1,5 @@
+# Quiz
+
 ---
 title: 1. Quiz
 updated: 2026-04-04 05:48:33Z

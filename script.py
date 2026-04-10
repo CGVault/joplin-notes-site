@@ -83,7 +83,7 @@ def build_map(src):
 
 
 # ----------------------
-# WRITE DOCS (CLEANED)
+# WRITE DOCS
 # ----------------------
 
 def write_docs(src, docs, mapping):
@@ -92,7 +92,7 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    # 🏠 CLEAN HOMEPAGE
+    # HOMEPAGE
     (docs / "index.md").write_text("""
 # Vault Wiki
 
@@ -119,48 +119,41 @@ This site is automatically generated from your Joplin vault.
 - Folders become sections
 - Notes are organized automatically
 - Navigation is fully dynamic
-
----
-
-## 📊 Status
-
-- Auto navigation enabled
-- MkDocs Material theme
-- Cloudflare analytics ready
 """)
 
-    # 🧪 SINGLE SAMPLE PAGE (KEEP THIS)
+    # SAMPLE PAGE
     (docs / "sample-page.md").write_text("""
 # Sample Page
 
-This is a sample page you can use as a reference.
+## Section One
+Some example content.
 
----
+## Section Two
+More example content.
 
-## ✍️ How to use
-
-- Copy this file
-- Modify content
-- Place it anywhere in your vault
-
----
-
-## 💡 Tip
-
-You can create custom manual pages like this alongside your synced notes.
+### Subsection
+Even deeper content.
 """)
 
-    # COPY REAL VAULT FILES
+    # COPY + ENSURE HEADINGS (important for TOC)
     for orig, new in mapping.items():
         src_file = src / orig
         dst_file = docs / new
 
         dst_file.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src_file, dst_file)
+
+        content = src_file.read_text(encoding="utf-8", errors="ignore")
+
+        # Ensure file has at least one H1 for TOC to work nicely
+        if not re.search(r'^# ', content, re.MULTILINE):
+            title = clean_display(Path(new).name)
+            content = f"# {title}\n\n" + content
+
+        dst_file.write_text(content, encoding="utf-8")
 
 
 # ----------------------
-# ENSURE FOLDER LANDING PAGES
+# ENSURE FOLDER INDEXES
 # ----------------------
 
 def ensure_folder_indexes(docs):
@@ -185,19 +178,9 @@ title: {name}
 
 # {name}
 
-This is the landing page for **{name}**.
-
----
-
 ## 📂 Contents
 
-This section contains notes and sub-sections.
-
----
-
-## 🧭 Navigation
-
-Use the sidebar to explore this area.
+Browse notes in this section using the sidebar.
 """)
 
 
@@ -222,7 +205,7 @@ def build_nav(docs):
                 if (p / "index.md").exists():
                     items.append({clean_folder(p.name): walk(p)})
 
-            elif p.suffix == ".md" and p.name != "index.md" and p.name != "sample-page.md":
+            elif p.suffix == ".md" and p.name not in {"index.md", "sample-page.md"}:
                 items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
 
         return items
@@ -231,7 +214,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG
+# MKDOCS CONFIG (TOC ENABLED)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -247,22 +230,12 @@ def write_mkdocs(docs):
             "name": "material",
             "features": [
                 "navigation.instant",
-                "navigation.tracking",
                 "navigation.sections",
-                "navigation.path",
                 "navigation.top",
                 "navigation.indexes",
-                "search.suggest",
-                "search.highlight",
-                "content.code.copy"
-            ],
-            "palette": [
-                {"scheme": "default", "primary": "blue", "accent": "indigo"}
-            ],
-            "font": {
-                "text": "Segoe UI",
-                "code": "Consolas"
-            }
+                "toc.follow",          # 👈 sticky TOC
+                "toc.integrate"        # 👈 better integration
+            ]
         },
 
         "markdown_extensions": [
@@ -271,6 +244,12 @@ def write_mkdocs(docs):
             "fenced_code",
             "admonition"
         ],
+
+        "extra": {
+            "toc": {
+                "depth": 3  # 👈 controls heading depth
+            }
+        },
 
         "extra_css": ["stylesheets/extra.css"],
         "extra_javascript": ["js/analytics.js"],
@@ -295,50 +274,9 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-body {
-    background: #ffffff;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    color: #1a1a1a;
-}
-
-.md-header {
-    background: #0078D4 !important;
-}
-
-.md-nav {
-    background: #f5f5f5;
-    border-right: 1px solid #e1e1e1;
-}
-
-.md-nav__item--active > .md-nav__link {
-    font-weight: 700;
-    color: #0078D4;
-}
-
-a {
-    color: #0078D4;
-}
-
 .md-content {
-    padding: 24px 32px;
     max-width: 900px;
     margin: auto;
-}
-
-h1 {
-    font-size: 2.6rem;
-    font-weight: 900;
-    border-bottom: 4px solid #0078D4;
-}
-
-h2 {
-    font-size: 1.9rem;
-    font-weight: 800;
-}
-
-h3 {
-    font-size: 1.4rem;
-    font-weight: 800;
 }
 """)
 
@@ -352,7 +290,6 @@ def write_analytics(docs):
     js_dir.mkdir(parents=True, exist_ok=True)
 
     if not CF_TOKEN:
-        print("⚠️ CF_TOKEN not set — analytics disabled")
         return
 
     (js_dir / "analytics.js").write_text(f"""
@@ -372,7 +309,7 @@ def write_analytics(docs):
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "vault cleanup: removed dummy pages + added sample"], check=False)
+    subprocess.run(["git", "commit", "-m", "feat: enable TOC on all pages"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -395,7 +332,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Clean vault + single sample page + no dummy content")
+    print("✅ TOC enabled across all pages")
 
 
 if __name__ == "__main__":

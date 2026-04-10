@@ -23,7 +23,7 @@
     
     
       
-        <title>3. Filtering rows - Vault Wiki</title>
+        <title>Filtering Rows - Vault Wiki</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#only-selecting-a-few-rows" class="md-skip">
+        <a href="#-" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              3. Filtering rows
+              Filtering Rows
             
           </span>
         </div>
@@ -178,7 +178,9 @@
 
 
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
@@ -599,8 +601,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Filtering Rows
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -618,6 +636,84 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ---
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#only-selecting-a-few-rows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Only selecting a few rows
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional operators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-conditions-and-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining conditions and columns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Combining conditions and columns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &nbsp;
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1981,57 +2077,12 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../sample-page/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🧪 Sample Page
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
                 </div>
               </div>
             
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-</nav>
-                  </div>
-                </div>
-              </div>
             
           
           
@@ -2151,6 +2202,14 @@
 
 
 
+<hr />
+<p>title: 3. Filtering rows
+updated: 2026-04-05 06:05:34Z
+created: 2026-04-04 05:40:02Z
+latitude: -33.86881970
+longitude: 151.20929550
+altitude: 0.0000</p>
+<h2 id="-">---<a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
 <h1 id="only-selecting-a-few-rows">Only selecting a few rows<a class="headerlink" href="#only-selecting-a-few-rows" title="Permanent link">&para;</a></h1>
 <p>We can use the WHERE keyword to filter rows according to a specific condition. We use it like this <code>select * from student where name = jack</code> . The condition can be much more complex than this.</p>
 <h1 id="conditional-operators">Conditional operators<a class="headerlink" href="#conditional-operators" title="Permanent link">&para;</a></h1>
@@ -2159,17 +2218,14 @@ Keywords like NOT can be used in SQL to flip results but for us the mathematics 
 <h1 id="combining-conditions-and-columns">Combining conditions and columns<a class="headerlink" href="#combining-conditions-and-columns" title="Permanent link">&para;</a></h1>
 <p>You can select specific columns while using conditions to limit results further. For example we can use <code>select id, name from student where not name = james</code> to selected everyone who is not James. Using <code>where name != james</code> does the same.</p>
 <p>You can use a WHERE clause to filter according to a column that has not been listed in the select clause. So <code>select id, name from student where results = 100%</code> still works. </p>
+<h2 id="_1">&nbsp;<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <p>&nbsp;</p>
-<p>&nbsp;</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2219,7 +2275,7 @@ Keywords like NOT can be used in SQL to flip results but for us the mathematics 
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>

@@ -23,7 +23,7 @@
     
     
       
-        <title>5. Text patterns - Vault Wiki</title>
+        <title>Text Patterns - Vault Wiki</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#conditions-using-strings" class="md-skip">
+        <a href="#-" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              5. Text patterns
+              Text Patterns
             
           </span>
         </div>
@@ -178,7 +178,9 @@
 
 
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
@@ -655,8 +657,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Text Patterns
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -674,6 +692,95 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ---
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditions-using-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditions using strings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conditions using strings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#select-from-student-where-name-max" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        select * from student where name = 'max'
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select-from-student-where-absent-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        select * from student where absent = N'✅'
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select-from-student-where-name-like-m_x-or-_ax-or-ma_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        select * from student where name like 'M_x' or '_ax' or 'Ma_'
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &nbsp;
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1981,57 +2088,12 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../sample-page/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🧪 Sample Page
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
                 </div>
               </div>
             
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-</nav>
-                  </div>
-                </div>
-              </div>
             
           
           
@@ -2151,18 +2213,26 @@
 
 
 
+<hr />
+<p>title: 5. Text patterns
+updated: 2026-04-05 16:19:54Z
+created: 2026-04-04 05:40:17Z
+latitude: -33.86881970
+longitude: 151.20929550
+altitude: 0.0000</p>
+<h2 id="-">---<a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
 <h1 id="conditions-using-strings">Conditions using strings<a class="headerlink" href="#conditions-using-strings" title="Permanent link">&para;</a></h1>
 <p>Conditions created with the where clause can also filter according to strings. Examples include</p>
-<p>Equating to a specific string<br />
-<code>select * from student where name = 'max'</code></p>
-<p>Equating to unicode strings (special characters using N)<br />
-<code>select * from student where absent = N'✅'</code></p>
+<p>Equating to a specific string  </p>
+<h2 id="select-from-student-where-name-max"><code>select * from student where name = 'max'</code><a class="headerlink" href="#select-from-student-where-name-max" title="Permanent link">&para;</a></h2>
+<p>Equating to unicode strings (special characters using N)  </p>
+<h2 id="select-from-student-where-absent-n"><code>select * from student where absent = N'✅'</code><a class="headerlink" href="#select-from-student-where-absent-n" title="Permanent link">&para;</a></h2>
 <p>Wildcard filters using the LIKE clause such as using:<br />
 % - zero or more (infinitely) unknown characters<br />
 <code>select * from student where name like 'A%'</code> (could also be '%A% for any name with an A in it ("A" also counts) or %A for ending in A.</p>
-<p>_ - one unknown character<br />
-<code>select * from student where name like 'M_x' or '_ax' or 'Ma_'</code></p>
-<p>&nbsp;</p>
+<p>_ - one unknown character  </p>
+<h2 id="select-from-student-where-name-like-m_x-or-_ax-or-ma_"><code>select * from student where name like 'M_x' or '_ax' or 'Ma_'</code><a class="headerlink" href="#select-from-student-where-name-like-m_x-or-_ax-or-ma_" title="Permanent link">&para;</a></h2>
+<h2 id="_1">&nbsp;<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <p>NOTE: You do not need to use unicode strings for each and every query, but its a good habit to do so. Best practice mostly if data has a likely possibility of special characters like emojis or icons for representing columns using ticks and crosses.</p>
 
 
@@ -2170,9 +2240,6 @@
 
 
 
-
-  
-  
 
 
 
@@ -2222,7 +2289,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>

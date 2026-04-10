@@ -23,7 +23,7 @@
     
     
       
-        <title>4. RIGHT JOIN - Vault Wiki</title>
+        <title>Right Join - Vault Wiki</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#what-is-a-right-join" class="md-skip">
+        <a href="#-" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              4. RIGHT JOIN
+              Right Join
             
           </span>
         </div>
@@ -178,7 +178,9 @@
 
 
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
@@ -1372,8 +1374,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Right Join
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1391,6 +1409,95 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ---
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-right-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a RIGHT JOIN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is a RIGHT JOIN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Select
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#order-by-sroomid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        order by s.RoomId;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1981,57 +2088,12 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../sample-page/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🧪 Sample Page
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
                 </div>
               </div>
             
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-</nav>
-                  </div>
-                </div>
-              </div>
             
           
           
@@ -2151,18 +2213,26 @@
 
 
 
+<hr />
+<p>title: 4. RIGHT JOIN
+updated: 2026-04-06 06:02:39Z
+created: 2026-04-04 05:46:00Z
+latitude: -33.86881970
+longitude: 151.20929550
+altitude: 0.0000</p>
+<h2 id="-">---<a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
 <h1 id="what-is-a-right-join">What is a RIGHT JOIN<a class="headerlink" href="#what-is-a-right-join" title="Permanent link">&para;</a></h1>
 <p>While an INNER JOIN only results in rows where both tables have a matching value in the ON clause equation, a RIGHT JOIN displays all results from the second table no matter what, plus any records from the first table that match with a record from the second table according to the ON clause equation.</p>
 <p>Like the INNER JOIN example, using the tables student and room with the equation s.RoomId=r.Id will result in every room being in the results even if the right side of the equation has a value not found on the left side, which is when a room doesn't have any students assigned to it. The resulting dataset will have all the rooms from the rooms table, and the rooms with a RoomId not found in the student table will also have NULLs for the columns from students table, columns like StudentName will be NULL. Rule of thumb is if the value of the column from the second table is not found somewhere in the corresponding column in the first table, then the attached columns from the first table will be NULL also.</p>
 <p>Most people just stick to LEFT JOINs and flip the tables around. The order matters a lot. A LEFT JOIN B is the same as B RIGHT JOIN A. LEFT JOIN is used to join two tables almost 100% of the time. RIGHT JOIN only really matters when we have a complex use case requiring us to join more than two tables, and even then everybody just flips the tables around and uses LEFT JOIN. </p>
-<p>Example:</p>
-<p><code>SELECT</code><br />
-<code>*</code><br />
+<h2 id="example">Example:<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
+<h2 id="select"><code>Select</code><a class="headerlink" href="#select" title="Permanent link">&para;</a></h2>
+<p><code>*</code><br />
 <code>FROM student s</code><br />
 <code>RIGHT JOIN room r</code><br />
-<code>ON s.RoomId=r.Id</code><br />
-<code>order by s.RoomId;</code></p>
-<p>Results:</p>
+<code>ON s.RoomId=r.Id</code>  </p>
+<h2 id="order-by-sroomid"><code>order by s.RoomId;</code><a class="headerlink" href="#order-by-sroomid" title="Permanent link">&para;</a></h2>
+<h2 id="results">Results:<a class="headerlink" href="#results" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2374,9 +2444,6 @@
 
 
 
-  
-  
-
 
 
 
@@ -2425,7 +2492,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>

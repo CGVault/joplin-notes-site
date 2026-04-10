@@ -23,7 +23,7 @@
     
     
       
-        <title>4. Logic - Vault Wiki</title>
+        <title>Logic - Vault Wiki</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#logical-operators" class="md-skip">
+        <a href="#-" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              4. Logic
+              Logic
             
           </span>
         </div>
@@ -178,7 +178,9 @@
 
 
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
@@ -627,8 +629,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logic
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -646,6 +664,90 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ---
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logical-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logical operators
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Logical operators">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complex-conditioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complex conditioning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complex conditioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &nbsp;
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1981,57 +2083,12 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../sample-page/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🧪 Sample Page
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
                 </div>
               </div>
             
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-</nav>
-                  </div>
-                </div>
-              </div>
             
           
           
@@ -2151,27 +2208,32 @@
 
 
 
+<hr />
+<p>title: 4. Logic
+updated: 2026-04-05 10:46:51Z
+created: 2026-04-04 05:40:11Z
+latitude: -33.86881970
+longitude: 151.20929550
+altitude: 0.0000</p>
+<h2 id="-">---<a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
 <h1 id="logical-operators">Logical operators<a class="headerlink" href="#logical-operators" title="Permanent link">&para;</a></h1>
 <p>OR - records that fulfill one or more of the conditions will pass the filter<br />
 AND - records passing both conditions will pass the filter<br />
 BETWEEN - records falling between two numbers pass the filter, this is the clause equivalent of doing =&gt; AND &lt;=. <code>where results between 90 and 100</code><br />
-NOT - flips the filter so the results become opposite of what the filter passes. <code>where results not between 90 and 100</code> <br />
-<br/></p>
+NOT - flips the filter so the results become opposite of what the filter passes. <code>where results not between 90 and 100</code>   </p>
+<h2 id="_1"><br/><a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <h1 id="complex-conditioning">Complex conditioning<a class="headerlink" href="#complex-conditioning" title="Permanent link">&para;</a></h1>
 <p>Combining conditions can be complex, messy, and hard to create from scratch. Its better to use brackets () to group conditions, and then stack them using AND/OR depending on your use case.</p>
 <p>Example:<br />
 <code>select results from student where (mark &gt; 70 AND mark &lt; 99) AND (rank not between 80 and 100) OR (subject = 'Math' OR subject = 'Science')</code> </p>
+<h2 id="_2">&nbsp;<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <p>&nbsp;</p>
-<p>&nbsp;</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2221,7 +2283,7 @@ NOT - flips the filter so the results become opposite of what the filter passes.
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>

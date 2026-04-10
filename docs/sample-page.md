@@ -1,14 +1,17 @@
 # Sample Page
 
-This page demonstrates how notes are structured.
+This is a reference note showing correct structure.
 
-## Headings
-Used for automatic table of contents.
+## Heading Level 2
 
-## Content Types
-- text
-- images
-- code
-- links
+This will appear in the TOC.
 
-This is the reference template for all notes.
+### Heading Level 3
+
+Also included in TOC.
+
+## Content Example
+
+- bullet 1
+- bullet 2
+

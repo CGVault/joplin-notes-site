@@ -1,3 +1,7 @@
+---
+title: Sample Page
+---
+
 # Sample Page
 
 This page shows how notes will look in your vault.
@@ -9,7 +13,6 @@ Use headings to automatically build the table of contents.
 
 ### Example Block
 
-You can write anything here:
 - notes
 - ideas
 - code

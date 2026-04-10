@@ -23,7 +23,7 @@
     
     
       
-        <title>Full Join - Vault Wiki</title>
+        <title>5. FULL JOIN - Vault Wiki</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#-" class="md-skip">
+        <a href="#what-does-a-full-join-do" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Full Join
+              5. FULL JOIN
             
           </span>
         </div>
@@ -178,9 +178,7 @@
 
 
 
-  
-
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
@@ -1402,24 +1400,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Full Join
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1437,106 +1419,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#-" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ---
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-does-a-full-join-do" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What does a FULL JOIN do
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="What does a FULL JOIN do">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#this-query" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        This query:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#select" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Select
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#order-by-sroomid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        order by s.RoomId;
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gives-us-this" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gives us this:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        &nbsp;
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -2106,6 +1988,24 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           
             <div class="md-content" data-md-component="content">
@@ -2224,25 +2124,17 @@
 
 
 
-<hr />
-<p>title: 5. FULL JOIN
-updated: 2026-04-06 06:29:21Z
-created: 2026-04-04 05:46:08Z
-latitude: -33.86881970
-longitude: 151.20929550
-altitude: 0.0000</p>
-<h2 id="-">---<a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
 <h1 id="what-does-a-full-join-do">What does a FULL JOIN do<a class="headerlink" href="#what-does-a-full-join-do" title="Permanent link">&para;</a></h1>
 <p>A FULL JOIN, essentially takes the results from a LEFT JOIN, and the results of a RIGHT JOIN and stacks the two outcomes into one table. The result ends up being everything from the first table, everything from the second table, all the records which fulfill an inner join, plus the records that do not fully fulfill an inner join. </p>
-<h2 id="this-query">This query:<a class="headerlink" href="#this-query" title="Permanent link">&para;</a></h2>
-<h2 id="select"><code>Select</code><a class="headerlink" href="#select" title="Permanent link">&para;</a></h2>
-<p><code>s.Name,</code><br />
+<p>This query:</p>
+<p><code>SELECT</code><br />
+<code>s.Name,</code><br />
 <code>r.RoomNumber</code><br />
 <code>FROM student s</code><br />
 <code>FULL JOIN room r</code><br />
-<code>ON s.RoomId=r.Id</code>  </p>
-<h2 id="order-by-sroomid"><code>order by s.RoomId;</code><a class="headerlink" href="#order-by-sroomid" title="Permanent link">&para;</a></h2>
-<h2 id="gives-us-this">Gives us this:<a class="headerlink" href="#gives-us-this" title="Permanent link">&para;</a></h2>
+<code>ON s.RoomId=r.Id</code><br />
+<code>order by s.RoomId;</code></p>
+<p>Gives us this:</p>
 <table>
 <thead>
 <tr>
@@ -2344,12 +2236,12 @@ altitude: 0.0000</p>
 <td>302</td>
 </tr>
 <tr>
-<td>##</td>
 <td>Ethan Wright</td>
+<td>403</td>
 </tr>
 </tbody>
 </table>
-<h2 id="_1">&nbsp;<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>&nbsp;</p>
 <p>&nbsp;</p>
 
 
@@ -2357,6 +2249,9 @@ altitude: 0.0000</p>
 
 
 
+
+  
+  
 
 
 
@@ -2406,7 +2301,7 @@ altitude: 0.0000</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>

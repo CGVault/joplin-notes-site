@@ -23,7 +23,7 @@
     
     
       
-        <title>How To Query More Than One Table - Vault Wiki</title>
+        <title>1. How to query more than one table - Vault Wiki</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#-" class="md-skip">
+        <a href="#joining-tables-the-simplest-way" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              How To Query More Than One Table
+              1. How to query more than one table
             
           </span>
         </div>
@@ -178,9 +178,7 @@
 
 
 
-  
-
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
@@ -836,24 +834,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    How To Query More Than One Table
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -871,112 +853,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#-" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ---
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#joining-tables-the-simplest-way" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Joining tables the simplest way
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Joining tables the simplest way">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#select-from-movie-director" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        select * from Movie, Director;
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#select-from-movie-cross-join-director" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        select * from Movie cross join Director;
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#joins-using-the-where-clause" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JOINs using the WHERE clause
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="JOINs using the WHERE clause">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#select-from-movie-director-where-moviedirector_id-directorsid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        select * from movie, director where movie.director_ID = directors.ID
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        &nbsp;
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -2112,6 +1988,24 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           
             <div class="md-content" data-md-component="content">
@@ -2230,23 +2124,15 @@
 
 
 
-<hr />
-<p>title: 1. How to query more than one table
-updated: 2026-04-05 15:29:07Z
-created: 2026-04-04 05:42:29Z
-latitude: -33.86881970
-longitude: 151.20929550
-altitude: 0.0000</p>
-<h2 id="-">---<a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
 <h1 id="joining-tables-the-simplest-way">Joining tables the simplest way<a class="headerlink" href="#joining-tables-the-simplest-way" title="Permanent link">&para;</a></h1>
-<p>The easiest way is to mention both tables in the FROM clause.  </p>
-<h2 id="select-from-movie-director"><code>select * from Movie, Director;</code><a class="headerlink" href="#select-from-movie-director" title="Permanent link">&para;</a></h2>
-<p>This is the most useless way to join tables, no one uses this method. This simple FROM clause method is the same as using CROSS JOIN because SQL does not know what you want from the data so it just makes every combination between the rows in both tables.   </p>
-<h2 id="select-from-movie-cross-join-director"><code>select * from Movie cross join Director;</code><a class="headerlink" href="#select-from-movie-cross-join-director" title="Permanent link">&para;</a></h2>
+<p>The easiest way is to mention both tables in the FROM clause.<br />
+<code>select * from Movie, Director;</code> </p>
+<p>This is the most useless way to join tables, no one uses this method. This simple FROM clause method is the same as using CROSS JOIN because SQL does not know what you want from the data so it just makes every combination between the rows in both tables. <br />
+<code>select * from Movie cross join Director;</code></p>
 <h1 id="joins-using-the-where-clause">JOINs using the WHERE clause<a class="headerlink" href="#joins-using-the-where-clause" title="Permanent link">&para;</a></h1>
 <p>Again, another simple but no one uses it method is using the WHERE clause to do what a JOIN and ON clause would do. Not standard but good to know if someone uses this method in their code. This is equivalent to the clause JOIN so its an inner join. </p>
-<h2 id="select-from-movie-director-where-moviedirector_id-directorsid"><code>select * from movie, director where movie.director_ID = directors.ID</code><a class="headerlink" href="#select-from-movie-director-where-moviedirector_id-directorsid" title="Permanent link">&para;</a></h2>
-<h2 id="_1">&nbsp;<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><code>select * from movie, director where movie.director_ID = directors.ID</code></p>
+<p>&nbsp;</p>
 <p>&nbsp;</p>
 
 
@@ -2254,6 +2140,9 @@ altitude: 0.0000</p>
 
 
 
+
+  
+  
 
 
 
@@ -2303,7 +2192,7 @@ altitude: 0.0000</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>

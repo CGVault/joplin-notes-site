@@ -321,7 +321,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (UI OVERHAUL)
+# MKDOCS CONFIG (NO BRANDING)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -362,6 +362,11 @@ def write_mkdocs(docs):
             ]
         },
 
+        # ✅ REMOVE MKDOCS / MATERIAL BRANDING
+        "extra": {
+            "generator": False
+        },
+
         "markdown_extensions": [
             {"toc": {"permalink": True}},
             "tables",
@@ -378,7 +383,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (MICROSOFT STYLE OVERHAUL)
+# CSS (REMOVE FOOTER BRANDING + CLEAN UI)
 # ----------------------
 
 def write_css():
@@ -388,7 +393,8 @@ def write_css():
 
     (css_dir / "extra.css").write_text("""
 /* =========================
-   MICROSOFT DOCS STYLE UI
+   MICROSOFT STYLE UI
+   + REMOVE MKDOCS BRANDING
    ========================= */
 
 /* Typography */
@@ -397,7 +403,7 @@ body {
     line-height: 1.7;
 }
 
-/* Headings — Microsoft-style underline accent */
+/* Headings */
 .md-typeset h1 {
     font-weight: 800;
     border-bottom: 3px solid #2563eb;
@@ -411,7 +417,7 @@ body {
     margin-top: 1.6em;
 }
 
-/* Sidebar active item (blue bar like Microsoft Docs) */
+/* Active nav item */
 .md-nav__link--active {
     color: #2563eb !important;
     font-weight: 600;
@@ -419,17 +425,17 @@ body {
     padding-left: 10px;
 }
 
-/* Sidebar hover effect */
+/* Hover nav */
 .md-nav__link:hover {
     color: #1d4ed8;
 }
 
-/* Top navigation bar polish */
+/* Header */
 .md-header {
     background: #0f172a;
 }
 
-/* Code blocks feel cleaner */
+/* Code blocks */
 .md-typeset code {
     border-radius: 6px;
 }
@@ -439,10 +445,20 @@ p {
     margin-bottom: 14px;
 }
 
-/* Section spacing */
-.md-typeset h2,
-.md-typeset h3 {
-    scroll-margin-top: 80px;
+/* =========================
+   REMOVE MKDOCS FOOTER BRANDING
+   ========================= */
+
+.md-footer,
+.md-footer-meta,
+.md-footer__inner,
+.md-copyright {
+    display: none !important;
+}
+
+/* Remove "Made with Material for MkDocs" style badges if present */
+footer {
+    display: none !important;
 }
 """, encoding="utf-8")
 
@@ -453,7 +469,7 @@ p {
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "Microsoft-style UI overhaul"], check=False)
+    subprocess.run(["git", "commit", "-m", "remove mkdocs branding"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -479,7 +495,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ MICROSOFT UI OVERHAUL COMPLETE")
+    print("✅ BRANDING REMOVED — CLEAN UI MODE ACTIVE")
 
 
 if __name__ == "__main__":

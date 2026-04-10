@@ -1,11 +1,8 @@
 
 # Sample Page
 
-## Section One
-Example content.
+## Section 1
+Example
 
-## Section Two
-TOC works here.
-
-## Section Three
-Use this page for testing.
+## Section 2
+More content

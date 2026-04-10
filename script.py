@@ -6,16 +6,12 @@ import shutil
 import subprocess
 from pathlib import Path
 
-# ----------------------
-# CONFIG
-# ----------------------
-
-IGNORE_DIRS = {".obsidian", ".trash"}
+IGNORE_DIRS = {".obsidian", ".trash", "_resources"}
 MAX_NAME = 120
 
 
 # ----------------------
-# ORDER PARSING
+# ORDER + CLEANING
 # ----------------------
 
 def parse_order(name):
@@ -35,21 +31,15 @@ def clean_folder(name):
     return title.replace("-", " ").strip()
 
 
-# ----------------------
-# SLUGIFY
-# ----------------------
-
 def slugify(text):
-    text = text.strip()
-    text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r'[^\w\s-]', '', text.strip())
     text = re.sub(r'[\s_-]+', ' ', text)
-    text = text.title()
-    text = text.replace(" ", "-")
+    text = text.title().replace(" ", "-")
     return text[:MAX_NAME].strip("-") or "Note"
 
 
 # ----------------------
-# BUILD FILE MAP (FIXED - NO STRUCTURE BREAKING)
+# BUILD MAP
 # ----------------------
 
 def build_map(src):
@@ -64,7 +54,6 @@ def build_map(src):
         if any(part in IGNORE_DIRS for part in rel.parts):
             continue
 
-        # ONLY rename file, preserve folder structure EXACTLY
         new_name = slugify(f.stem) + f.suffix.lower()
         new_rel = rel.with_name(new_name)
 
@@ -74,7 +63,25 @@ def build_map(src):
 
 
 # ----------------------
-# CONTENT FIX (IMAGES + HEADINGS)
+# IMAGE FIX (NEW SYSTEM)
+# ----------------------
+
+def fix_images(content):
+    """
+    Convert Joplin _resources references into local folder resources
+    """
+
+    # normalize all Joplin variants
+    content = re.sub(r'!\[([^\]]*)\]\([^)]*_resources/', r'![\1](resources/', content)
+
+    # fallback replacements
+    content = content.replace("_resources/", "resources/")
+
+    return content
+
+
+# ----------------------
+# CONTENT FIX
 # ----------------------
 
 def fix_content(content):
@@ -83,29 +90,17 @@ def fix_content(content):
 
     for line in lines:
 
-        # ----------------------
-        # HEADINGS (TOC FIX)
-        # ----------------------
+        # TOC FIX (include first heading now)
         if line.startswith("#"):
-            fixed.append(re.sub(r'^#', '##', line))
-            continue
-
-        # ----------------------
-        # IMAGE FIX (JOPLIN _resources)
-        # ----------------------
-
-        line = line.replace("../../../_resources/", "resources/")
-        line = line.replace("../../_resources/", "resources/")
-        line = line.replace("../_resources/", "resources/")
-        line = line.replace("_resources/", "resources/")
+            line = "#" + line  # shift everything down one level
 
         fixed.append(line)
 
-    return "\n".join(fixed)
+    return fix_images("\n".join(fixed))
 
 
 # ----------------------
-# WRITE DOCS (FIXED PATH HANDLING)
+# WRITE DOCS
 # ----------------------
 
 def write_docs(src, docs, mapping):
@@ -115,125 +110,59 @@ def write_docs(src, docs, mapping):
     docs.mkdir(parents=True, exist_ok=True)
 
     # ----------------------
-    # COPY RESOURCES
-    # ----------------------
-
-    resources_src = src / "resources"
-    resources_dst = docs / "resources"
-
-    if resources_src.exists():
-        if resources_dst.exists():
-            shutil.rmtree(resources_dst)
-        shutil.copytree(resources_src, resources_dst)
-
-    # ----------------------
     # HOME PAGE
     # ----------------------
 
     (docs / "index.md").write_text("""
 # Vault Wiki
 
-Welcome to your knowledge base.
-
----
-
-## 🚀 Start Here
-
-- [🧪 Open Sample Page](sample-page.md)
-
----
-
-## 📊 Overview
-
-- Auto-generated from Joplin
-- Structured wiki navigation
+## Start Here
+- [Sample Page](sample-page.md)
 """)
-
-    # ----------------------
-    # SAMPLE PAGE
-    # ----------------------
 
     (docs / "sample-page.md").write_text("""
 # Sample Page
 
-## Section One
-Example content.
+## Section 1
+Example
 
-## Section Two
-TOC works here.
-
-## Section Three
-Use this page for testing.
+## Section 2
+More content
 """)
 
     # ----------------------
-    # PROCESS FILES (FIXED PATH LOGIC)
+    # FILES
     # ----------------------
 
     for orig, new in mapping.items():
         src_file = src / orig
-        dst_file = docs / new   # ✅ FIXED (NO STRING CONVERSION BUG)
+        dst_file = docs / new
 
         dst_file.parent.mkdir(parents=True, exist_ok=True)
 
         content = src_file.read_text(encoding="utf-8", errors="ignore")
         content = fix_content(content)
 
+        # ----------------------
+        # COPY LOCAL RESOURCES
+        # ----------------------
+
+        src_folder = src_file.parent
+        dst_folder = dst_file.parent
+
+        src_res = src_folder / "_resources"
+        dst_res = dst_folder / "resources"
+
+        if src_res.exists():
+            if dst_res.exists():
+                shutil.rmtree(dst_res)
+            shutil.copytree(src_res, dst_res)
+
         dst_file.write_text(content, encoding="utf-8")
 
 
 # ----------------------
-# FOLDER INDEX PAGES
-# ----------------------
-
-def generate_folder_indexes(docs):
-    for root, _, _ in os.walk(docs):
-        root = Path(root)
-
-        if root == docs:
-            continue
-
-        if any(part in IGNORE_DIRS for part in root.parts):
-            continue
-
-        subfolders = []
-        notes = []
-
-        for item in sorted(root.iterdir()):
-            if any(part in IGNORE_DIRS for part in item.parts):
-                continue
-
-            if item.is_dir():
-                if (item / "index.md").exists():
-                    subfolders.append(item)
-
-            elif item.suffix == ".md" and item.name != "index.md":
-                notes.append(item)
-
-        folder_name = clean_folder(root.name)
-
-        content = f"# {folder_name}\n\n"
-
-        if subfolders:
-            content += "## Sections\n\n"
-            for sf in subfolders:
-                name = clean_folder(sf.name)
-                rel = sf.relative_to(docs).as_posix()
-                content += f"- [{name}]({rel}/)\n"
-            content += "\n"
-
-        if notes:
-            content += "## Notes\n\n"
-            for nf in notes:
-                name = clean_display(nf.name)
-                rel = nf.relative_to(docs).as_posix()
-                content += f"- [{name}]({rel})\n"
-
-        (root / "index.md").write_text(content)
-
-
-# ----------------------
-# NAV TREE
+# NAV BUILD (IGNORES _resources)
 # ----------------------
 
 def build_nav(docs):
@@ -254,7 +183,7 @@ def build_nav(docs):
                 if (p / "index.md").exists():
                     items.append({clean_folder(p.name): walk(p)})
 
-            elif p.suffix == ".md" and p.name not in {"index.md", "sample-page.md"}:
+            elif p.suffix == ".md" and p.name != "index.md":
                 items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
 
         return items
@@ -263,7 +192,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG
+# MKDOCS
 # ----------------------
 
 def write_mkdocs(docs):
@@ -273,7 +202,6 @@ def write_mkdocs(docs):
 
     config = {
         "site_name": "Vault Wiki",
-
         "theme": {
             "name": "material",
             "features": [
@@ -281,22 +209,17 @@ def write_mkdocs(docs):
                 "navigation.sections",
                 "navigation.path",
                 "navigation.top",
-                "navigation.indexes",
                 "toc.follow"
             ]
         },
-
         "markdown_extensions": [
             {"toc": {"permalink": True}},
             "tables",
             "fenced_code"
         ],
-
-        "extra_css": ["stylesheets/extra.css"],
-
         "nav": [
-            {"🏠 Home": "index.md"},
-            {"🧪 Sample Page": "sample-page.md"},
+            {"Home": "index.md"},
+            {"Sample": "sample-page.md"},
             *nav
         ]
     }
@@ -306,43 +229,12 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (MICROSOFT STYLE)
-# ----------------------
-
-def write_css():
-    css_dir = Path("docs/stylesheets")
-    css_dir.mkdir(parents=True, exist_ok=True)
-
-    (css_dir / "extra.css").write_text("""
-.md-typeset h1 {
-    font-weight: 900;
-    font-size: 2.4rem;
-}
-
-.md-typeset h2 {
-    font-weight: 800;
-    font-size: 2rem;
-}
-
-.md-typeset h3 {
-    font-weight: 700;
-}
-
-.md-typeset h1,
-.md-typeset h2,
-.md-typeset h3 {
-    letter-spacing: -0.02em;
-}
-""")
-
-
-# ----------------------
 # DEPLOY
 # ----------------------
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: stable Joplin pipeline (paths + images + nav)"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: images + nav cleanup"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -360,12 +252,10 @@ def main():
     mapping = build_map(src)
 
     write_docs(src, docs, mapping)
-    generate_folder_indexes(docs)
-    write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Fully stable Joplin → MkDocs pipeline rebuilt")
+    print("✅ FIXED: images + navigation + resources handling")
 
 
 if __name__ == "__main__":

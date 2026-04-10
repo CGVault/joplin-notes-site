@@ -1,13 +1,5 @@
----
-title: 7. Lets practice
-updated: 2026-04-06 03:00:57Z
-created: 2026-04-04 05:44:43Z
-latitude: -33.86881970
-longitude: 151.20929550
-altitude: 0.0000
----
 
-# Using all the concepts in one large complex query
+## Using all the concepts in one large complex query
 
 The following query utilities the commands, ordering and grouping we learned in one query:
 

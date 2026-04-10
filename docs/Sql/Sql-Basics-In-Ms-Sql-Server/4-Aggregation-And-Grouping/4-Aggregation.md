@@ -1,13 +1,5 @@
----
-title: 4. Aggregation
-updated: 2026-04-05 23:14:04Z
-created: 2026-04-04 05:43:40Z
-latitude: -33.86881970
-longitude: 151.20929550
-altitude: 0.0000
----
 
-# Computing basic statistics
+## Computing basic statistics
 
 We can use specific window functions, or commands, to achieve specific statistics in SQL. These commands are more complex than just being simple clauses.
 
@@ -31,7 +23,7 @@ To use aggregates properly in SQL, and for them to be more meaningful, we have t
 
 All columns which are not aggregates (the ones not using counts and commands like that) need to be added to the GROUP BY section, which makes aggregating useful but more annoying as you can't just use \* to pull in every column, you need to mention them all specifically.
 
-# Others
+## Others
 
 Apart from count we also have:
 

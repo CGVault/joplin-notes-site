@@ -1,13 +1,5 @@
----
-title: 5. Text patterns
-updated: 2026-04-05 16:19:54Z
-created: 2026-04-04 05:40:17Z
-latitude: -33.86881970
-longitude: 151.20929550
-altitude: 0.0000
----
 
-# Conditions using strings
+## Conditions using strings
 
 Conditions created with the where clause can also filter according to strings. Examples include
 

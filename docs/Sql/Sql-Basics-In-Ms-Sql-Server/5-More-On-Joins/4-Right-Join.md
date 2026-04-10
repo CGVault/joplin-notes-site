@@ -1,13 +1,5 @@
----
-title: 4. RIGHT JOIN
-updated: 2026-04-06 06:02:39Z
-created: 2026-04-04 05:46:00Z
-latitude: -33.86881970
-longitude: 151.20929550
-altitude: 0.0000
----
 
-# What is a RIGHT JOIN
+## What is a RIGHT JOIN
 
 While an INNER JOIN only results in rows where both tables have a matching value in the ON clause equation, a RIGHT JOIN displays all results from the second table no matter what, plus any records from the first table that match with a record from the second table according to the ON clause equation.
 

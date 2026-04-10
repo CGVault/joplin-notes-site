@@ -1,13 +1,5 @@
----
-title: 1. Introduction
-updated: 2026-04-05 01:45:12Z
-created: 2026-04-04 05:36:36Z
-latitude: -33.86881970
-longitude: 151.20929550
-altitude: 0.0000
----
 
-# Introduction
+## Introduction
 
 SQL - Structured Query Language
 SQL Server - stores information in a database, uses T-SQL (Transact - Microsoft SQL)

@@ -1,13 +1,5 @@
----
-title: 3. Eliminating duplicate records
-updated: 2026-04-05 17:29:10Z
-created: 2026-04-04 05:43:26Z
-latitude: -33.86881970
-longitude: 151.20929550
-altitude: 0.0000
----
 
-# Duplicates and DISTINCT
+## Duplicates and DISTINCT
 
 The clause DISTINCT is used to remove duplicate records for reporting purposes and is very often used to get a list of unique values in a specific column, like all the years an order was placed.
 

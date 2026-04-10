@@ -82,10 +82,16 @@ def build_map(src):
 
 
 # ----------------------
-# FIX CONTENT (TOC SAFE FIX)
+# FIX CONTENT (FORCE H2 TITLES)
 # ----------------------
 
 def fix_content(content):
+
+    # ----------------------
+    # REMOVE Joplin frontmatter
+    # ----------------------
+    content = re.sub(r'^---\n.*?\n---\n', '', content, flags=re.DOTALL)
+
     # ----------------------
     # Fix Joplin images
     # ----------------------
@@ -98,7 +104,7 @@ def fix_content(content):
     content = content.replace("_resources/", "resources/")
 
     # ----------------------
-    # Normalize whitespace (CRITICAL for TOC)
+    # Clean whitespace
     # ----------------------
     content = content.replace("\xa0", " ")
     content = re.sub(r'[ \t]+$', '', content, flags=re.MULTILINE)
@@ -109,28 +115,23 @@ def fix_content(content):
     for i, line in enumerate(lines):
         stripped = line.strip()
 
-        # Fix "#Heading" → "# Heading"
+        # Fix malformed headings (#Heading → # Heading)
         if re.match(r'^#{1,6}\S', stripped):
             stripped = re.sub(r'^(#{1,6})(\S)', r'\1 \2', stripped)
 
-        # If it's a heading
+        # Convert ANY heading → H2
         if stripped.startswith("#"):
-            level = len(stripped.split(" ")[0])
-            text = stripped[level:].strip()
+            text = re.sub(r'^#{1,6}\s*', '', stripped).strip()
 
-            # Only allow H1 and H2
-            if level >= 3:
-                level = 2
+            clean = f"## {text}"
 
-            clean = "#" * level + " " + text
-
-            # Ensure blank line BEFORE (important for MkDocs)
+            # Ensure spacing before
             if new_lines and new_lines[-1].strip() != "":
                 new_lines.append("")
 
             new_lines.append(clean)
 
-            # Ensure blank line AFTER
+            # Ensure spacing after
             if i + 1 < len(lines) and lines[i + 1].strip() != "":
                 new_lines.append("")
 
@@ -225,7 +226,7 @@ Use the sidebar to browse topics automatically generated from your vault.
 
 ## ⚡ Tip
 
-Use proper # and ## headings in notes for TOC.
+Use proper headings in notes for TOC.
 """, encoding="utf-8")
 
 
@@ -256,11 +257,17 @@ def write_docs(src, docs, mapping):
 
 
 # ----------------------
+# (REST UNCHANGED — EXACT BASE SCRIPT)
+# ----------------------
+
+# KEEP EVERYTHING BELOW EXACTLY AS YOUR BASE SCRIPT
+
+
+# ----------------------
 # FOLDER INDEXES
 # ----------------------
 
 def generate_folder_indexes(docs):
-
     for root, _, _ in os.walk(docs):
         root = Path(root)
 
@@ -274,7 +281,6 @@ def generate_folder_indexes(docs):
         notes = []
 
         for item in sorted(root.iterdir()):
-
             if any(part in IGNORE_DIRS for part in item.parts):
                 continue
 
@@ -312,12 +318,10 @@ def generate_folder_indexes(docs):
 # ----------------------
 
 def build_nav(docs):
-
     def walk(folder):
         items = []
 
         for p in sorted(folder.iterdir()):
-
             if any(part in IGNORE_DIRS for part in p.parts):
                 continue
 
@@ -341,7 +345,6 @@ def build_nav(docs):
 # ----------------------
 
 def write_mkdocs(docs):
-
     import yaml
 
     nav = [
@@ -397,7 +400,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "auto update vault"], check=False)
+    subprocess.run(["git", "commit", "-m", "force h2 headings for toc"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -407,7 +410,6 @@ def deploy():
 # ----------------------
 
 def main():
-
     import sys
 
     src = Path(sys.argv[1]).resolve()
@@ -423,7 +425,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ BUILD COMPLETE (TOC fixed without breaking nav)")
+    print("✅ BUILD COMPLETE (FORCED H2 HEADINGS — TOC WORKING)")
 
 
 if __name__ == "__main__":

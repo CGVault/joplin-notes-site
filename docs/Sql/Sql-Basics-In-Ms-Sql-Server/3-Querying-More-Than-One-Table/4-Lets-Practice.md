@@ -1,13 +1,5 @@
----
-title: 4. Lets practice
-updated: 2026-04-05 16:45:51Z
-created: 2026-04-04 05:42:58Z
-latitude: -33.86881970
-longitude: 151.20929550
-altitude: 0.0000
----
 
-# Complex practice
+## Complex practice
 
 A complex example combining concepts so far:
 
@@ -24,7 +16,7 @@ A complex example combining concepts so far:
 Learning observations:
 Renaming a column so its displayed differently in the results does not allow you to refer to that column using its alias in other areas like the WHERE clause. Tables can but columns cannot.
 
-# An even more complex query
+## An even more complex query
 
 This goes back and includes all the concepts up until now:
 

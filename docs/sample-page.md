@@ -1,19 +1,15 @@
 # Sample Page
 
-This page shows how notes should be structured.
+## What this is
+This page demonstrates correct structure.
 
-## Headings (TOC Example)
-
+## Headings (TOC TEST)
 ### Level 3 Heading
-MkDocs Material automatically builds TOC from headings.
+#### Level 4 Heading
 
-## Content Example
+MkDocs TOC is automatically generated from headings.
 
+## Example Content
 - notes
 - images
 - code
-- links
-
-## Purpose
-
-Use this page as a template for all future notes.

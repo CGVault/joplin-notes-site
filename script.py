@@ -201,11 +201,11 @@ Use the sidebar to browse topics automatically generated from your vault.
 
 ## ✨ Features
 
-- Automatic folder → navigation conversion
-- Image support from Joplin resources
-- Clean TOC from headings
-- Fast search system
-- Microsoft-style navigation layout
+- Microsoft-style navigation UI
+- Instant search system
+- Clean TOC per page
+- Joplin image support
+- Structured knowledge base
 
 ---
 
@@ -321,7 +321,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (LEVEL 1 UPGRADE)
+# MKDOCS CONFIG (UI OVERHAUL)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -337,9 +337,6 @@ def write_mkdocs(docs):
     config = {
         "site_name": "Vault Wiki",
 
-        # ----------------------
-        # SEARCH UPGRADE (LEVEL 1)
-        # ----------------------
         "plugins": [
             {
                 "search": {
@@ -349,9 +346,6 @@ def write_mkdocs(docs):
             }
         ],
 
-        # ----------------------
-        # THEME UPGRADE (NAVIGATION POLISH)
-        # ----------------------
         "theme": {
             "name": "material",
             "features": [
@@ -384,25 +378,71 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS
+# CSS (MICROSOFT STYLE OVERHAUL)
 # ----------------------
 
 def write_css():
+
     css_dir = Path("docs/stylesheets")
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-.md-typeset h1 { font-weight: 900; }
-.md-typeset h2 { font-weight: 900; font-size: 2rem; }
-.md-typeset h3 { font-weight: 800; }
+/* =========================
+   MICROSOFT DOCS STYLE UI
+   ========================= */
 
+/* Typography */
 body {
     font-size: 15.5px;
     line-height: 1.7;
 }
 
+/* Headings — Microsoft-style underline accent */
+.md-typeset h1 {
+    font-weight: 800;
+    border-bottom: 3px solid #2563eb;
+    padding-bottom: 6px;
+}
+
+.md-typeset h2 {
+    font-weight: 700;
+    border-bottom: 2px solid #93c5fd;
+    padding-bottom: 4px;
+    margin-top: 1.6em;
+}
+
+/* Sidebar active item (blue bar like Microsoft Docs) */
+.md-nav__link--active {
+    color: #2563eb !important;
+    font-weight: 600;
+    border-left: 3px solid #2563eb;
+    padding-left: 10px;
+}
+
+/* Sidebar hover effect */
+.md-nav__link:hover {
+    color: #1d4ed8;
+}
+
+/* Top navigation bar polish */
+.md-header {
+    background: #0f172a;
+}
+
+/* Code blocks feel cleaner */
+.md-typeset code {
+    border-radius: 6px;
+}
+
+/* Paragraph spacing */
 p {
     margin-bottom: 14px;
+}
+
+/* Section spacing */
+.md-typeset h2,
+.md-typeset h3 {
+    scroll-margin-top: 80px;
 }
 """, encoding="utf-8")
 
@@ -413,7 +453,7 @@ p {
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "upgrade search + navigation polish"], check=False)
+    subprocess.run(["git", "commit", "-m", "Microsoft-style UI overhaul"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -439,7 +479,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ LEVEL 1 UPGRADE COMPLETE (SEARCH + NAV POLISH)")
+    print("✅ MICROSOFT UI OVERHAUL COMPLETE")
 
 
 if __name__ == "__main__":

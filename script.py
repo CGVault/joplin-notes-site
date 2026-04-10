@@ -92,7 +92,7 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    # 🏠 REAL HOMEPAGE (NO DUMMY FOLDER LINKS)
+    # 🏠 CLEAN HOMEPAGE
     (docs / "index.md").write_text("""
 # Vault Wiki
 
@@ -102,19 +102,23 @@ Welcome to your knowledge base.
 
 ## 📌 Start Here
 
-These are example entry points into your system:
-
-- [🧠 Notes Overview](notes-overview/)
-- [📁 Folder Structure Guide](folder-guide/)
-- [⚙️ System Information](system-info/)
+Use the sidebar to explore your notes.
 
 ---
 
-## 🚀 What this is
+## 🧪 Example
+
+- [Sample Page](sample-page/)
+
+---
+
+## 🚀 About
 
 This site is automatically generated from your Joplin vault.
 
-Each folder becomes a section with its own landing page.
+- Folders become sections
+- Notes are organized automatically
+- Navigation is fully dynamic
 
 ---
 
@@ -125,68 +129,25 @@ Each folder becomes a section with its own landing page.
 - Cloudflare analytics ready
 """)
 
-    # 🧪 REAL SAMPLE PAGES (USED BY HOMEPAGE LINKS)
+    # 🧪 SINGLE SAMPLE PAGE (KEEP THIS)
+    (docs / "sample-page.md").write_text("""
+# Sample Page
 
-    (docs / "notes-overview.md").write_text("""
-# Notes Overview
-
-This page shows how your notes are structured.
-
----
-
-## What you'll find here
-
-- Automatically imported notes from Joplin
-- Organized by folders
-- Clean navigation hierarchy
+This is a sample page you can use as a reference.
 
 ---
 
-## Tip
+## ✍️ How to use
 
-Use the sidebar to browse all notes.
-""")
-
-    (docs / "folder-guide.md").write_text("""
-# Folder Structure Guide
-
-Your vault is organized into folders.
+- Copy this file
+- Modify content
+- Place it anywhere in your vault
 
 ---
 
-## How it works
+## 💡 Tip
 
-- Each folder becomes a section
-- Each section has a landing page
-- Subfolders are nested automatically
-
----
-
-## Navigation
-
-Use breadcrumbs and sidebar to move around easily.
-""")
-
-    (docs / "system-info.md").write_text("""
-# System Information
-
-This wiki system is automatically generated.
-
----
-
-## Stack
-
-- MkDocs Material
-- Python generator script
-- GitHub Pages deployment
-
----
-
-## Features
-
-- Auto navigation
-- Folder indexing
-- Cloudflare analytics integration
+You can create custom manual pages like this alongside your synced notes.
 """)
 
     # COPY REAL VAULT FILES
@@ -261,7 +222,7 @@ def build_nav(docs):
                 if (p / "index.md").exists():
                     items.append({clean_folder(p.name): walk(p)})
 
-            elif p.suffix == ".md" and p.name != "index.md":
+            elif p.suffix == ".md" and p.name != "index.md" and p.name != "sample-page.md":
                 items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
 
         return items
@@ -316,6 +277,7 @@ def write_mkdocs(docs):
 
         "nav": [
             {"🏠 Home Dashboard": "index.md"},
+            {"🧪 Sample Page": "sample-page.md"},
             *nav
         ]
     }
@@ -325,7 +287,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (UNCHANGED)
+# CSS
 # ----------------------
 
 def write_css():
@@ -410,7 +372,7 @@ def write_analytics(docs):
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "vault cleanup: real homepage + structure"], check=False)
+    subprocess.run(["git", "commit", "-m", "vault cleanup: removed dummy pages + added sample"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -433,7 +395,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Clean homepage + real sample pages + no dummy folders")
+    print("✅ Clean vault + single sample page + no dummy content")
 
 
 if __name__ == "__main__":

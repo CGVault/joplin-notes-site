@@ -7,19 +7,23 @@ Welcome to your knowledge base.
 
 ## 📌 Start Here
 
-These are example entry points into your system:
-
-- [🧠 Notes Overview](notes-overview/)
-- [📁 Folder Structure Guide](folder-guide/)
-- [⚙️ System Information](system-info/)
+Use the sidebar to explore your notes.
 
 ---
 
-## 🚀 What this is
+## 🧪 Example
+
+- [Sample Page](sample-page/)
+
+---
+
+## 🚀 About
 
 This site is automatically generated from your Joplin vault.
 
-Each folder becomes a section with its own landing page.
+- Folders become sections
+- Notes are organized automatically
+- Navigation is fully dynamic
 
 ---
 

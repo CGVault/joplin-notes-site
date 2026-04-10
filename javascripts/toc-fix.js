@@ -6,27 +6,25 @@
         return Array.from(document.querySelectorAll(".md-content h1, .md-content h2, .md-content h3, .md-content h4"));
     }
 
-    function getTOCLinks() {
+    function getLinks() {
         return Array.from(document.querySelectorAll(".md-sidebar--secondary a, .md-nav--secondary a"));
     }
 
     function clear() {
-        getTOCLinks().forEach(a => a.classList.remove("toc-active"));
+        getLinks().forEach(l => l.classList.remove("toc-active"));
     }
 
     function activate(link) {
-        if (!link) return;
-        link.classList.add("toc-active");
+        if (link) link.classList.add("toc-active");
     }
 
-    function findLinkById(id) {
-        if (!id) return null;
+    function findLink(id) {
         return document.querySelector(
             `.md-sidebar--secondary a[href="#${id}"], .md-nav--secondary a[href="#${id}"]`
         );
     }
 
-    function getCurrentHeading(headings, scrollPos) {
+    function getCurrent(headings, scrollPos) {
         let current = headings[0];
 
         for (let h of headings) {
@@ -45,12 +43,12 @@
 
         const scrollPos = window.scrollY;
 
-        const current = getCurrentHeading(headings, scrollPos);
+        const current = getCurrent(headings, scrollPos);
 
         clear();
-        activate(findLinkById(current.id));
+        activate(findLink(current.id));
 
-        // 🔥 FIX: robust bottom detection (not fragile scrollHeight check)
+        // FIX: reliable bottom detection
         const docHeight = Math.max(
             document.body.scrollHeight,
             document.documentElement.scrollHeight
@@ -61,15 +59,12 @@
         if (atBottom) {
             const last = headings[headings.length - 1];
             clear();
-            activate(findLinkById(last.id));
+            activate(findLink(last.id));
         }
     }
 
-    // run often enough for Material instant navigation
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("load", onScroll);
     window.addEventListener("resize", onScroll);
-
-    // 🔥 FIX: Material instant reload support
     document.addEventListener("DOMContentLoaded", onScroll);
 })();

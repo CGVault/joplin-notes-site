@@ -9,25 +9,25 @@
       
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../1-How-To-Query-More-Than-One-Table/">
       
       
-        <link rel="next" href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/1.%20A%20primer%20on%20databases/1-Introduction/">
+        <link rel="next" href="../3-Referencing-Columns/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>🧪 Sample Page - Vault Wiki</title>
+        <title>2. Creating JOINs - Vault Wiki</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
       
       
 
@@ -46,9 +46,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sample-page" class="md-skip">
+        <a href="#actual-joins" class="md-skip">
           Skip to content
         </a>
       
@@ -82,7 +82,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Vault Wiki" class="md-header__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
+    <a href="../../../.." title="Vault Wiki" class="md-header__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🧪 Sample Page
+              2. Creating JOINs
             
           </span>
         </div>
@@ -180,7 +180,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
+    <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -198,7 +198,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         
   
   
@@ -222,37 +222,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🧪 Sample Page
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../../sample-page/" class="md-nav__link">
         
   
   
@@ -268,59 +241,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#section-one" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Section One
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#section-two" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Section Two
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#section-three" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Section Three
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -332,7 +252,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         
   
   
@@ -356,8 +276,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -372,11 +294,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
@@ -397,7 +319,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -412,8 +334,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -439,11 +363,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" checked>
         
           
           <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
@@ -464,7 +388,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -535,7 +459,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/1.%20A%20primer%20on%20databases/1-Introduction/" class="md-nav__link">
+      <a href="../../1.%20A%20primer%20on%20databases/1-Introduction/" class="md-nav__link">
         
   
   
@@ -638,7 +562,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/2.%20Selecting%20data%20from%20one%20table/1-Returning-All-Data-From-A-Table/" class="md-nav__link">
+      <a href="../../2.%20Selecting%20data%20from%20one%20table/1-Returning-All-Data-From-A-Table/" class="md-nav__link">
         
   
   
@@ -666,7 +590,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/2.%20Selecting%20data%20from%20one%20table/2-Select-Some-Columns/" class="md-nav__link">
+      <a href="../../2.%20Selecting%20data%20from%20one%20table/2-Select-Some-Columns/" class="md-nav__link">
         
   
   
@@ -694,7 +618,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/2.%20Selecting%20data%20from%20one%20table/3-Filtering-Rows/" class="md-nav__link">
+      <a href="../../2.%20Selecting%20data%20from%20one%20table/3-Filtering-Rows/" class="md-nav__link">
         
   
   
@@ -722,7 +646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/2.%20Selecting%20data%20from%20one%20table/4-Logic/" class="md-nav__link">
+      <a href="../../2.%20Selecting%20data%20from%20one%20table/4-Logic/" class="md-nav__link">
         
   
   
@@ -750,7 +674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/2.%20Selecting%20data%20from%20one%20table/5-Text-Patterns/" class="md-nav__link">
+      <a href="../../2.%20Selecting%20data%20from%20one%20table/5-Text-Patterns/" class="md-nav__link">
         
   
   
@@ -778,7 +702,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/2.%20Selecting%20data%20from%20one%20table/6-To-Be-Or-Null-To-Be/" class="md-nav__link">
+      <a href="../../2.%20Selecting%20data%20from%20one%20table/6-To-Be-Or-Null-To-Be/" class="md-nav__link">
         
   
   
@@ -806,7 +730,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/2.%20Selecting%20data%20from%20one%20table/7-A-Bit-Of-Mathematics/" class="md-nav__link">
+      <a href="../../2.%20Selecting%20data%20from%20one%20table/7-A-Bit-Of-Mathematics/" class="md-nav__link">
         
   
   
@@ -834,7 +758,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/2.%20Selecting%20data%20from%20one%20table/8-Lets-Practice/" class="md-nav__link">
+      <a href="../../2.%20Selecting%20data%20from%20one%20table/8-Lets-Practice/" class="md-nav__link">
         
   
   
@@ -867,8 +791,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -886,11 +812,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1_3" checked>
         
           
           <label class="md-nav__link" for="__nav_4_1_3" id="__nav_4_1_3_label" tabindex="0">
@@ -911,7 +837,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_1_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_1_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_1_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -929,7 +855,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/3.%20Querying%20more%20than%20one%20table/1-How-To-Query-More-Than-One-Table/" class="md-nav__link">
+      <a href="../1-How-To-Query-More-Than-One-Table/" class="md-nav__link">
         
   
   
@@ -954,10 +880,35 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/3.%20Querying%20more%20than%20one%20table/2-Creating-Joins/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Joins
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -973,6 +924,35 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#actual-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actual JOINs
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -985,7 +965,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/3.%20Querying%20more%20than%20one%20table/3-Referencing-Columns/" class="md-nav__link">
+      <a href="../3-Referencing-Columns/" class="md-nav__link">
         
   
   
@@ -1013,7 +993,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/3.%20Querying%20more%20than%20one%20table/4-Lets-Practice/" class="md-nav__link">
+      <a href="../4-Lets-Practice/" class="md-nav__link">
         
   
   
@@ -1114,7 +1094,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/4.%20Aggregation%20and%20grouping/1-Ordering/" class="md-nav__link">
+      <a href="../../4.%20Aggregation%20and%20grouping/1-Ordering/" class="md-nav__link">
         
   
   
@@ -1142,7 +1122,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/4.%20Aggregation%20and%20grouping/2-Limiting-The-Output/" class="md-nav__link">
+      <a href="../../4.%20Aggregation%20and%20grouping/2-Limiting-The-Output/" class="md-nav__link">
         
   
   
@@ -1170,7 +1150,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/4.%20Aggregation%20and%20grouping/3-Eliminating-Duplicate-Records/" class="md-nav__link">
+      <a href="../../4.%20Aggregation%20and%20grouping/3-Eliminating-Duplicate-Records/" class="md-nav__link">
         
   
   
@@ -1198,7 +1178,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/4.%20Aggregation%20and%20grouping/4-Aggregation/" class="md-nav__link">
+      <a href="../../4.%20Aggregation%20and%20grouping/4-Aggregation/" class="md-nav__link">
         
   
   
@@ -1226,7 +1206,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/4.%20Aggregation%20and%20grouping/5-Grouping/" class="md-nav__link">
+      <a href="../../4.%20Aggregation%20and%20grouping/5-Grouping/" class="md-nav__link">
         
   
   
@@ -1254,7 +1234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/4.%20Aggregation%20and%20grouping/6-Having-Filtering-And-Ordering-Groups/" class="md-nav__link">
+      <a href="../../4.%20Aggregation%20and%20grouping/6-Having-Filtering-And-Ordering-Groups/" class="md-nav__link">
         
   
   
@@ -1282,7 +1262,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/4.%20Aggregation%20and%20grouping/7-Lets-Practice/" class="md-nav__link">
+      <a href="../../4.%20Aggregation%20and%20grouping/7-Lets-Practice/" class="md-nav__link">
         
   
   
@@ -1383,7 +1363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/5.%20More%20on%20JOINs/1-Get-To-Know-The-Data/" class="md-nav__link">
+      <a href="../../5.%20More%20on%20JOINs/1-Get-To-Know-The-Data/" class="md-nav__link">
         
   
   
@@ -1411,7 +1391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/5.%20More%20on%20JOINs/2-Join-Revisited/" class="md-nav__link">
+      <a href="../../5.%20More%20on%20JOINs/2-Join-Revisited/" class="md-nav__link">
         
   
   
@@ -1439,7 +1419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/5.%20More%20on%20JOINs/3-Left-Join/" class="md-nav__link">
+      <a href="../../5.%20More%20on%20JOINs/3-Left-Join/" class="md-nav__link">
         
   
   
@@ -1467,7 +1447,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/5.%20More%20on%20JOINs/4-Right-Join/" class="md-nav__link">
+      <a href="../../5.%20More%20on%20JOINs/4-Right-Join/" class="md-nav__link">
         
   
   
@@ -1495,7 +1475,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/5.%20More%20on%20JOINs/5-Full-Join/" class="md-nav__link">
+      <a href="../../5.%20More%20on%20JOINs/5-Full-Join/" class="md-nav__link">
         
   
   
@@ -1523,7 +1503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/5.%20More%20on%20JOINs/6-Outer-Join/" class="md-nav__link">
+      <a href="../../5.%20More%20on%20JOINs/6-Outer-Join/" class="md-nav__link">
         
   
   
@@ -1551,7 +1531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/5.%20More%20on%20JOINs/7-Aliases-For-Tables/" class="md-nav__link">
+      <a href="../../5.%20More%20on%20JOINs/7-Aliases-For-Tables/" class="md-nav__link">
         
   
   
@@ -1648,7 +1628,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/6.%20Subqueries/1-Introduction/" class="md-nav__link">
+      <a href="../../6.%20Subqueries/1-Introduction/" class="md-nav__link">
         
   
   
@@ -1676,7 +1656,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/6.%20Subqueries/2-Very-Simple-Subqueries/" class="md-nav__link">
+      <a href="../../6.%20Subqueries/2-Very-Simple-Subqueries/" class="md-nav__link">
         
   
   
@@ -1704,7 +1684,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/6.%20Subqueries/4-Correlated-Subqueries/" class="md-nav__link">
+      <a href="../../6.%20Subqueries/4-Correlated-Subqueries/" class="md-nav__link">
         
   
   
@@ -1732,7 +1712,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/6.%20Subqueries/5-Other-Subqueries/" class="md-nav__link">
+      <a href="../../6.%20Subqueries/5-Other-Subqueries/" class="md-nav__link">
         
   
   
@@ -1760,7 +1740,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/6.%20Subqueries/3Subqueries-With-Multiple-Results/" class="md-nav__link">
+      <a href="../../6.%20Subqueries/3Subqueries-With-Multiple-Results/" class="md-nav__link">
         
   
   
@@ -1855,7 +1835,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/7.%20Set%20operations/1-Introduction/" class="md-nav__link">
+      <a href="../../7.%20Set%20operations/1-Introduction/" class="md-nav__link">
         
   
   
@@ -1883,7 +1863,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/7.%20Set%20operations/2-Union/" class="md-nav__link">
+      <a href="../../7.%20Set%20operations/2-Union/" class="md-nav__link">
         
   
   
@@ -1911,7 +1891,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/7.%20Set%20operations/3-Intersect/" class="md-nav__link">
+      <a href="../../7.%20Set%20operations/3-Intersect/" class="md-nav__link">
         
   
   
@@ -1939,7 +1919,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/7.%20Set%20operations/4-Except/" class="md-nav__link">
+      <a href="../../7.%20Set%20operations/4-Except/" class="md-nav__link">
         
   
   
@@ -2028,7 +2008,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SQL/SQL%20Basics%20in%20MS%20SQL%20Server/8.%20Quiz/1-Quiz/" class="md-nav__link">
+      <a href="../../8.%20Quiz/1-Quiz/" class="md-nav__link">
         
   
   
@@ -2089,8 +2069,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2099,32 +2077,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#section-one" class="md-nav__link">
+  <a href="#actual-joins" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Section One
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#section-two" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Section Two
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#section-three" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Section Three
+        Actual JOINs
       
     </span>
   </a>
@@ -2149,6 +2105,106 @@
   
 
 
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    🏠 Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../1.%20A%20primer%20on%20databases/1-Introduction/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    SQL
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../1.%20A%20primer%20on%20databases/1-Introduction/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    SQL Basics in MS SQL Server
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../1-How-To-Query-More-Than-One-Table/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Querying more than one table
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
               
               <article class="md-content__inner md-typeset">
                 
@@ -2156,19 +2212,21 @@
 
 
 
-<h1 id="sample-page">Sample Page<a class="headerlink" href="#sample-page" title="Permanent link">&para;</a></h1>
-<h2 id="section-one">Section One<a class="headerlink" href="#section-one" title="Permanent link">&para;</a></h2>
-<p>Example content.</p>
-<h2 id="section-two">Section Two<a class="headerlink" href="#section-two" title="Permanent link">&para;</a></h2>
-<p>TOC works here.</p>
-<h2 id="section-three">Section Three<a class="headerlink" href="#section-three" title="Permanent link">&para;</a></h2>
-<p>Use this page for testing.</p>
+  <h1>Creating Joins</h1>
+
+<h2 id="actual-joins">Actual JOINs<a class="headerlink" href="#actual-joins" title="Permanent link">&para;</a></h2>
+<p>Standard SQL joins use the JOIN and ON clause like so:<br />
+<code>select * from movie join director on movie.directorID = director.ID</code> </p>
+<p>&nbsp;</p>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -2218,10 +2276,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.path", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

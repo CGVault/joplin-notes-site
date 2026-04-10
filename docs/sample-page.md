@@ -1,17 +1,20 @@
 # Sample Page
 
-This is a reference note showing correct structure.
+This page shows how notes will look in your vault.
 
-## Heading Level 2
+## Structure Example
 
-This will appear in the TOC.
+### Headings
+Use headings to automatically build the table of contents.
 
-### Heading Level 3
+### Example Block
 
-Also included in TOC.
+You can write anything here:
+- notes
+- ideas
+- code
+- images
 
-## Content Example
+## Why this exists
 
-- bullet 1
-- bullet 2
-
+This is your reference template for all future notes.

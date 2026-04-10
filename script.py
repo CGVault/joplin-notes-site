@@ -10,12 +10,12 @@ from pathlib import Path
 # CONFIG
 # ----------------------
 
-IGNORE_DIRS = {"_resources", ".obsidian", ".trash"}
+IGNORE_DIRS = {"resources", ".obsidian", ".trash"}
 MAX_NAME = 120
 
 
 # ----------------------
-# ORDER PARSING (NAV ONLY)
+# ORDER PARSING
 # ----------------------
 
 def parse_order(name):
@@ -36,7 +36,7 @@ def clean_folder(name):
 
 
 # ----------------------
-# SLUGIFY (FILES ONLY)
+# SLUGIFY
 # ----------------------
 
 def slugify(text):
@@ -49,7 +49,7 @@ def slugify(text):
 
 
 # ----------------------
-# BUILD MAP (NO CONTENT TOUCHING)
+# BUILD MAP
 # ----------------------
 
 def build_map(src):
@@ -81,24 +81,21 @@ def build_map(src):
 
 
 # ----------------------
-# ONLY FIX IMAGES (NO HEADING TOUCHING)
+# FIX CONTENT (IMAGES)
 # ----------------------
 
 def fix_content(content):
-
-    # Joplin image fix only
     content = re.sub(
         r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
         r'![\1](resources/\2)',
         content
     )
-
     content = content.replace("_resources/", "resources/")
     return content
 
 
 # ----------------------
-# COPY RESOURCES
+# RESOURCES
 # ----------------------
 
 def copy_all_resources(src, docs):
@@ -117,65 +114,86 @@ def copy_all_resources(src, docs):
 
 
 # ----------------------
-# SAMPLE PAGE (NO STRUCTURE DAMAGE)
+# SAMPLE PAGE
 # ----------------------
 
 def create_sample_page(docs):
+    sample = docs / "sample-page.md"
 
-    (docs / "sample-page.md").write_text("""# Sample Page
+    if not sample.exists():
+        sample.write_text("""# Sample Page
 
-This is a reference note showing correct structure.
+This page shows how notes will look in your vault.
 
-## Heading Level 2
+## Structure Example
 
-This will appear in the TOC.
+### Headings
+Use headings to automatically build the table of contents.
 
-### Heading Level 3
+### Example Block
 
-Also included in TOC.
+You can write anything here:
+- notes
+- ideas
+- code
+- images
 
-## Content Example
+## Why this exists
 
-- bullet 1
-- bullet 2
-
+This is your reference template for all future notes.
 """, encoding="utf-8")
 
 
 # ----------------------
-# HOME PAGE (CLEAN BUT SAFE)
+# HOME PAGE (IMPROVED UX)
 # ----------------------
 
 def create_home_page(docs):
 
-    (docs / "index.md").write_text("""# Vault Wiki
+    home = docs / "index.md"
 
-Welcome to your knowledge base.
+    home.write_text("""# 🧠 Vault Wiki
 
----
-
-## Start Here
-
-👉 Recommended:
-- Open the **Sample Page** (structure example)
+Welcome to your personal knowledge system.
 
 ---
 
-## Example
+## 🚀 Start Here
 
-- [Sample Page](sample-page.md)
+This vault is automatically generated from your Joplin notes.
+
+👉 Recommended first step:
+- Open the **Sample Page** to understand structure
 
 ---
 
-## Navigation
+## 📘 Example Page
 
-Use sidebar to explore all notes.
+- 🧪 [Sample Page](sample-page.md)
+
+---
+
+## 📂 Explore
+
+Use the sidebar to browse your notes, folders, and topics.
+
+Everything is auto-generated from your vault structure.
+
+---
+
+## ✨ Tips
+
+- Use headings in Joplin for automatic TOC generation
+- Prefix folders with numbers (e.g. `01 - Basics`) to control order
+- Images are supported automatically
+
+---
 
 """, encoding="utf-8")
 
 
 # ----------------------
-# WRITE DOCS (NO MARKDOWN MODIFICATION)
+# WRITE DOCS
 # ----------------------
 
 def write_docs(src, docs, mapping):
@@ -194,7 +212,6 @@ def write_docs(src, docs, mapping):
 
         dst_file.parent.mkdir(parents=True, exist_ok=True)
 
-        # IMPORTANT: ONLY IMAGE FIX, NO HEADING TOUCHING
         content = src_file.read_text(encoding="utf-8", errors="ignore")
         content = fix_content(content)
 
@@ -202,37 +219,18 @@ def write_docs(src, docs, mapping):
 
 
 # ----------------------
-# NAV TREE (SAFE FILTER ONLY)
+# SAMPLE PAGE HOOK
 # ----------------------
 
-def build_nav(docs):
-
-    def walk(folder):
-        items = []
-
-        for p in sorted(folder.iterdir()):
-
-            if any(part in IGNORE_DIRS for part in p.parts):
-                continue
-
-            if p.is_dir():
-                if (p / "index.md").exists():
-                    items.append({clean_folder(p.name): walk(p)})
-
-            elif p.suffix == ".md" and p.name != "index.md" and p.name != "sample-page.md":
-                items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
-
-        return items
-
-    return walk(docs)
+def ensure_sample_page(docs):
+    create_sample_page(docs)
 
 
 # ----------------------
-# FOLDER INDEXES (NO CONTENT ALTERATION)
+# FOLDER INDEXES
 # ----------------------
 
 def generate_folder_indexes(docs):
-
     for root, _, _ in os.walk(docs):
         root = Path(root)
 
@@ -274,6 +272,29 @@ def generate_folder_indexes(docs):
                 content += f"- [{name}]({rel})\n"
 
         (root / "index.md").write_text(content, encoding="utf-8")
+
+
+# ----------------------
+# NAV TREE
+# ----------------------
+
+def build_nav(docs):
+
+    def walk(folder):
+        items = []
+
+        for p in sorted(folder.iterdir()):
+
+            if p.is_dir():
+                if (p / "index.md").exists():
+                    items.append({clean_folder(p.name): walk(p)})
+
+            elif p.suffix == ".md" and p.name != "index.md":
+                items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
+
+        return items
+
+    return walk(docs)
 
 
 # ----------------------
@@ -337,7 +358,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: restore TOC stability + safe markdown pipeline"], check=False)
+    subprocess.run(["git", "commit", "-m", "improve home page + stable vault UI"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -357,14 +378,15 @@ def main():
 
     write_docs(src, docs, mapping)
     generate_folder_indexes(docs)
-    create_sample_page(docs)
+    ensure_sample_page(docs)
+
     create_home_page(docs)
 
     write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FIX COMPLETE (TOCs restored + clean navigation + stable rendering)")
+    print("✅ FULL FIX COMPLETE (home page improved + sample page linked)")
 
 
 if __name__ == "__main__":

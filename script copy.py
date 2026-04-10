@@ -49,7 +49,7 @@ def slugify(text):
 
 
 # ----------------------
-# BUILD MAP
+# BUILD FILE MAP
 # ----------------------
 
 def build_map(src):
@@ -81,7 +81,7 @@ def build_map(src):
 
 
 # ----------------------
-# FIX CONTENT (IMAGES)
+# CONTENT FIX
 # ----------------------
 
 def fix_content(content):
@@ -90,12 +90,13 @@ def fix_content(content):
         r'![\1](resources/\2)',
         content
     )
+
     content = content.replace("_resources/", "resources/")
     return content
 
 
 # ----------------------
-# RESOURCES
+# COPY RESOURCES
 # ----------------------
 
 def copy_all_resources(src, docs):
@@ -114,7 +115,7 @@ def copy_all_resources(src, docs):
 
 
 # ----------------------
-# SAMPLE PAGE
+# SAMPLE PAGE (FIXED)
 # ----------------------
 
 def create_sample_page(docs):
@@ -123,72 +124,19 @@ def create_sample_page(docs):
     if not sample.exists():
         sample.write_text("""# Sample Page
 
-This page shows how notes will look in your vault.
+This is a template page for new notes.
 
-## Structure Example
+## Usage
 
-### Headings
-Use headings to automatically build the table of contents.
+- Add new notes in Joplin
+- They will appear automatically here
+- Use headings for TOC support
 
-### Example Block
+## Example Section
 
-You can write anything here:
-- notes
-- ideas
-- code
-- images
+### Subheading Example
 
-## Why this exists
-
-This is your reference template for all future notes.
-""", encoding="utf-8")
-
-
-# ----------------------
-# HOME PAGE (IMPROVED UX)
-# ----------------------
-
-def create_home_page(docs):
-
-    home = docs / "index.md"
-
-    home.write_text("""# 🧠 Vault Wiki
-
-Welcome to your personal knowledge system.
-
----
-
-## 🚀 Start Here
-
-This vault is automatically generated from your Joplin notes.
-
-👉 Recommended first step:
-- Open the **Sample Page** to understand structure
-
----
-
-## 📘 Example Page
-
-- 🧪 [Sample Page](sample-page.md)
-
----
-
-## 📂 Explore
-
-Use the sidebar to browse your notes, folders, and topics.
-
-Everything is auto-generated from your vault structure.
-
----
-
-## ✨ Tips
-
-- Use headings in Joplin for automatic TOC generation
-- Prefix folders with numbers (e.g. `01 - Basics`) to control order
-- Images are supported automatically
-
----
-
+Write your content here.
 """, encoding="utf-8")
 
 
@@ -203,8 +151,22 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
+    # HOME PAGE
+    (docs / "index.md").write_text("""
+# Vault Wiki
+
+Welcome to your knowledge base.
+
+## Start Here
+
+- Sample Page included in navigation
+- Use sidebar to explore notes
+""", encoding="utf-8")
+
+    # COPY RESOURCES FIRST
     copy_all_resources(src, docs)
 
+    # WRITE FILES
     for orig, new in mapping.items():
 
         src_file = src / orig
@@ -219,7 +181,7 @@ def write_docs(src, docs, mapping):
 
 
 # ----------------------
-# SAMPLE PAGE HOOK
+# SAMPLE PAGE HOOK (IMPORTANT)
 # ----------------------
 
 def ensure_sample_page(docs):
@@ -305,11 +267,16 @@ def write_mkdocs(docs):
 
     import yaml
 
+    sample_exists = (docs / "sample-page.md").exists()
+
     nav = [
         {"🏠 Home": "index.md"},
-        {"🧪 Sample Page": "sample-page.md"},
-        *build_nav(docs)
     ]
+
+    if sample_exists:
+        nav.append({"🧪 Sample Page": "sample-page.md"})
+
+    nav.extend(build_nav(docs))
 
     config = {
         "site_name": "Vault Wiki",
@@ -358,7 +325,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "improve home page + stable vault UI"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: stable Joplin export + sample page"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -379,14 +346,11 @@ def main():
     write_docs(src, docs, mapping)
     generate_folder_indexes(docs)
     ensure_sample_page(docs)
-
-    create_home_page(docs)
-
     write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FULL FIX COMPLETE (home page improved + sample page linked)")
+    print("✅ FULL FIX COMPLETE (images + sample page + nav stable)")
 
 
 if __name__ == "__main__":

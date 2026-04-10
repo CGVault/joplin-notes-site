@@ -1,15 +1,20 @@
 # Sample Page
 
-This is a template page for new notes.
+This page shows how notes will look in your vault.
 
-## Usage
+## Structure Example
 
-- Add new notes in Joplin
-- They will appear automatically here
-- Use headings for TOC support
+### Headings
+Use headings to automatically build the table of contents.
 
-## Example Section
+### Example Block
 
-### Subheading Example
+You can write anything here:
+- notes
+- ideas
+- code
+- images
 
-Write your content here.
+## Why this exists
+
+This is your reference template for all future notes.

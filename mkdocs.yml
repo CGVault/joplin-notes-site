@@ -6,6 +6,9 @@ theme:
   - navigation.instant
   - navigation.tracking
   - navigation.sections
+  - navigation.path
+  - navigation.top
+  - navigation.indexes
   - search.suggest
   - search.highlight
   - content.code.copy
@@ -26,7 +29,7 @@ extra_css:
 extra_javascript:
 - js/analytics.js
 nav:
-- Home: index.md
+- "\U0001F3E0 Home Dashboard": index.md
 - Sql:
   - Sql Basics In Ms Sql Server:
     - A Primer On Databases:

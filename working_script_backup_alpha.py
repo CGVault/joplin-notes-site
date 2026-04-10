@@ -25,10 +25,6 @@ def parse_order(name):
     return 9999, name
 
 
-# ----------------------
-# CLEAN DISPLAY
-# ----------------------
-
 def clean_display(name):
     _, title = parse_order(Path(name).stem)
     return title.replace("-", " ").strip()
@@ -40,7 +36,7 @@ def clean_folder(name):
 
 
 # ----------------------
-# PROPER CASE SLUG (SAFE FILE NAMES)
+# SLUGIFY
 # ----------------------
 
 def slugify(text):
@@ -105,10 +101,10 @@ def write_docs(src, docs, mapping):
 
 
 # ----------------------
-# CREATE INDEXES
+# FOLDER LANDING PAGES
 # ----------------------
 
-def create_indexes(docs):
+def generate_folder_indexes(docs):
     for root, _, _ in os.walk(docs):
         root = Path(root)
 
@@ -118,21 +114,50 @@ def create_indexes(docs):
         if any(part in IGNORE_DIRS for part in root.parts):
             continue
 
-        index = root / "index.md"
+        subfolders = []
+        notes = []
 
-        if not index.exists():
-            name = clean_folder(root.name)
+        for item in sorted(root.iterdir()):
+            if any(part in IGNORE_DIRS for part in item.parts):
+                continue
 
-            index.write_text(f"""---
-title: {name}
+            if item.is_dir():
+                if (item / "index.md").exists():
+                    subfolders.append(item)
+
+            elif item.suffix == ".md" and item.name != "index.md":
+                notes.append(item)
+
+        folder_name = clean_folder(root.name)
+
+        content = f"""---
+title: {folder_name}
 ---
 
-# {name}
-""")
+# {folder_name}
+
+"""
+
+        if subfolders:
+            content += "## Sections\n\n"
+            for sf in subfolders:
+                name = clean_folder(sf.name)
+                rel = sf.relative_to(docs).as_posix()
+                content += f"- [{name}]({rel}/)\n"
+            content += "\n"
+
+        if notes:
+            content += "## Notes\n\n"
+            for nf in notes:
+                name = clean_display(nf.name)
+                rel = nf.relative_to(docs).as_posix()
+                content += f"- [{name}]({rel})\n"
+
+        (root / "index.md").write_text(content)
 
 
 # ----------------------
-# NAV BUILDER
+# BUILD NAV TREE
 # ----------------------
 
 def build_nav(docs):
@@ -179,17 +204,12 @@ def write_mkdocs(docs):
                 "navigation.instant",
                 "navigation.tracking",
                 "navigation.sections",
-                "navigation.prune",
                 "search.suggest",
                 "search.highlight",
                 "content.code.copy"
             ],
             "palette": [
-                {
-                    "scheme": "default",
-                    "primary": "blue",
-                    "accent": "indigo"
-                }
+                {"scheme": "default", "primary": "blue", "accent": "indigo"}
             ],
             "font": {
                 "text": "Segoe UI",
@@ -206,6 +226,9 @@ def write_mkdocs(docs):
 
         "extra_css": ["stylesheets/extra.css"],
 
+        # ✅ ANALYTICS FILE
+        "extra_javascript": ["js/analytics.js"],
+
         "nav": [
             {"Home": "index.md"},
             *nav
@@ -217,7 +240,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# MICROSOFT FLUENT CSS (UPGRADED + FIXED HEADINGS)
+# CSS
 # ----------------------
 
 def write_css():
@@ -225,103 +248,66 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-/* =========================================
-   MICROSOFT FLUENT UI (WHITE THEME)
-   ========================================= */
-
-:root {
-    --ms-blue: #0078D4;
-    --ms-bg: #ffffff;
-    --ms-sidebar: #f5f5f5;
-    --ms-text: #1a1a1a;
-    --ms-border: #e1e1e1;
-}
-
-/* BASE */
 body {
-    background: var(--ms-bg) !important;
-    color: var(--ms-text);
+    background: #ffffff;
     font-family: "Segoe UI", system-ui, sans-serif;
-    line-height: 1.6;
+    color: #1a1a1a;
 }
 
-/* HEADER */
 .md-header {
-    background: var(--ms-blue) !important;
-    color: white !important;
+    background: #0078D4 !important;
 }
 
-/* SIDEBAR */
 .md-nav {
-    background: var(--ms-sidebar);
-    border-right: 1px solid var(--ms-border);
+    background: #f5f5f5;
+    border-right: 1px solid #e1e1e1;
 }
 
-/* LINKS */
 a {
-    color: var(--ms-blue);
+    color: #0078D4;
 }
 
-/* CONTENT AREA */
 .md-content {
     padding: 24px 32px;
     max-width: 900px;
     margin: auto;
 }
 
-/* =========================================
-   STRONG HEADING SYSTEM (FIXED VISIBILITY)
-   ========================================= */
-
 h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: #1a1a1a;
-    border-bottom: 3px solid var(--ms-blue);
-    padding-bottom: 10px;
-    margin-bottom: 16px;
+    font-size: 2.6rem;
+    font-weight: 900;
+    border-bottom: 4px solid #0078D4;
 }
 
 h2 {
-    font-size: 1.6rem;
+    font-size: 1.9rem;
     font-weight: 800;
-    margin-top: 24px;
-    margin-bottom: 10px;
 }
 
 h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 1.4rem;
+    font-weight: 800;
 }
+""")
 
-/* Force MkDocs override issues */
-.md-content h1,
-.md-content h2,
-.md-content h3 {
-    font-weight: 800 !important;
-}
 
-/* SIDEBAR EMPHASIS */
-.md-nav__link {
-    font-weight: 500;
-}
+# ----------------------
+# WRITE ANALYTICS SCRIPT (REAL ONE)
+# ----------------------
 
-.md-nav__link--active {
-    font-weight: 700;
-    color: var(--ms-blue) !important;
-}
+def write_analytics(docs):
+    js_dir = docs / "js"
+    js_dir.mkdir(parents=True, exist_ok=True)
 
-/* CODE */
-pre {
-    background: #f6f6f6 !important;
-    border: 1px solid var(--ms-border);
-}
-
-code {
-    background: #f3f3f3;
-    padding: 2px 5px;
-    border-radius: 4px;
-}
+    (js_dir / "analytics.js").write_text("""
+/* Cloudflare Web Analytics */
+(function() {
+    var script = document.createElement('script');
+    script.defer = true;
+    script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    script.setAttribute('data-cf-beacon', '{"token": "3cc08260ee084ea2988505b82c3fc095"}');
+    document.head.appendChild(script);
+})();
 """)
 
 
@@ -330,7 +316,14 @@ code {
 # ----------------------
 
 def deploy():
-    subprocess.run(["mkdocs", "build"], check=True)
+    subprocess.run(["git", "add", "-A"], check=True)
+
+    subprocess.run(
+        ["git", "commit", "-m", "sync full vault + docs + analytics"],
+        check=False
+    )
+
+    subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
 
@@ -346,12 +339,13 @@ def main():
 
     mapping = build_map(src)
     write_docs(src, docs, mapping)
-    create_indexes(docs)
+    generate_folder_indexes(docs)
     write_css()
+    write_analytics(docs)   # ✅ uses your real script
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Microsoft Fluent MkDocs site deployed successfully")
+    print("✅ Cloudflare analytics fully integrated and live")
 
 
 if __name__ == "__main__":

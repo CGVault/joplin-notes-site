@@ -36,7 +36,7 @@ def clean_folder(name):
 
 
 # ----------------------
-# SLUGIFY
+# SLUGIFY (PROPER CASE SAFE)
 # ----------------------
 
 def slugify(text):
@@ -226,9 +226,6 @@ def write_mkdocs(docs):
 
         "extra_css": ["stylesheets/extra.css"],
 
-        # ✅ ANALYTICS FILE
-        "extra_javascript": ["js/analytics.js"],
-
         "nav": [
             {"Home": "index.md"},
             *nav
@@ -240,7 +237,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS
+# CSS (UPDATED HEADINGS ONLY)
 # ----------------------
 
 def write_css():
@@ -273,41 +270,52 @@ a {
     margin: auto;
 }
 
+/* =========================
+   UPGRADED HEADINGS
+   ========================= */
+
+/* H1 = Page title (very strong) */
 h1 {
     font-size: 2.6rem;
     font-weight: 900;
+    letter-spacing: -0.02em;
     border-bottom: 4px solid #0078D4;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
 }
 
+/* H2 = Section headers */
 h2 {
     font-size: 1.9rem;
     font-weight: 800;
+    margin-top: 28px;
+    margin-bottom: 12px;
+    color: #1a1a1a;
 }
 
+/* H3 = Subsections */
 h3 {
     font-size: 1.4rem;
     font-weight: 800;
+    margin-top: 20px;
 }
-""")
 
+/* Ensure MkDocs doesn't override */
+.md-content h1,
+.md-content h2,
+.md-content h3 {
+    font-weight: 900 !important;
+}
 
-# ----------------------
-# WRITE ANALYTICS SCRIPT (REAL ONE)
-# ----------------------
-
-def write_analytics(docs):
-    js_dir = docs / "js"
-    js_dir.mkdir(parents=True, exist_ok=True)
-
-    (js_dir / "analytics.js").write_text("""
-/* Cloudflare Web Analytics */
-(function() {
-    var script = document.createElement('script');
-    script.defer = true;
-    script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
-    script.setAttribute('data-cf-beacon', '{"token": "3cc08260ee084ea2988505b82c3fc095"}');
-    document.head.appendChild(script);
-})();
+/* Slight visual hierarchy boost */
+h2::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: #0078D4;
+    margin-bottom: 8px;
+}
 """)
 
 
@@ -319,7 +327,7 @@ def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
 
     subprocess.run(
-        ["git", "commit", "-m", "sync full vault + docs + analytics"],
+        ["git", "commit", "-m", "sync full vault + docs"],
         check=False
     )
 
@@ -341,11 +349,10 @@ def main():
     write_docs(src, docs, mapping)
     generate_folder_indexes(docs)
     write_css()
-    write_analytics(docs)   # ✅ uses your real script
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Cloudflare analytics fully integrated and live")
+    print("✅ Headings upgraded (H1/H2/H3 Microsoft-style hierarchy improved)")
 
 
 if __name__ == "__main__":

@@ -23,6 +23,8 @@ markdown_extensions:
 - admonition
 extra_css:
 - stylesheets/extra.css
+extra_javascript:
+- js/analytics.js
 nav:
 - Home: index.md
 - Sql:

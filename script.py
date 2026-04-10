@@ -321,7 +321,62 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (UI OVERHAUL)
+# JS FIX (TOC + LAST SECTION HIGHLIGHT)
+# ----------------------
+
+def write_js():
+    js_dir = Path("docs/javascripts")
+    js_dir.mkdir(parents=True, exist_ok=True)
+
+    (js_dir / "toc-fix.js").write_text("""
+(function () {
+    const OFFSET = 120;
+
+    function getHeadings() {
+        return Array.from(document.querySelectorAll("h1, h2, h3, h4"));
+    }
+
+    function getLinks() {
+        return Array.from(document.querySelectorAll(".md-nav--secondary a"));
+    }
+
+    function setActive(link) {
+        getLinks().forEach(l => l.classList.remove("toc-active"));
+        if (link) link.classList.add("toc-active");
+    }
+
+    function onScroll() {
+        const scrollPos = window.scrollY + OFFSET;
+        const headings = getHeadings();
+
+        let current = headings[0];
+
+        for (let h of headings) {
+            if (h.offsetTop <= scrollPos) current = h;
+        }
+
+        const id = current.id;
+        const link = document.querySelector(`.md-nav--secondary a[href="#${id}"]`);
+        setActive(link);
+
+        // FORCE LAST HEADING ACTIVE AT BOTTOM
+        const bottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
+
+        if (bottom && headings.length > 0) {
+            const last = headings[headings.length - 1];
+            const lastLink = document.querySelector(`.md-nav--secondary a[href="#${last.id}"]`);
+            setActive(lastLink);
+        }
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("load", onScroll);
+})();
+""", encoding="utf-8")
+
+
+# ----------------------
+# MKDOCS CONFIG
 # ----------------------
 
 def write_mkdocs(docs):
@@ -369,6 +424,7 @@ def write_mkdocs(docs):
         ],
 
         "extra_css": ["stylesheets/extra.css"],
+        "extra_javascript": ["javascripts/toc-fix.js"],
 
         "nav": nav
     }
@@ -378,7 +434,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (MICROSOFT STYLE OVERHAUL)
+# CSS
 # ----------------------
 
 def write_css():
@@ -387,17 +443,11 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-/* =========================
-   MICROSOFT DOCS STYLE UI
-   ========================= */
-
-/* Typography */
 body {
     font-size: 15.5px;
     line-height: 1.7;
 }
 
-/* Headings — Microsoft-style underline accent */
 .md-typeset h1 {
     font-weight: 800;
     border-bottom: 3px solid #2563eb;
@@ -411,7 +461,6 @@ body {
     margin-top: 1.6em;
 }
 
-/* Sidebar active item (blue bar like Microsoft Docs) */
 .md-nav__link--active {
     color: #2563eb !important;
     font-weight: 600;
@@ -419,44 +468,24 @@ body {
     padding-left: 10px;
 }
 
-/* Sidebar hover effect */
-.md-nav__link:hover {
-    color: #1d4ed8;
+.md-nav--secondary a.toc-active {
+    color: #2563eb !important;
+    font-weight: 700;
 }
 
-/* Top navigation bar polish */
 .md-header {
     background: #0f172a;
 }
 
-/* Code blocks feel cleaner */
-.md-typeset code {
-    border-radius: 6px;
-}
-
-/* Paragraph spacing */
-p {
-    margin-bottom: 14px;
-}
-
-/* Section spacing */
 .md-typeset h2,
 .md-typeset h3 {
-    scroll-margin-top: 80px;
+    scroll-margin-top: 100px;
 }
-
-/* =========================
-   REMOVE MKDOCS FOOTER BRANDING
-   ========================= */
 
 .md-footer,
 .md-footer-meta,
 .md-footer__inner,
-.md-copyright {
-    display: none !important;
-}
-
-/* Remove "Made with Material for MkDocs" style badges if present */
+.md-copyright,
 footer {
     display: none !important;
 }
@@ -469,7 +498,7 @@ footer {
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "Microsoft-style UI overhaul"], check=False)
+    subprocess.run(["git", "commit", "-m", "TOC + scrollspy fix + UI polish"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -492,10 +521,11 @@ def main():
     create_sample_page(docs)
     create_home_page(docs)
     write_css()
+    write_js()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ MICROSOFT UI OVERHAUL COMPLETE")
+    print("✅ TOC + NAV FIX COMPLETE")
 
 
 if __name__ == "__main__":

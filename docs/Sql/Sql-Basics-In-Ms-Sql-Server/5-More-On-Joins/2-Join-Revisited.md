@@ -40,6 +40,6 @@ The normal JOIN clause is just the shorthand way of typing INNER JOIN, they do t
 
 INNER JOIN only joins the records which match both columns from the two tables being joined. So if the student and room tables are connected using s.RoomId=r.Id then students not assigned to a room (the first half of the equation would be NULL) then it doesn't show up in the results. Conversely, if there is a room that is not assigned to any students (the second half of the equation would be NULL) then that room does not show up in the results.
 
-![effdb026b7a904261d9904ad272a5f1e.png](../../../_resources/effdb026b7a904261d9904ad272a5f1e.png)
+![effdb026b7a904261d9904ad272a5f1e.png](../../../resources/effdb026b7a904261d9904ad272a5f1e.png)
 
 &nbsp;

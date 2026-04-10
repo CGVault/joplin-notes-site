@@ -5,7 +5,6 @@ import re
 import shutil
 import subprocess
 from pathlib import Path
-import yaml
 
 # ----------------------
 # CONFIG
@@ -16,7 +15,7 @@ MAX_NAME = 120
 
 
 # ----------------------
-# TITLE CLEANING
+# ORDER PARSING
 # ----------------------
 
 def parse_order(name):
@@ -26,8 +25,13 @@ def parse_order(name):
     return 9999, name
 
 
-def clean_title(name):
-    _, title = parse_order(Path(name).stem if "." in name else name)
+def clean_display(name):
+    _, title = parse_order(Path(name).stem)
+    return title.replace("-", " ").strip()
+
+
+def clean_folder(name):
+    _, title = parse_order(name)
     return title.replace("-", " ").strip()
 
 
@@ -58,6 +62,7 @@ def build_map(src):
 
         rel = f.relative_to(src)
 
+        # ignore system folders
         if any(part in IGNORE_DIRS for part in rel.parts):
             continue
 
@@ -78,23 +83,26 @@ def build_map(src):
 
 
 # ----------------------
-# FIX CONTENT (IMAGES ONLY)
+# FIX CONTENT (IMAGES)
 # ----------------------
 
 def fix_content(content):
+    # Joplin resource links → mkdocs local resources
     content = re.sub(
         r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
         r'![\1](resources/\2)',
         content
     )
+
+    content = content.replace("_resources/", "resources/")
     return content
 
 
 # ----------------------
-# RESOURCES COPY
+# COPY RESOURCES
 # ----------------------
 
-def copy_resources(src, docs):
+def copy_all_resources(src, docs):
     for res in src.rglob("_resources"):
         if not res.is_dir():
             continue
@@ -110,6 +118,76 @@ def copy_resources(src, docs):
 
 
 # ----------------------
+# SAMPLE PAGE
+# ----------------------
+
+def create_sample_page(docs):
+    sample = docs / "sample-page.md"
+
+    sample.write_text("""# Sample Page
+
+This page shows how notes should be structured.
+
+## Headings (TOC Example)
+
+### Level 3 Heading
+MkDocs Material automatically builds TOC from headings.
+
+## Content Example
+
+- notes
+- images
+- code
+- links
+
+## Purpose
+
+Use this page as a template for all future notes.
+""", encoding="utf-8")
+
+
+# ----------------------
+# HOME PAGE
+# ----------------------
+
+def create_home_page(docs):
+
+    home = docs / "index.md"
+
+    home.write_text("""# 🧠 Vault Wiki
+
+Welcome to your knowledge base.
+
+---
+
+## 🚀 Start Here
+
+- 📘 [Sample Page](sample-page.md)
+
+---
+
+## 📂 Navigation
+
+Use the sidebar to browse topics automatically generated from your vault.
+
+---
+
+## ✨ Features
+
+- Automatic folder → navigation conversion
+- Image support from Joplin resources
+- Clean TOC from headings
+- Stable MkDocs Material layout
+
+---
+
+## ⚡ Tip
+
+Keep headings in your notes to improve structure and TOC.
+""", encoding="utf-8")
+
+
+# ----------------------
 # WRITE DOCS
 # ----------------------
 
@@ -120,9 +198,10 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    copy_resources(src, docs)
+    copy_all_resources(src, docs)
 
     for orig, new in mapping.items():
+
         src_file = src / orig
         dst_file = docs / new
 
@@ -135,84 +214,97 @@ def write_docs(src, docs, mapping):
 
 
 # ----------------------
-# SAMPLE PAGE (ONLY ONE SOURCE)
+# FOLDER INDEXES (FIXED)
 # ----------------------
 
-def create_sample_page(docs):
-    (docs / "sample-page.md").write_text("""# Sample Page
+def generate_folder_indexes(docs):
 
-## What this is
-This page demonstrates correct structure.
+    for root, _, _ in os.walk(docs):
+        root = Path(root)
 
-## Headings (TOC TEST)
-### Level 3 Heading
-#### Level 4 Heading
+        if root == docs:
+            continue
 
-MkDocs TOC is automatically generated from headings.
+        if any(part in IGNORE_DIRS for part in root.parts):
+            continue
 
-## Example Content
-- notes
-- images
-- code
-""", encoding="utf-8")
+        subfolders = []
+        notes = []
+
+        for item in sorted(root.iterdir()):
+
+            if any(part in IGNORE_DIRS for part in item.parts):
+                continue
+
+            if item.is_dir():
+                if (item / "index.md").exists():
+                    subfolders.append(item)
+
+            elif item.suffix == ".md" and item.name != "index.md":
+                notes.append(item)
+
+        folder_name = clean_folder(root.name)
+
+        content = f"# {folder_name}\n\n"
+
+        if subfolders:
+            content += "## Sections\n\n"
+            for sf in subfolders:
+                name = clean_folder(sf.name)
+                rel = sf.relative_to(docs).as_posix()
+                content += f"- [{name}]({rel}/)\n"
+            content += "\n"
+
+        if notes:
+            content += "## Notes\n\n"
+            for nf in notes:
+                name = clean_display(nf.name)
+                rel = nf.relative_to(docs).as_posix()
+                content += f"- [{name}]({rel})\n"
+
+        (root / "index.md").write_text(content, encoding="utf-8")
 
 
 # ----------------------
-# HOME PAGE
-# ----------------------
-
-def create_home_page(docs):
-    (docs / "index.md").write_text("""# Vault Wiki
-
-Welcome.
-
-## Start Here
-- [Sample Page](sample-page.md)
-
-## Navigation
-Use sidebar.
-""", encoding="utf-8")
-
-
-# ----------------------
-# NAV BUILDER (FIXED, NO DUPLICATES)
+# NAV BUILD (FIXED)
 # ----------------------
 
 def build_nav(docs):
-
-    nav = [
-        {"Home": "index.md"},
-        {"Sample Page": "sample-page.md"},
-    ]
 
     def walk(folder):
         items = []
 
         for p in sorted(folder.iterdir()):
 
+            # 🚨 FIX: fully skip ignored dirs
             if any(part in IGNORE_DIRS for part in p.parts):
                 continue
 
             if p.is_dir():
                 if (p / "index.md").exists():
-                    items.append({clean_title(p.name): walk(p)})
+                    items.append({clean_folder(p.name): walk(p)})
 
-            elif p.suffix == ".md":
-                if p.name in {"index.md", "sample-page.md"}:
-                    continue
-                items.append({clean_title(p.name): p.relative_to(docs).as_posix()})
+            elif p.suffix == ".md" and p.name != "index.md":
+                items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
 
         return items
 
-    nav.extend(walk(docs))
-    return nav
+    return walk(docs)
 
 
 # ----------------------
-# MKDOCS CONFIG
+# MKDOCS CONFIG (FIXED NAV)
 # ----------------------
 
 def write_mkdocs(docs):
+
+    import yaml
+
+    nav = [
+        {"🏠 Home": "index.md"},
+        {"🧪 Sample Page": "sample-page.md"},
+        *build_nav(docs)
+    ]
 
     config = {
         "site_name": "Vault Wiki",
@@ -228,12 +320,12 @@ def write_mkdocs(docs):
             ]
         },
         "markdown_extensions": [
+            {"toc": {"permalink": True}},
             "tables",
-            "fenced_code",
-            {"toc": {"permalink": True}}
+            "fenced_code"
         ],
         "extra_css": ["stylesheets/extra.css"],
-        "nav": build_nav(docs)
+        "nav": nav
     }
 
     with open("mkdocs.yml", "w") as f:
@@ -249,8 +341,9 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-.md-typeset h1 { font-weight: 800; }
-.md-typeset h2 { font-weight: 700; }
+.md-typeset h1 { font-weight: 900; }
+.md-typeset h2 { font-weight: 900; font-size: 2rem; }
+.md-typeset h3 { font-weight: 800; }
 """, encoding="utf-8")
 
 
@@ -260,7 +353,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix nav duplication + restore TOC stability"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix navigation + remove resource leaks + stable vault"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -279,13 +372,14 @@ def main():
     mapping = build_map(src)
 
     write_docs(src, docs, mapping)
+    generate_folder_indexes(docs)
     create_sample_page(docs)
     create_home_page(docs)
     write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FULL FIX COMPLETE (no duplicates, TOC stable, nav fixed)")
+    print("✅ FULL FIX COMPLETE (navigation + sample page + resources fixed)")
 
 
 if __name__ == "__main__":

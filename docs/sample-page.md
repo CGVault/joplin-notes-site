@@ -1,5 +1,7 @@
 # Sample Page
 
+This page shows how notes should be structured.
+
 ## Headings (TOC Example)
 
 ### Level 3 Heading
@@ -13,4 +15,4 @@
 
 ## Purpose
 
-Use this page as a template.
+Use this page as a template for all future notes.

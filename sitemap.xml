@@ -5,7 +5,15 @@
          <lastmod>2026-04-10</lastmod>
     </url>
     <url>
-         <loc>https://cgvault.github.io/joplin-notes-site/sample-page/</loc>
+         <loc>https://cgvault.github.io/joplin-notes-site/folder-guide/</loc>
+         <lastmod>2026-04-10</lastmod>
+    </url>
+    <url>
+         <loc>https://cgvault.github.io/joplin-notes-site/notes-overview/</loc>
+         <lastmod>2026-04-10</lastmod>
+    </url>
+    <url>
+         <loc>https://cgvault.github.io/joplin-notes-site/system-info/</loc>
          <lastmod>2026-04-10</lastmod>
     </url>
     <url>
@@ -194,10 +202,6 @@
     </url>
     <url>
          <loc>https://cgvault.github.io/joplin-notes-site/Sql/Sql-Basics-In-Ms-Sql-Server/8-Quiz/1-Quiz/</loc>
-         <lastmod>2026-04-10</lastmod>
-    </url>
-    <url>
-         <loc>https://cgvault.github.io/joplin-notes-site/example-folder/</loc>
          <lastmod>2026-04-10</lastmod>
     </url>
 </urlset>

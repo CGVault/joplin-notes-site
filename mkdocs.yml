@@ -5,6 +5,7 @@ plugins:
     lang: en
 theme:
   name: material
+  custom_dir: overrides
   features:
   - navigation.instant
   - navigation.tracking
@@ -16,6 +17,8 @@ theme:
   - search.suggest
   - search.highlight
   - content.code.copy
+extra:
+  generator: false
 markdown_extensions:
 - toc:
     permalink: true
@@ -23,6 +26,8 @@ markdown_extensions:
 - fenced_code
 extra_css:
 - stylesheets/extra.css
+extra_javascript:
+- stylesheets/extra.js
 nav:
 - "\U0001F3E0 Home": index.md
 - "\U0001F9EA Sample Page": sample-page.md

@@ -204,8 +204,8 @@ Use the sidebar to browse topics automatically generated from your vault.
 - Microsoft-style navigation UI
 - Instant search system
 - Clean TOC per page
-- Code copy buttons
-- Smooth scrolling navigation
+- Joplin image support
+- Structured knowledge base
 
 ---
 
@@ -321,7 +321,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (UI OVERHAUL + FIXES)
+# MKDOCS CONFIG (UI OVERHAUL)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -337,7 +337,6 @@ def write_mkdocs(docs):
     config = {
         "site_name": "Vault Wiki",
 
-        # SEARCH
         "plugins": [
             {
                 "search": {
@@ -347,10 +346,8 @@ def write_mkdocs(docs):
             }
         ],
 
-        # THEME
         "theme": {
             "name": "material",
-            "custom_dir": "overrides",
             "features": [
                 "navigation.instant",
                 "navigation.tracking",
@@ -365,11 +362,6 @@ def write_mkdocs(docs):
             ]
         },
 
-        # REMOVE MKDOCS BRANDING
-        "extra": {
-            "generator": False
-        },
-
         "markdown_extensions": [
             {"toc": {"permalink": True}},
             "tables",
@@ -377,7 +369,6 @@ def write_mkdocs(docs):
         ],
 
         "extra_css": ["stylesheets/extra.css"],
-        "extra_javascript": ["stylesheets/extra.js"],
 
         "nav": nav
     }
@@ -387,7 +378,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (MICROSOFT STYLE + POLISH)
+# CSS (MICROSOFT STYLE OVERHAUL)
 # ----------------------
 
 def write_css():
@@ -396,12 +387,17 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
+/* =========================
+   MICROSOFT DOCS STYLE UI
+   ========================= */
+
+/* Typography */
 body {
     font-size: 15.5px;
     line-height: 1.7;
 }
 
-/* HEADINGS MICROSOFT STYLE */
+/* Headings — Microsoft-style underline accent */
 .md-typeset h1 {
     font-weight: 800;
     border-bottom: 3px solid #2563eb;
@@ -412,9 +408,10 @@ body {
     font-weight: 700;
     border-bottom: 2px solid #93c5fd;
     padding-bottom: 4px;
+    margin-top: 1.6em;
 }
 
-/* ACTIVE SIDEBAR */
+/* Sidebar active item (blue bar like Microsoft Docs) */
 .md-nav__link--active {
     color: #2563eb !important;
     font-weight: 600;
@@ -422,60 +419,31 @@ body {
     padding-left: 10px;
 }
 
-/* HOVER */
+/* Sidebar hover effect */
 .md-nav__link:hover {
     color: #1d4ed8;
 }
 
-/* CODE BLOCKS */
+/* Top navigation bar polish */
+.md-header {
+    background: #0f172a;
+}
+
+/* Code blocks feel cleaner */
 .md-typeset code {
     border-radius: 6px;
 }
 
-/* FIX SPACING */
-.md-typeset h2, .md-typeset h3 {
-    scroll-margin-top: 90px;
+/* Paragraph spacing */
+p {
+    margin-bottom: 14px;
 }
-""", encoding="utf-8")
 
-
-# ----------------------
-# JAVASCRIPT FIX (TOC LAST ITEM + SMOOTH SCROLL FIX)
-# ----------------------
-
-def write_js():
-
-    js_dir = Path("docs/stylesheets")
-    js_dir.mkdir(parents=True, exist_ok=True)
-
-    (js_dir / "extra.js").write_text("""
-document.addEventListener("DOMContentLoaded", function () {
-
-    // Fix TOC last item not highlighting
-    const headings = document.querySelectorAll(".md-typeset h2, .md-typeset h3");
-    const tocLinks = document.querySelectorAll(".md-nav__link");
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const id = entry.target.id;
-
-                tocLinks.forEach(link => {
-                    if (link.getAttribute("href") === "#" + id) {
-                        link.classList.add("md-nav__link--active");
-                    } else {
-                        link.classList.remove("md-nav__link--active");
-                    }
-                });
-            }
-        });
-    }, {
-        rootMargin: "0px 0px -80% 0px",
-        threshold: 0.1
-    });
-
-    headings.forEach(h => observer.observe(h));
-});
+/* Section spacing */
+.md-typeset h2,
+.md-typeset h3 {
+    scroll-margin-top: 80px;
+}
 """, encoding="utf-8")
 
 
@@ -485,7 +453,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "Microsoft UI overhaul v2"], check=False)
+    subprocess.run(["git", "commit", "-m", "Microsoft-style UI overhaul"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -508,11 +476,10 @@ def main():
     create_sample_page(docs)
     create_home_page(docs)
     write_css()
-    write_js()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ MICROSOFT UI OVERHAUL COMPLETE (FINAL POLISH)")
+    print("✅ MICROSOFT UI OVERHAUL COMPLETE")
 
 
 if __name__ == "__main__":

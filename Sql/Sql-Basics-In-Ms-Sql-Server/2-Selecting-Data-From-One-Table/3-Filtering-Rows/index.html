@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#overview" class="md-skip">
+        <a href="#only-selecting-a-few-rows" class="md-skip">
           Skip to content
         </a>
       
@@ -599,24 +599,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Filtering Rows
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -634,34 +618,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -2042,25 +1998,8 @@
   
   
   
+    
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -2077,18 +2016,16 @@
 
 
 
-<h1 id="only-selecting-a-few-rows">Only selecting a few rows<a class="headerlink" href="#only-selecting-a-few-rows" title="Permanent link">&para;</a></h1>
+<h1 id="only-selecting-a-few-rows">Only selecting a few rows</h1>
 <p>We can use the WHERE keyword to filter rows according to a specific condition. We use it like this <code>select * from student where name = jack</code> . The condition can be much more complex than this.</p>
-<h1 id="conditional-operators">Conditional operators<a class="headerlink" href="#conditional-operators" title="Permanent link">&para;</a></h1>
+<h1 id="conditional-operators">Conditional operators</h1>
 <p>You can use the usual mathematics symbols like less than, greater than, equals, plus, minus, etc to make other conditions.<br />
 Keywords like NOT can be used in SQL to flip results but for us the mathematics equivalent of this would be !=.</p>
-<h1 id="combining-conditions-and-columns">Combining conditions and columns<a class="headerlink" href="#combining-conditions-and-columns" title="Permanent link">&para;</a></h1>
+<h1 id="combining-conditions-and-columns">Combining conditions and columns</h1>
 <p>You can select specific columns while using conditions to limit results further. For example we can use <code>select id, name from student where not name = james</code> to selected everyone who is not James. Using <code>where name != james</code> does the same.</p>
 <p>You can use a WHERE clause to filter according to a column that has not been listed in the select clause. So <code>select id, name from student where results = 100%</code> still works. </p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Additional details.</p>
 
 
 

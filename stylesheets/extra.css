@@ -3,47 +3,41 @@
     --md-text-font: "Segoe UI", system-ui, sans-serif;
 }
 
-/* Content width */
+/* Layout */
 .md-content {
     max-width: 920px;
     margin: auto;
 }
 
-/* Headings - Microsoft style */
+/* H1 - strong Microsoft style */
 h1 {
-    font-size: 2.4rem;
-    font-weight: 700;
+    font-size: 2.5rem;
+    font-weight: 800;  /* 🔥 strong bold */
     letter-spacing: -0.02em;
-    margin-top: 1.2em;
-    border-bottom: 2px solid #e5e5e5;
+    border-bottom: 2px solid #e6e6e6;
     padding-bottom: 0.3em;
 }
 
+/* H2 */
 h2 {
     font-size: 1.8rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-top: 1.5em;
 }
 
+/* H3 */
 h3 {
     font-size: 1.3rem;
     font-weight: 600;
-    margin-top: 1.2em;
 }
 
-/* Improve readability */
+/* Paragraph readability */
 p {
     line-height: 1.7;
-    font-size: 1rem;
 }
 
-/* Sidebar polish */
-.md-nav__link--active {
-    font-weight: 600;
-}
-
-/* TOC styling */
+/* TOC sidebar */
 .md-sidebar--secondary {
     border-left: 1px solid #eee;
-    padding-left: 10px;
+    padding-left: 12px;
 }

@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#overview" class="md-skip">
+        <a href="#computing-basic-statistics" class="md-skip">
           Skip to content
         </a>
       
@@ -1103,24 +1103,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Aggregation
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1138,34 +1122,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -2042,25 +1998,8 @@
   
   
   
+    
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -2077,7 +2016,7 @@
 
 
 
-<h1 id="computing-basic-statistics">Computing basic statistics<a class="headerlink" href="#computing-basic-statistics" title="Permanent link">&para;</a></h1>
+<h1 id="computing-basic-statistics">Computing basic statistics</h1>
 <p>We can use specific window functions, or commands, to achieve specific statistics in SQL. These commands are more complex than just being simple clauses.</p>
 <p>COUNT() - used to count the total number of whatever column is specified</p>
 <p><code>select count(*) as EmployeeNumber from Employee</code>   <br />
@@ -2091,7 +2030,7 @@ DISTINCT should be used within the aggregate if you want that specific calculati
 <p>That would make a new column and after each order, there would be a count for how many orders that person has done. This will not filter the results down to unique values, so every single order will have the same number in the OrderCount column for the same ID.</p>
 <p>To use aggregates properly in SQL, and for them to be more meaningful, we have to use the GROUP BY clause which is mentioned later on. You actually require a GROUP BY clause for these to even run in the first place unless you are just selecting the aggregate column.</p>
 <p>All columns which are not aggregates (the ones not using counts and commands like that) need to be added to the GROUP BY section, which makes aggregating useful but more annoying as you can't just use * to pull in every column, you need to mention them all specifically.</p>
-<h1 id="others">Others<a class="headerlink" href="#others" title="Permanent link">&para;</a></h1>
+<h1 id="others">Others</h1>
 <p>Apart from count we also have:</p>
 <p>MIN() - find the minimum value in the column</p>
 <p>MAX() - find the maximum value in the column</p>
@@ -2099,8 +2038,6 @@ DISTINCT should be used within the aggregate if you want that specific calculati
 <p>AVG() - finds the average of all the values in a column</p>
 <p>Note: in real life these commands won't usually be used on the entire column, it will be used for use cases such as the average salary by department for example, this is where the GROUP BY clause comes into play. It basically says "use this command on each of these groups", such as grouping by department name will use the average command on the salary column and give an average for each departments separately.</p>
 <p>&nbsp;</p>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Additional details.</p>
 
 
 

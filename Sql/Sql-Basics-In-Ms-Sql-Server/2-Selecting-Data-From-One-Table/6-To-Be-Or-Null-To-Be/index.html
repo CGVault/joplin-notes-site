@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#overview" class="md-skip">
+        <a href="#null-values" class="md-skip">
           Skip to content
         </a>
       
@@ -683,24 +683,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    To Be Or Null To Be
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -718,34 +702,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -2042,25 +1998,8 @@
   
   
   
+    
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -2077,14 +2016,12 @@
 
 
 
-<h1 id="null-values">NULL values<a class="headerlink" href="#null-values" title="Permanent link">&para;</a></h1>
+<h1 id="null-values">NULL values</h1>
 <p>Filtering for NULL values is useful for finding missing information and disregarding records that have incomplete columns/fields. NULL is a void, it is not 0 or an empty string or date, it is a column/field that has not been filled in at all.</p>
 <p>In SQL, because NULL doesn't equal 0, records with a 0, like a price for example, won't show up in  the results. NULL is special and will always be excluded from the results unless there is a condition searching for it.<br />
 <br/>Furthermore, NULL in T-SQL interestingly doesn't equal itself. NULL = NULL is false.</p>
 <p>Filtering NULLs uses the clause IS, NOT, NULL, to get NULL values we can use IS NULL. The clauses IS, NOT and NULL are separate clauses but are used together in this instance. IS can be used for IS IN, NOT flips other results too, etc.</p>
 <p><code>select * from student where result IS NOT NULL</code> finds all the students that have results. Using IS NULL will find records where the results column hasn't been filled in.</p>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Additional details.</p>
 
 
 

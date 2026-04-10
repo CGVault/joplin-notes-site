@@ -1,6 +1,7 @@
 
 /* =========================
-   MICROSOFT DOCS STYLE UI
+   MICROSOFT STYLE UI
+   + REMOVE MKDOCS BRANDING
    ========================= */
 
 /* Typography */
@@ -9,7 +10,7 @@ body {
     line-height: 1.7;
 }
 
-/* Headings — Microsoft-style underline accent */
+/* Headings */
 .md-typeset h1 {
     font-weight: 800;
     border-bottom: 3px solid #2563eb;
@@ -23,7 +24,7 @@ body {
     margin-top: 1.6em;
 }
 
-/* Sidebar active item (blue bar like Microsoft Docs) */
+/* Active nav item */
 .md-nav__link--active {
     color: #2563eb !important;
     font-weight: 600;
@@ -31,17 +32,17 @@ body {
     padding-left: 10px;
 }
 
-/* Sidebar hover effect */
+/* Hover nav */
 .md-nav__link:hover {
     color: #1d4ed8;
 }
 
-/* Top navigation bar polish */
+/* Header */
 .md-header {
     background: #0f172a;
 }
 
-/* Code blocks feel cleaner */
+/* Code blocks */
 .md-typeset code {
     border-radius: 6px;
 }
@@ -51,8 +52,18 @@ p {
     margin-bottom: 14px;
 }
 
-/* Section spacing */
-.md-typeset h2,
-.md-typeset h3 {
-    scroll-margin-top: 80px;
+/* =========================
+   REMOVE MKDOCS FOOTER BRANDING
+   ========================= */
+
+.md-footer,
+.md-footer-meta,
+.md-footer__inner,
+.md-copyright {
+    display: none !important;
+}
+
+/* Remove "Made with Material for MkDocs" style badges if present */
+footer {
+    display: none !important;
 }

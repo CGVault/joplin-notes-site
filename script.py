@@ -7,11 +7,10 @@ import subprocess
 from pathlib import Path
 
 IGNORE_DIRS = {".obsidian", ".trash", "_resources"}
-MAX_NAME = 120
 
 
 # ----------------------
-# ORDER + CLEANING
+# CLEANING
 # ----------------------
 
 def parse_order(name):
@@ -21,122 +20,78 @@ def parse_order(name):
     return 9999, name
 
 
-def clean_display(name):
-    _, title = parse_order(Path(name).stem)
-    return title.replace("-", " ").strip()
-
-
-def clean_folder(name):
-    _, title = parse_order(name)
-    return title.replace("-", " ").strip()
-
-
 def slugify(text):
     text = re.sub(r'[^\w\s-]', '', text.strip())
     text = re.sub(r'[\s_-]+', ' ', text)
-    text = text.title().replace(" ", "-")
-    return text[:MAX_NAME].strip("-") or "Note"
+    return text.title().replace(" ", "-")
+
+
+def clean_title(name):
+    _, title = parse_order(Path(name).stem)
+    return title
 
 
 # ----------------------
-# BUILD MAP
+# BUILD FILE MAP
 # ----------------------
 
 def build_map(src):
-    mapping = {}
+    mapping = []
 
-    for f in src.rglob("*"):
-        if not f.is_file():
-            continue
-
+    for f in src.rglob("*.md"):
         rel = f.relative_to(src)
 
         if any(part in IGNORE_DIRS for part in rel.parts):
             continue
 
-        new_name = slugify(f.stem) + f.suffix.lower()
-        new_rel = rel.with_name(new_name)
-
-        mapping[rel] = new_rel
+        mapping.append(rel)
 
     return mapping
 
 
 # ----------------------
-# IMAGE FIX (NEW SYSTEM)
+# FIX CONTENT (IMPORTANT)
 # ----------------------
 
-def fix_images(content):
-    """
-    Convert Joplin _resources references into local folder resources
-    """
+def fix_content(content):
 
-    # normalize all Joplin variants
-    content = re.sub(r'!\[([^\]]*)\]\([^)]*_resources/', r'![\1](resources/', content)
+    # FIX IMAGE PATHS
+    content = re.sub(
+        r'!\[([^\]]*)\]\([^)]*?_resources/',
+        r'![\1](resources/',
+        content
+    )
 
-    # fallback replacements
     content = content.replace("_resources/", "resources/")
 
     return content
 
 
 # ----------------------
-# CONTENT FIX
+# WRITE FILES (LOCAL RESOURCES SYSTEM)
 # ----------------------
 
-def fix_content(content):
-    lines = content.splitlines()
-    fixed = []
+def write_docs(src, docs, files):
 
-    for line in lines:
-
-        # TOC FIX (include first heading now)
-        if line.startswith("#"):
-            line = "#" + line  # shift everything down one level
-
-        fixed.append(line)
-
-    return fix_images("\n".join(fixed))
-
-
-# ----------------------
-# WRITE DOCS
-# ----------------------
-
-def write_docs(src, docs, mapping):
     if docs.exists():
         shutil.rmtree(docs)
 
     docs.mkdir(parents=True, exist_ok=True)
 
     # ----------------------
-    # HOME PAGE
+    # HOME
     # ----------------------
 
-    (docs / "index.md").write_text("""
-# Vault Wiki
-
-## Start Here
-- [Sample Page](sample-page.md)
-""")
-
-    (docs / "sample-page.md").write_text("""
-# Sample Page
-
-## Section 1
-Example
-
-## Section 2
-More content
-""")
+    (docs / "index.md").write_text("# Vault Wiki\n")
 
     # ----------------------
-    # FILES
+    # PROCESS FILES
     # ----------------------
 
-    for orig, new in mapping.items():
-        src_file = src / orig
-        dst_file = docs / new
+    for rel in files:
+        src_file = src / rel
+
+        dst_file = docs / rel
 
         dst_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -162,46 +117,54 @@ More content
 
 
 # ----------------------
-# NAV BUILD (IGNORES _resources)
+# BUILD NAV (FIXED - NO ORPHANS)
 # ----------------------
 
 def build_nav(docs):
 
-    def walk(folder):
-        items = []
+    tree = {}
 
-        def sort_key(p):
-            order, _ = parse_order(p.stem)
-            return order, p.name.lower()
+    for f in docs.rglob("*.md"):
+        rel = f.relative_to(docs).as_posix()
 
-        for p in sorted(folder.iterdir(), key=sort_key):
+        parts = Path(rel).parts
 
-            if any(part in IGNORE_DIRS for part in p.parts):
-                continue
+        cursor = tree
 
-            if p.is_dir():
-                if (p / "index.md").exists():
-                    items.append({clean_folder(p.name): walk(p)})
+        for part in parts[:-1]:
+            cursor = cursor.setdefault(part, {})
 
-            elif p.suffix == ".md" and p.name != "index.md":
-                items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
+        cursor[parts[-1]] = rel
 
-        return items
+    return tree
 
-    return walk(docs)
+
+def convert_nav(tree):
+    nav = []
+
+    for k, v in sorted(tree.items()):
+        if isinstance(v, dict):
+            nav.append({k: convert_nav(v)})
+        else:
+            name = Path(k).stem.replace("-", " ")
+            nav.append({name: v})
+
+    return nav
 
 
 # ----------------------
-# MKDOCS
+# MKDOCS CONFIG
 # ----------------------
 
 def write_mkdocs(docs):
     import yaml
 
-    nav = build_nav(docs)
+    nav_tree = build_nav(docs)
+    nav = convert_nav(nav_tree)
 
     config = {
         "site_name": "Vault Wiki",
+
         "theme": {
             "name": "material",
             "features": [
@@ -212,14 +175,15 @@ def write_mkdocs(docs):
                 "toc.follow"
             ]
         },
+
         "markdown_extensions": [
             {"toc": {"permalink": True}},
             "tables",
             "fenced_code"
         ],
+
         "nav": [
             {"Home": "index.md"},
-            {"Sample": "sample-page.md"},
             *nav
         ]
     }
@@ -234,7 +198,7 @@ def write_mkdocs(docs):
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: images + nav cleanup"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: full nav + image system rewrite"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -249,13 +213,13 @@ def main():
     src = Path(sys.argv[1]).resolve()
     docs = Path("docs")
 
-    mapping = build_map(src)
+    files = build_map(src)
 
-    write_docs(src, docs, mapping)
+    write_docs(src, docs, files)
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FIXED: images + navigation + resources handling")
+    print("✅ FULL FIX: nav + images + orphan elimination complete")
 
 
 if __name__ == "__main__":

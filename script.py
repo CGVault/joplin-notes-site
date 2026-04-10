@@ -6,11 +6,16 @@ import shutil
 import subprocess
 from pathlib import Path
 
-IGNORE_DIRS = {".obsidian", ".trash", "_resources"}
+# ----------------------
+# CONFIG
+# ----------------------
+
+IGNORE_DIRS = {"resources", "_resources", ".obsidian", ".trash"}
+MAX_NAME = 120
 
 
 # ----------------------
-# CLEANING
+# ORDER PARSING
 # ----------------------
 
 def parse_order(name):
@@ -20,15 +25,27 @@ def parse_order(name):
     return 9999, name
 
 
-def slugify(text):
-    text = re.sub(r'[^\w\s-]', '', text.strip())
-    text = re.sub(r'[\s_-]+', ' ', text)
-    return text.title().replace(" ", "-")
-
-
-def clean_title(name):
+def clean_display(name):
     _, title = parse_order(Path(name).stem)
-    return title
+    return title.replace("-", " ").strip()
+
+
+def clean_folder(name):
+    _, title = parse_order(name)
+    return title.replace("-", " ").strip()
+
+
+# ----------------------
+# SLUGIFY
+# ----------------------
+
+def slugify(text):
+    text = text.strip()
+    text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r'[\s_-]+', ' ', text)
+    text = text.title()
+    text = text.replace(" ", "-")
+    return text[:MAX_NAME].strip("-") or "Note"
 
 
 # ----------------------
@@ -36,120 +53,201 @@ def clean_title(name):
 # ----------------------
 
 def build_map(src):
-    mapping = []
+    mapping = {}
+    used = set()
 
-    for f in src.rglob("*.md"):
+    for f in src.rglob("*"):
+        if not f.is_file():
+            continue
+
         rel = f.relative_to(src)
 
         if any(part in IGNORE_DIRS for part in rel.parts):
             continue
 
-        mapping.append(rel)
+        new_name = slugify(f.stem) + f.suffix.lower()
+        new_path = Path(*[slugify(p) for p in rel.parts[:-1]]) / new_name
+
+        base = new_path
+        i = 1
+        while str(new_path) in used:
+            new_path = base.with_name(f"{base.stem}-{i}{base.suffix}")
+            i += 1
+
+        used.add(str(new_path))
+        mapping[str(rel)] = str(new_path)
 
     return mapping
 
 
 # ----------------------
-# FIX CONTENT (IMPORTANT)
+# CONTENT FIX (UPDATED)
 # ----------------------
 
 def fix_content(content):
+    lines = content.splitlines()
+    fixed = []
 
-    # FIX IMAGE PATHS
+    first_heading_handled = False
+
+    for line in lines:
+        if line.startswith("#"):
+            if not first_heading_handled:
+                # 🔥 Convert FIRST H1 → H2 (so it appears in TOC)
+                fixed.append(re.sub(r'^# ', '## ', line))
+                first_heading_handled = True
+            else:
+                # Keep all others at H2 level
+                fixed.append(re.sub(r'^# ', '## ', line))
+        else:
+            fixed.append(line)
+
+    content = "\n".join(fixed)
+
+    # Fix Joplin images
     content = re.sub(
-        r'!\[([^\]]*)\]\([^)]*?_resources/',
-        r'![\1](resources/',
+        r'!\[.*?\]\(:/([a-zA-Z0-9]+)\)',
+        r'![image](resources/\1.png)',
         content
     )
-
-    content = content.replace("_resources/", "resources/")
 
     return content
 
 
 # ----------------------
-# WRITE FILES (LOCAL RESOURCES SYSTEM)
+# WRITE DOCS
 # ----------------------
 
-def write_docs(src, docs, files):
-
+def write_docs(src, docs, mapping):
     if docs.exists():
         shutil.rmtree(docs)
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    # ----------------------
-    # HOME
-    # ----------------------
+    # 🏠 Homepage
+    (docs / "index.md").write_text("""
+# Vault Wiki
 
-    (docs / "index.md").write_text("# Vault Wiki\n")
+Welcome to your knowledge base.
 
-    # ----------------------
-    # PROCESS FILES
-    # ----------------------
+---
 
-    for rel in files:
-        src_file = src / rel
+## 🚀 Start Here
 
-        dst_file = docs / rel
+- [🧪 Open Sample Page](sample-page.md)
+- Use the sidebar to browse all notes
+
+---
+
+## 📊 Overview
+
+- Auto-generated from Joplin
+- Structured wiki navigation
+""")
+
+    # 🧪 Sample page
+    (docs / "sample-page.md").write_text("""
+# Sample Page
+
+## Section One
+Example content.
+
+## Section Two
+TOC works here.
+
+## Section Three
+Use this page for testing.
+""")
+
+    for orig, new in mapping.items():
+        src_file = src / orig
+        dst_file = docs / new
 
         dst_file.parent.mkdir(parents=True, exist_ok=True)
 
         content = src_file.read_text(encoding="utf-8", errors="ignore")
         content = fix_content(content)
 
-        # ----------------------
-        # COPY LOCAL RESOURCES
-        # ----------------------
-
-        src_folder = src_file.parent
-        dst_folder = dst_file.parent
-
-        src_res = src_folder / "_resources"
-        dst_res = dst_folder / "resources"
-
-        if src_res.exists():
-            if dst_res.exists():
-                shutil.rmtree(dst_res)
-            shutil.copytree(src_res, dst_res)
-
         dst_file.write_text(content, encoding="utf-8")
 
 
 # ----------------------
-# BUILD NAV (FIXED - NO ORPHANS)
+# FOLDER LANDING PAGES
+# ----------------------
+
+def generate_folder_indexes(docs):
+    for root, _, _ in os.walk(docs):
+        root = Path(root)
+
+        if root == docs:
+            continue
+
+        if any(part in IGNORE_DIRS for part in root.parts):
+            continue
+
+        subfolders = []
+        notes = []
+
+        for item in sorted(root.iterdir()):
+            if any(part in IGNORE_DIRS for part in item.parts):
+                continue
+
+            if item.is_dir():
+                if (item / "index.md").exists():
+                    subfolders.append(item)
+
+            elif item.suffix == ".md" and item.name != "index.md":
+                notes.append(item)
+
+        folder_name = clean_folder(root.name)
+
+        content = f"# {folder_name}\n\n"
+
+        if subfolders:
+            content += "## Sections\n\n"
+            for sf in subfolders:
+                name = clean_folder(sf.name)
+                rel = sf.relative_to(docs).as_posix()
+                content += f"- [{name}]({rel}/)\n"
+            content += "\n"
+
+        if notes:
+            content += "## Notes\n\n"
+            for nf in notes:
+                name = clean_display(nf.name)
+                rel = nf.relative_to(docs).as_posix()
+                content += f"- [{name}]({rel})\n"
+
+        (root / "index.md").write_text(content)
+
+
+# ----------------------
+# BUILD NAV TREE
 # ----------------------
 
 def build_nav(docs):
+    def walk(folder):
+        items = []
 
-    tree = {}
+        def sort_key(p):
+            order, _ = parse_order(p.stem)
+            return order, p.name.lower()
 
-    for f in docs.rglob("*.md"):
-        rel = f.relative_to(docs).as_posix()
+        for p in sorted(folder.iterdir(), key=sort_key):
 
-        parts = Path(rel).parts
+            if any(part in IGNORE_DIRS for part in p.parts):
+                continue
 
-        cursor = tree
+            if p.is_dir():
+                if (p / "index.md").exists():
+                    items.append({clean_folder(p.name): walk(p)})
 
-        for part in parts[:-1]:
-            cursor = cursor.setdefault(part, {})
+            elif p.suffix == ".md" and p.name not in {"index.md", "sample-page.md"}:
+                items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
 
-        cursor[parts[-1]] = rel
+        return items
 
-    return tree
-
-
-def convert_nav(tree):
-    nav = []
-
-    for k, v in sorted(tree.items()):
-        if isinstance(v, dict):
-            nav.append({k: convert_nav(v)})
-        else:
-            name = Path(k).stem.replace("-", " ")
-            nav.append({name: v})
-
-    return nav
+    return walk(docs)
 
 
 # ----------------------
@@ -159,8 +257,7 @@ def convert_nav(tree):
 def write_mkdocs(docs):
     import yaml
 
-    nav_tree = build_nav(docs)
-    nav = convert_nav(nav_tree)
+    nav = build_nav(docs)
 
     config = {
         "site_name": "Vault Wiki",
@@ -172,6 +269,7 @@ def write_mkdocs(docs):
                 "navigation.sections",
                 "navigation.path",
                 "navigation.top",
+                "navigation.indexes",
                 "toc.follow"
             ]
         },
@@ -182,8 +280,11 @@ def write_mkdocs(docs):
             "fenced_code"
         ],
 
+        "extra_css": ["stylesheets/extra.css"],
+
         "nav": [
-            {"Home": "index.md"},
+            {"🏠 Home": "index.md"},
+            {"🧪 Sample Page": "sample-page.md"},
             *nav
         ]
     }
@@ -193,12 +294,27 @@ def write_mkdocs(docs):
 
 
 # ----------------------
+# CSS
+# ----------------------
+
+def write_css():
+    css_dir = Path("docs/stylesheets")
+    css_dir.mkdir(parents=True, exist_ok=True)
+
+    (css_dir / "extra.css").write_text("""
+.md-typeset h1 { font-weight: 900; }
+.md-typeset h2 { font-weight: 900; font-size: 2rem; }
+.md-typeset h3 { font-weight: 800; }
+""")
+
+
+# ----------------------
 # DEPLOY
 # ----------------------
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: full nav + image system rewrite"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: include first heading in TOC"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -213,13 +329,14 @@ def main():
     src = Path(sys.argv[1]).resolve()
     docs = Path("docs")
 
-    files = build_map(src)
-
-    write_docs(src, docs, files)
+    mapping = build_map(src)
+    write_docs(src, docs, mapping)
+    generate_folder_indexes(docs)
+    write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FULL FIX: nav + images + orphan elimination complete")
+    print("✅ First heading now included in TOC")
 
 
 if __name__ == "__main__":

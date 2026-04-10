@@ -5,7 +5,7 @@ created: 2026-04-04 05:45:39Z
 latitude: -33.86881970
 longitude: 151.20929550
 altitude: 0.0000
-## ---
+---
 
 The exercises completed uses a relational database with tables Student, Room and Equipment.
 

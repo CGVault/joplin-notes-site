@@ -5,7 +5,7 @@ created: 2026-04-04 05:43:57Z
 latitude: -33.86881970
 longitude: 151.20929550
 altitude: 0.0000
-## ---
+---
 
 # Filtering the results after grouping has occurred
 
@@ -15,23 +15,23 @@ However, if we want to filter the data after it has been grouped, like filtering
 
 In this case, we want filter the number if years an employee has worked, which is something we had to calculate, so we use the HAVING clause after the group by to filter according to our COUNT calculation.
 
-## `Select`
+`SELECT`  
 `FirstName,`  
 `LastName,`  
 `COUNT(Year) as EmployeeYears`  
 `FROM Employee`  
 `GROUP BY FIrstName, LastName`  
-## `HAVING COUNT(Year) > 2;`
+`HAVING COUNT(Year) > 2;`
 
 Here is an example where we filter the data before its group, limiting it to a specific year. Then we filter the data after its grouped to limit the data according to the average salary calculation we made.
 
-## `Select`
+`SELECT`  
 `department,`  
 `AVG(salary) as AvgDepartmentSalary`  
 `FROM Employee`  
 `WHERE year = '2012'`  
 `GROUP BY department`  
-## `HAVING AVG(salary) > 3000;`
+`HAVING AVG(salary) > 3000;`
 
 # Ordering groups
 
@@ -39,12 +39,12 @@ ORDER BY can still be used after all the grouping has occurred, and the ORDER BY
 
 This examples group's total employee salaries, and then it filters the total salaries calculated using SUM() in descending order to find the employee with the highest total salary.
 
-## `Select`
+`SELECT`  
 `FirstName,`  
 `LastName,`  
 `SUM(salary) as TotalSalary`  
 `FROM Employee`  
 `GROUP BY FIrstName, LastName`  
-## `ORDER BY SUM(salary) desc;`
+`ORDER BY SUM(salary) desc;`
 
 &nbsp;

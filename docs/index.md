@@ -27,4 +27,4 @@ Use the sidebar to browse topics automatically generated from your vault.
 
 ## ⚡ Tip
 
-Keep headings in your notes to improve structure and TOC.
+Use proper # and ## headings in notes for TOC.

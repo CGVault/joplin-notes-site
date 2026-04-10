@@ -82,11 +82,13 @@ def build_map(src):
 
 
 # ----------------------
-# FIX CONTENT (IMAGES + HEADINGS)
+# FIX CONTENT (IMAGES + CLEAN HEADINGS ONLY)
 # ----------------------
 
 def fix_content(content):
+    # ----------------------
     # Fix Joplin images
+    # ----------------------
     content = re.sub(
         r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
         r'![\1](resources/\2)',
@@ -95,37 +97,30 @@ def fix_content(content):
 
     content = content.replace("_resources/", "resources/")
 
-    # Convert headings
+    # ----------------------
+    # Normalize headings ONLY
+    # ----------------------
+
     lines = content.splitlines()
     new_lines = []
 
-    for i, line in enumerate(lines):
-        stripped = line.strip()
+    for line in lines:
+        stripped = line.lstrip()
 
-        if not stripped:
+        # Keep H1 and H2 exactly as-is
+        if stripped.startswith("# "):
             new_lines.append(line)
             continue
 
-        if stripped.startswith("#"):
+        if stripped.startswith("## "):
             new_lines.append(line)
             continue
 
-        # ALL CAPS → H2
-        if stripped.isupper() and len(stripped) < 80:
-            new_lines.append(f"## {stripped.title()}")
+        # Convert deeper headings → H2
+        if re.match(r'^#{3,}\s+', stripped):
+            text = re.sub(r'^#{3,}\s+', '', stripped)
+            new_lines.append(f"## {text}")
             continue
-
-        # Bold → H3
-        if re.match(r'^\*\*(.+)\*\*$', stripped):
-            text = re.sub(r'^\*\*(.+)\*\*$', r'\1', stripped)
-            new_lines.append(f"### {text}")
-            continue
-
-        # Short line before empty line → H2
-        if i + 1 < len(lines) and not lines[i + 1].strip():
-            if len(stripped) < 80:
-                new_lines.append(f"## {stripped}")
-                continue
 
         new_lines.append(line)
 
@@ -165,7 +160,6 @@ This page shows how notes should be structured.
 ## Headings (TOC Example)
 
 ### Level 3 Heading
-MkDocs Material automatically builds TOC from headings.
 
 ## Content Example
 
@@ -217,7 +211,7 @@ Use the sidebar to browse topics automatically generated from your vault.
 
 ## ⚡ Tip
 
-Keep headings in your notes to improve structure and TOC.
+Use proper # and ## headings in notes for TOC.
 """, encoding="utf-8")
 
 
@@ -300,7 +294,7 @@ def generate_folder_indexes(docs):
 
 
 # ----------------------
-# NAV BUILD (FIXED)
+# NAV BUILD
 # ----------------------
 
 def build_nav(docs):
@@ -313,7 +307,6 @@ def build_nav(docs):
             if any(part in IGNORE_DIRS for part in p.parts):
                 continue
 
-            # Skip sample page (avoid duplicate)
             if p.name == "sample-page.md":
                 continue
 
@@ -330,7 +323,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG
+# MKDOCS CONFIG (TOC FIXED)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -353,8 +346,7 @@ def write_mkdocs(docs):
                 "navigation.path",
                 "navigation.top",
                 "navigation.indexes",
-                "toc.follow",
-                "toc.integrate"
+                "toc.follow"   # ✅ RIGHT SIDE TOC
             ]
         },
         "markdown_extensions": [
@@ -417,7 +409,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ BUILD COMPLETE (nav fixed + TOC working + clean UI)")
+    print("✅ BUILD COMPLETE (clean TOC + strict headings + nav fixed)")
 
 
 if __name__ == "__main__":

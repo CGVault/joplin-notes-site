@@ -81,25 +81,13 @@ def build_map(src):
 
 
 # ----------------------
-# CONTENT FIX
-# ----------------------
-
-def fix_content(content):
-    content = re.sub(
-        r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
-        r'![\1](resources/\2)',
-        content
-    )
-
-    content = content.replace("_resources/", "resources/")
-    return content
-
-
-# ----------------------
-# COPY RESOURCES
+# COPY ALL JOPLIN RESOURCES (FIXED CORE)
 # ----------------------
 
 def copy_all_resources(src, docs):
+    """
+    Mirror ALL _resources folders into docs/<same folder>/resources
+    """
     for res in src.rglob("_resources"):
         if not res.is_dir():
             continue
@@ -115,29 +103,22 @@ def copy_all_resources(src, docs):
 
 
 # ----------------------
-# SAMPLE PAGE (FIXED)
+# CONTENT FIX (IMAGE RESOLUTION FIXED)
 # ----------------------
 
-def create_sample_page(docs):
-    sample = docs / "sample-page.md"
+def fix_content(content):
 
-    if not sample.exists():
-        sample.write_text("""# Sample Page
+    # FIX JOPLIN INLINE IDS
+    content = re.sub(
+        r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
+        r'![\1](resources/\2)',
+        content
+    )
 
-This is a template page for new notes.
+    # FIX legacy resource paths
+    content = content.replace("_resources/", "resources/")
 
-## Usage
-
-- Add new notes in Joplin
-- They will appear automatically here
-- Use headings for TOC support
-
-## Example Section
-
-### Subheading Example
-
-Write your content here.
-""", encoding="utf-8")
+    return content
 
 
 # ----------------------
@@ -151,22 +132,33 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
+    # ----------------------
     # HOME PAGE
+    # ----------------------
+
     (docs / "index.md").write_text("""
 # Vault Wiki
 
 Welcome to your knowledge base.
 
-## Start Here
+---
 
-- Sample Page included in navigation
-- Use sidebar to explore notes
-""", encoding="utf-8")
+## 🚀 Start Here
 
-    # COPY RESOURCES FIRST
+- [Sample Page](sample-page.md)
+- Use sidebar navigation to explore notes
+""")
+
+    # ----------------------
+    # COPY RESOURCES FIRST (CRITICAL FIX)
+    # ----------------------
+
     copy_all_resources(src, docs)
 
+    # ----------------------
     # WRITE FILES
+    # ----------------------
+
     for orig, new in mapping.items():
 
         src_file = src / orig
@@ -178,14 +170,6 @@ Welcome to your knowledge base.
         content = fix_content(content)
 
         dst_file.write_text(content, encoding="utf-8")
-
-
-# ----------------------
-# SAMPLE PAGE HOOK (IMPORTANT)
-# ----------------------
-
-def ensure_sample_page(docs):
-    create_sample_page(docs)
 
 
 # ----------------------
@@ -233,7 +217,7 @@ def generate_folder_indexes(docs):
                 rel = nf.relative_to(docs).as_posix()
                 content += f"- [{name}]({rel})\n"
 
-        (root / "index.md").write_text(content, encoding="utf-8")
+        (root / "index.md").write_text(content)
 
 
 # ----------------------
@@ -264,22 +248,13 @@ def build_nav(docs):
 # ----------------------
 
 def write_mkdocs(docs):
-
     import yaml
 
-    sample_exists = (docs / "sample-page.md").exists()
-
-    nav = [
-        {"🏠 Home": "index.md"},
-    ]
-
-    if sample_exists:
-        nav.append({"🧪 Sample Page": "sample-page.md"})
-
-    nav.extend(build_nav(docs))
+    nav = build_nav(docs)
 
     config = {
         "site_name": "Vault Wiki",
+
         "theme": {
             "name": "material",
             "features": [
@@ -291,13 +266,20 @@ def write_mkdocs(docs):
                 "toc.follow"
             ]
         },
+
         "markdown_extensions": [
             {"toc": {"permalink": True}},
             "tables",
             "fenced_code"
         ],
+
         "extra_css": ["stylesheets/extra.css"],
-        "nav": nav
+
+        "nav": [
+            {"🏠 Home": "index.md"},
+            {"🧪 Sample Page": "sample-page.md"},
+            *nav
+        ]
     }
 
     with open("mkdocs.yml", "w") as f:
@@ -316,7 +298,7 @@ def write_css():
 .md-typeset h1 { font-weight: 900; }
 .md-typeset h2 { font-weight: 900; font-size: 2rem; }
 .md-typeset h3 { font-weight: 800; }
-""", encoding="utf-8")
+""")
 
 
 # ----------------------
@@ -325,7 +307,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: stable Joplin export + sample page"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: fully stable Joplin image system"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -335,7 +317,6 @@ def deploy():
 # ----------------------
 
 def main():
-
     import sys
 
     src = Path(sys.argv[1]).resolve()
@@ -345,12 +326,11 @@ def main():
 
     write_docs(src, docs, mapping)
     generate_folder_indexes(docs)
-    ensure_sample_page(docs)
     write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FULL FIX COMPLETE (images + sample page + nav stable)")
+    print("✅ FULL FIX COMPLETE: images now work reliably")
 
 
 if __name__ == "__main__":

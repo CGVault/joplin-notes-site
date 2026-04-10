@@ -3,9 +3,7 @@
 
 Welcome to your knowledge base.
 
----
+## Start Here
 
-## 🚀 Start Here
-
-- [Sample Page](sample-page.md)
-- Use sidebar navigation to explore notes
+- Sample Page included in navigation
+- Use sidebar to explore notes

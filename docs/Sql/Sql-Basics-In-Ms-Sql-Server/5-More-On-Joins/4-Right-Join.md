@@ -5,7 +5,7 @@ created: 2026-04-04 05:46:00Z
 latitude: -33.86881970
 longitude: 151.20929550
 altitude: 0.0000
----
+## ---
 
 # What is a RIGHT JOIN
 
@@ -15,16 +15,16 @@ Like the INNER JOIN example, using the tables student and room with the equation
 
 Most people just stick to LEFT JOINs and flip the tables around. The order matters a lot. A LEFT JOIN B is the same as B RIGHT JOIN A. LEFT JOIN is used to join two tables almost 100% of the time. RIGHT JOIN only really matters when we have a complex use case requiring us to join more than two tables, and even then everybody just flips the tables around and uses LEFT JOIN. 
 
-Example:
+## Example:
 
-`SELECT`  
+## `Select`
       `  *`  
 `FROM student s`  
 `RIGHT JOIN room r`  
       `  ON s.RoomId=r.Id`  
-      `  order by s.RoomId;`
+## `  order by s.RoomId;`
 
-Results:
+## Results:
 
 | Id  | Name | RoomId | Id  | RoomNumber | Beds | Floor |
 | --- | --- | --- | --- | --- | --- | --- |

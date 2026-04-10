@@ -5,7 +5,7 @@ created: 2026-04-04 05:42:50Z
 latitude: -33.86881970
 longitude: 151.20929550
 altitude: 0.0000
----
+## ---
 
 # Columns when using JOIN
 
@@ -31,6 +31,6 @@ Rule of thumb is to join first and then filter, all columns in the WHERE clause 
 
 `select * from Person join Car on Person.ID = Car.OwnerID where Person.age < 25 or Car.OwnderName = 'Max'; ` 
 
-&nbsp;
+## &nbsp;
 
 &nbsp;

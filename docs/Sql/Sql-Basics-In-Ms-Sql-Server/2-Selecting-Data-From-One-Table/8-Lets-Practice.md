@@ -5,7 +5,7 @@ created: 2026-04-04 05:40:55Z
 latitude: -33.86881970
 longitude: 151.20929550
 altitude: 0.0000
----
+## ---
 
 # Combination of all concepts complex example
 
@@ -18,7 +18,7 @@ Here is an example query using best practice coding (as far as I am concerned) c
 `and (brand not like 'Volkswagen')`  
 `and (model like 'P%' or model like 'F%')`  
 `and (price is not null)`  
-`;` 
+## `;`
 
 Some teachable moments observed:  
 NOT goes before the clause its flipping  

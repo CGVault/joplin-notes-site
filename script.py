@@ -62,7 +62,6 @@ def build_map(src):
 
         rel = f.relative_to(src)
 
-        # ignore system folders
         if any(part in IGNORE_DIRS for part in rel.parts):
             continue
 
@@ -83,11 +82,11 @@ def build_map(src):
 
 
 # ----------------------
-# FIX CONTENT (IMAGES)
+# FIX CONTENT (IMAGES + HEADINGS)
 # ----------------------
 
 def fix_content(content):
-    # Joplin resource links → mkdocs local resources
+    # Fix Joplin images
     content = re.sub(
         r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
         r'![\1](resources/\2)',
@@ -95,7 +94,42 @@ def fix_content(content):
     )
 
     content = content.replace("_resources/", "resources/")
-    return content
+
+    # Convert headings
+    lines = content.splitlines()
+    new_lines = []
+
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+
+        if not stripped:
+            new_lines.append(line)
+            continue
+
+        if stripped.startswith("#"):
+            new_lines.append(line)
+            continue
+
+        # ALL CAPS → H2
+        if stripped.isupper() and len(stripped) < 80:
+            new_lines.append(f"## {stripped.title()}")
+            continue
+
+        # Bold → H3
+        if re.match(r'^\*\*(.+)\*\*$', stripped):
+            text = re.sub(r'^\*\*(.+)\*\*$', r'\1', stripped)
+            new_lines.append(f"### {text}")
+            continue
+
+        # Short line before empty line → H2
+        if i + 1 < len(lines) and not lines[i + 1].strip():
+            if len(stripped) < 80:
+                new_lines.append(f"## {stripped}")
+                continue
+
+        new_lines.append(line)
+
+    return "\n".join(new_lines)
 
 
 # ----------------------
@@ -214,7 +248,7 @@ def write_docs(src, docs, mapping):
 
 
 # ----------------------
-# FOLDER INDEXES (FIXED)
+# FOLDER INDEXES
 # ----------------------
 
 def generate_folder_indexes(docs):
@@ -276,8 +310,11 @@ def build_nav(docs):
 
         for p in sorted(folder.iterdir()):
 
-            # 🚨 FIX: fully skip ignored dirs
             if any(part in IGNORE_DIRS for part in p.parts):
+                continue
+
+            # Skip sample page (avoid duplicate)
+            if p.name == "sample-page.md":
                 continue
 
             if p.is_dir():
@@ -293,7 +330,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (FIXED NAV)
+# MKDOCS CONFIG
 # ----------------------
 
 def write_mkdocs(docs):
@@ -316,7 +353,8 @@ def write_mkdocs(docs):
                 "navigation.path",
                 "navigation.top",
                 "navigation.indexes",
-                "toc.follow"
+                "toc.follow",
+                "toc.integrate"
             ]
         },
         "markdown_extensions": [
@@ -353,7 +391,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix navigation + remove resource leaks + stable vault"], check=False)
+    subprocess.run(["git", "commit", "-m", "auto update vault"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -379,7 +417,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FULL FIX COMPLETE (navigation + sample page + resources fixed)")
+    print("✅ BUILD COMPLETE (nav fixed + TOC working + clean UI)")
 
 
 if __name__ == "__main__":

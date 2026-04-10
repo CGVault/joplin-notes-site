@@ -8,6 +8,7 @@ theme:
   - navigation.top
   - navigation.indexes
   - toc.follow
+  - toc.integrate
 markdown_extensions:
 - toc:
     permalink: true
@@ -65,4 +66,3 @@ nav:
       - Except: Sql/Sql-Basics-In-Ms-Sql-Server/7-Set-Operations/4-Except.md
     - Quiz:
       - Quiz: Sql/Sql-Basics-In-Ms-Sql-Server/8-Quiz/1-Quiz.md
-- sample page: sample-page.md

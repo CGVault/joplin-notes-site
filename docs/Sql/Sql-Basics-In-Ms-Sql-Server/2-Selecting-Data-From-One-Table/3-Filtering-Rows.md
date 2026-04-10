@@ -5,7 +5,7 @@ created: 2026-04-04 05:40:02Z
 latitude: -33.86881970
 longitude: 151.20929550
 altitude: 0.0000
----
+## ---
 
 # Only selecting a few rows
 
@@ -22,6 +22,6 @@ You can select specific columns while using conditions to limit results further.
 
 You can use a WHERE clause to filter according to a column that has not been listed in the select clause. So `select id, name from student where results = 100%` still works. 
 
-&nbsp;
+## &nbsp;
 
 &nbsp;

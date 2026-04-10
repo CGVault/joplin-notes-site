@@ -1075,8 +1075,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Eliminating Duplicate Records
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1094,6 +1110,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#duplicates-and-distinct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duplicates and DISTINCT
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2042,25 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#duplicates-and-distinct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duplicates and DISTINCT
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,7 +2185,9 @@
 
 
 
-<h1 id="duplicates-and-distinct">Duplicates and DISTINCT<a class="headerlink" href="#duplicates-and-distinct" title="Permanent link">&para;</a></h1>
+  <h1>Eliminating Duplicate Records</h1>
+
+<h2 id="duplicates-and-distinct">Duplicates and DISTINCT<a class="headerlink" href="#duplicates-and-distinct" title="Permanent link">&para;</a></h2>
 <p>The clause DISTINCT is used to remove duplicate records for reporting purposes and is very often used to get a list of unique values in a specific column, like all the years an order was placed.</p>
 <p><code>select distinct YearOrder from Orders;</code> </p>
 <p>Remember, DISTINCT removes duplicate rows. So using it across multiple columns works well if you know what the query is doing. This selects records where a customer has done at least one order on a day. The customer IDs will repeat because they are paired up with a unique date. But if a customer order twice on the same day, those records won't show up as the record will have the same customer ID and date:<br />

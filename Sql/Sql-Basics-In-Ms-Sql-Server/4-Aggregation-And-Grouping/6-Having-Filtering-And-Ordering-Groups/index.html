@@ -1159,8 +1159,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -1203,14 +1201,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-the-results-after-grouping-has-occurred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering the results after grouping has occurred
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#ordering-groups" class="md-nav__link">
@@ -2046,14 +2053,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-the-results-after-grouping-has-occurred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering the results after grouping has occurred
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#ordering-groups" class="md-nav__link">
@@ -2191,7 +2207,9 @@
 
 
 
-<h1 id="filtering-the-results-after-grouping-has-occurred">Filtering the results after grouping has occurred<a class="headerlink" href="#filtering-the-results-after-grouping-has-occurred" title="Permanent link">&para;</a></h1>
+  <h1>Having Filtering And Ordering Groups</h1>
+
+<h2 id="filtering-the-results-after-grouping-has-occurred">Filtering the results after grouping has occurred<a class="headerlink" href="#filtering-the-results-after-grouping-has-occurred" title="Permanent link">&para;</a></h2>
 <p>When making queries with a group by clause, we can always filter the the data coming in before the grouping happens, like filtering according to a column we haven't selected in the SELECT clause such as filtering all data before a certain date.</p>
 <p>However, if we want to filter the data after it has been grouped, like filtering by one of the aggregates we performed, we have to use the HAVING clause. </p>
 <p>In this case, we want filter the number if years an employee has worked, which is something we had to calculate, so we use the HAVING clause after the group by to filter according to our COUNT calculation.</p>

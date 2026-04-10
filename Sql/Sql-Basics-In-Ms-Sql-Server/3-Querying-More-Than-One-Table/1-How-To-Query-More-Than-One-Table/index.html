@@ -834,8 +834,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -878,14 +876,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#joining-tables-the-simplest-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joining tables the simplest way
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#joins-using-the-where-clause" class="md-nav__link">
@@ -2046,14 +2053,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#joining-tables-the-simplest-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joining tables the simplest way
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#joins-using-the-where-clause" class="md-nav__link">
@@ -2191,7 +2207,9 @@
 
 
 
-<h1 id="joining-tables-the-simplest-way">Joining tables the simplest way<a class="headerlink" href="#joining-tables-the-simplest-way" title="Permanent link">&para;</a></h1>
+  <h1>How To Query More Than One Table</h1>
+
+<h2 id="joining-tables-the-simplest-way">Joining tables the simplest way<a class="headerlink" href="#joining-tables-the-simplest-way" title="Permanent link">&para;</a></h2>
 <p>The easiest way is to mention both tables in the FROM clause.<br />
 <code>select * from Movie, Director;</code> </p>
 <p>This is the most useless way to join tables, no one uses this method. This simple FROM clause method is the same as using CROSS JOIN because SQL does not know what you want from the data so it just makes every combination between the rows in both tables. <br />

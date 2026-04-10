@@ -1019,8 +1019,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -1063,14 +1061,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ordering-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordering results
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#multi-ordering" class="md-nav__link">
@@ -2046,14 +2053,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ordering-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordering results
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#multi-ordering" class="md-nav__link">
@@ -2191,7 +2207,9 @@
 
 
 
-<h1 id="ordering-results">Ordering results<a class="headerlink" href="#ordering-results" title="Permanent link">&para;</a></h1>
+  <h1>Ordering</h1>
+
+<h2 id="ordering-results">Ordering results<a class="headerlink" href="#ordering-results" title="Permanent link">&para;</a></h2>
 <p>Results without an order is useless for reporting, so after all the selecting, filtering, any aggregation, we sort the results by a specific column. The ORDER BY clause arranges all the records according to the column chosen. By default its ASC (ascending) so you do not need to type it out each time but its best practice to do so, DESC flips it to descending order. Not all SQL servers are setup the same and this is why we explicitly code in everything even if it takes longer.</p>
 <p><code>select * from employee order by salary</code> </p>
 <p>Filter first:</p>

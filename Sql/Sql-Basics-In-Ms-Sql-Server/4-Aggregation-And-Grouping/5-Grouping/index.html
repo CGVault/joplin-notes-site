@@ -1131,8 +1131,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -1175,14 +1173,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-group-by-to-get-meaningful-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using GROUP BY to get meaningful statistics
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#grouping-by-more-than-one-column" class="md-nav__link">
@@ -2046,14 +2053,23 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-group-by-to-get-meaningful-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using GROUP BY to get meaningful statistics
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#grouping-by-more-than-one-column" class="md-nav__link">
@@ -2191,7 +2207,9 @@
 
 
 
-<h1 id="using-group-by-to-get-meaningful-statistics">Using GROUP BY to get meaningful statistics<a class="headerlink" href="#using-group-by-to-get-meaningful-statistics" title="Permanent link">&para;</a></h1>
+  <h1>Grouping</h1>
+
+<h2 id="using-group-by-to-get-meaningful-statistics">Using GROUP BY to get meaningful statistics<a class="headerlink" href="#using-group-by-to-get-meaningful-statistics" title="Permanent link">&para;</a></h2>
 <p>As mentioned on the aggregation page, GROUP BY is required for us to use aggregate functions in a meaningful way.</p>
 <p>This example counts all the employees per department.</p>
 <p><code>select department, count(FirstName) as DepartmentEmployees</code><br />

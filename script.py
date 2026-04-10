@@ -444,6 +444,22 @@ p {
 .md-typeset h3 {
     scroll-margin-top: 80px;
 }
+
+/* =========================
+   REMOVE MKDOCS FOOTER BRANDING
+   ========================= */
+
+.md-footer,
+.md-footer-meta,
+.md-footer__inner,
+.md-copyright {
+    display: none !important;
+}
+
+/* Remove "Made with Material for MkDocs" style badges if present */
+footer {
+    display: none !important;
+}
 """, encoding="utf-8")
 
 

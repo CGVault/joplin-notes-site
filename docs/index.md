@@ -18,11 +18,10 @@ Use the sidebar to browse topics automatically generated from your vault.
 
 ## ✨ Features
 
-- Microsoft-style navigation UI
-- Instant search system
-- Clean TOC per page
-- Joplin image support
-- Structured knowledge base
+- Automatic folder → navigation conversion
+- Image support from Joplin resources
+- Clean TOC from headings
+- Stable MkDocs Material layout
 
 ---
 

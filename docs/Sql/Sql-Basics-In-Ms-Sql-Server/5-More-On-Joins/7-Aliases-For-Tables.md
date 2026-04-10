@@ -18,7 +18,7 @@ Example:
 `from room as r`  
 `join equipment as e on e.RoomId=r.Id;`
 
-# Aliases in SELF JOINs
+## Aliases in SELF JOINs
 
 Self joins are not super typical in live enterprise databases but there are some situations where two different objects we want to compare or match are stored in the same table. Such as a table called person storing children and their parents, or a employees table storing managers and their team members. Because mothers and children are both people, and managers are employees just like their team members, they are stored in the same table.
 
@@ -28,7 +28,7 @@ This example self joins to find everyone who also have the same RoomId as Jack. 
 `from student a1 join student a2 on a1.RoomId=a2.RoomId`  
 `where a1.Name = 'Jack Pearson' and a2.Name != 'Jack Pearson';`
 
-# Joining more than one table challenge
+## Joining more than one table challenge
 
 Joining more than two tables, and even self joining while doing that is entirely possible. Such queries need careful planning, as they can be complicated but breaking down what you need does help.
 
@@ -40,7 +40,7 @@ For each room with two beds where there are actually two students, we want to sh
 
 Don't change any column names. Each pair of students should only be shown once. The student whose name comes first in the alphabet should be shown first.
 
-# My solution
+## My solution
 
 `select`  
 `s1.name,`  
@@ -53,7 +53,7 @@ Don't change any column names. Each pair of students should only be shown once. 
 
 &nbsp;
 
-# Answer
+## Answer
 
 `SELECT`  
       `  S1.Name,`  
@@ -69,6 +69,6 @@ Don't change any column names. Each pair of students should only be shown once. 
 
 &nbsp;
 
-# Explanation
+## Explanation
 
 &nbsp;

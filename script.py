@@ -10,31 +10,10 @@ from pathlib import Path
 # CONFIG
 # ----------------------
 
-IGNORE_DIRS = {"resources", "_resources", ".obsidian", ".trash"}
+IGNORE_DIRS = {".obsidian", ".trash"}
 MAX_NAME = 120
 
 CF_TOKEN = os.getenv("CF_TOKEN", "")
-
-
-# ----------------------
-# ORDER PARSING
-# ----------------------
-
-def parse_order(name):
-    match = re.match(r'^(\d+)[\.\-\s]+(.+)$', name)
-    if match:
-        return int(match.group(1)), match.group(2)
-    return 9999, name
-
-
-def clean_display(name):
-    _, title = parse_order(Path(name).stem)
-    return title.replace("-", " ").strip()
-
-
-def clean_folder(name):
-    _, title = parse_order(name)
-    return title.replace("-", " ").strip()
 
 
 # ----------------------
@@ -45,8 +24,7 @@ def slugify(text):
     text = text.strip()
     text = re.sub(r'[^\w\s-]', '', text)
     text = re.sub(r'[\s_-]+', ' ', text)
-    text = text.title()
-    text = text.replace(" ", "-")
+    text = text.title().replace(" ", "-")
     return text[:MAX_NAME].strip("-") or "Note"
 
 
@@ -56,7 +34,6 @@ def slugify(text):
 
 def build_map(src):
     mapping = {}
-    used = set()
 
     for f in src.rglob("*"):
         if not f.is_file():
@@ -70,20 +47,48 @@ def build_map(src):
         new_name = slugify(f.stem) + f.suffix.lower()
         new_path = Path(*[slugify(p) for p in rel.parts[:-1]]) / new_name
 
-        base = new_path
-        i = 1
-        while str(new_path) in used:
-            new_path = base.with_name(f"{base.stem}-{i}{base.suffix}")
-            i += 1
-
-        used.add(str(new_path))
         mapping[str(rel)] = str(new_path)
 
     return mapping
 
 
 # ----------------------
-# WRITE DOCS (NO CONTENT MODIFICATION)
+# FIX JOPLIN CONTENT
+# ----------------------
+
+def fix_content(content):
+    lines = content.splitlines()
+
+    fixed = []
+    first_h1 = False
+
+    for line in lines:
+        # Fix headings
+        if line.startswith("#"):
+            if not first_h1:
+                fixed.append(line)  # keep first H1
+                first_h1 = True
+            else:
+                # downgrade all other H1 → H2
+                fixed.append(re.sub(r'^# ', '## ', line))
+            continue
+
+        fixed.append(line)
+
+    content = "\n".join(fixed)
+
+    # Fix Joplin image links :/abc123 → resources/abc123.*
+    content = re.sub(
+        r'!\[.*?\]\(:/([a-zA-Z0-9]+)\)',
+        r'![image](resources/\1.png)',
+        content
+    )
+
+    return content
+
+
+# ----------------------
+# WRITE DOCS
 # ----------------------
 
 def write_docs(src, docs, mapping):
@@ -92,20 +97,20 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
+    # Copy resources folder directly
+    resources_src = src / "resources"
+    if resources_src.exists():
+        shutil.copytree(resources_src, docs / "resources")
+
     # HOMEPAGE
     (docs / "index.md").write_text("""
 # Vault Wiki
 
 Welcome to your knowledge base.
 
----
-
 Use the sidebar to explore your notes.
 
----
-
 ## Example
-
 - [Sample Page](sample-page/)
 """)
 
@@ -118,44 +123,19 @@ Example content.
 
 ## Section Two
 More content.
-
-### Subsection
-Details.
 """)
 
-    # COPY FILES EXACTLY (NO MODIFICATION)
+    # COPY FILES WITH FIXES
     for orig, new in mapping.items():
         src_file = src / orig
         dst_file = docs / new
 
         dst_file.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src_file, dst_file)
 
+        content = src_file.read_text(encoding="utf-8", errors="ignore")
+        content = fix_content(content)
 
-# ----------------------
-# ENSURE FOLDER INDEXES
-# ----------------------
-
-def ensure_folder_indexes(docs):
-    for root, _, _ in os.walk(docs):
-        root = Path(root)
-
-        if root == docs:
-            continue
-
-        if any(part in IGNORE_DIRS for part in root.parts):
-            continue
-
-        index = root / "index.md"
-
-        if not index.exists():
-            name = clean_folder(root.name)
-
-            index.write_text(f"""
-# {name}
-
-This section contains related notes.
-""")
+        dst_file.write_text(content, encoding="utf-8")
 
 
 # ----------------------
@@ -167,15 +147,11 @@ def build_nav(docs):
         items = []
 
         for p in sorted(folder.iterdir()):
-            if any(part in IGNORE_DIRS for part in p.parts):
-                continue
-
             if p.is_dir():
-                if (p / "index.md").exists():
-                    items.append({clean_folder(p.name): walk(p)})
+                items.append({p.name: walk(p)})
 
             elif p.suffix == ".md" and p.name not in {"index.md", "sample-page.md"}:
-                items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
+                items.append({p.stem: p.relative_to(docs).as_posix()})
 
         return items
 
@@ -183,13 +159,11 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (REAL TOC FIX)
+# MKDOCS CONFIG
 # ----------------------
 
-def write_mkdocs(docs):
+def write_mkdocs():
     import yaml
-
-    nav = build_nav(docs)
 
     config = {
         "site_name": "Vault Wiki",
@@ -199,24 +173,25 @@ def write_mkdocs(docs):
             "features": [
                 "navigation.sections",
                 "navigation.top",
-                "navigation.indexes",
                 "toc.follow"
             ]
         },
 
         "markdown_extensions": [
-            "toc",  # IMPORTANT: this is what generates TOC from headings
+            {
+                "toc": {
+                    "permalink": True
+                }
+            },
             "tables",
-            "fenced_code",
-            "admonition"
+            "fenced_code"
         ],
 
         "extra_css": ["stylesheets/extra.css"],
 
         "nav": [
-            {"🏠 Home": "index.md"},
-            {"🧪 Sample Page": "sample-page.md"},
-            *nav
+            {"Home": "index.md"},
+            {"Sample": "sample-page.md"}
         ]
     }
 
@@ -225,7 +200,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# PROFESSIONAL CSS
+# CSS (FORCE BOLD + CLEAN)
 # ----------------------
 
 def write_css():
@@ -233,47 +208,16 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-:root {
-    --md-text-font: "Segoe UI", system-ui, sans-serif;
+h1, .md-typeset h1 {
+    font-weight: 800 !important;
 }
 
-/* Layout */
-.md-content {
-    max-width: 920px;
-    margin: auto;
+h2, .md-typeset h2 {
+    font-weight: 700 !important;
 }
 
-/* H1 - strong Microsoft style */
-h1 {
-    font-size: 2.5rem;
-    font-weight: 800;  /* 🔥 strong bold */
-    letter-spacing: -0.02em;
-    border-bottom: 2px solid #e6e6e6;
-    padding-bottom: 0.3em;
-}
-
-/* H2 */
-h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-top: 1.5em;
-}
-
-/* H3 */
-h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-}
-
-/* Paragraph readability */
-p {
-    line-height: 1.7;
-}
-
-/* TOC sidebar */
-.md-sidebar--secondary {
-    border-left: 1px solid #eee;
-    padding-left: 12px;
+h3, .md-typeset h3 {
+    font-weight: 600 !important;
 }
 """)
 
@@ -284,7 +228,7 @@ p {
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: proper TOC using real headings"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: toc + images + headings"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -301,12 +245,11 @@ def main():
 
     mapping = build_map(src)
     write_docs(src, docs, mapping)
-    ensure_folder_indexes(docs)
     write_css()
-    write_mkdocs(docs)
+    write_mkdocs()
     deploy()
 
-    print("✅ TOC now reflects real Joplin headings")
+    print("✅ TOC, images, and headings fully fixed")
 
 
 if __name__ == "__main__":

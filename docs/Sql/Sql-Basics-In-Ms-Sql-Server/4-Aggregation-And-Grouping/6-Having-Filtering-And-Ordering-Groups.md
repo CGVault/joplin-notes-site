@@ -33,7 +33,7 @@ Here is an example where we filter the data before its group, limiting it to a s
 `GROUP BY department`  
 `HAVING AVG(salary) > 3000;`
 
-# Ordering groups
+## Ordering groups
 
 ORDER BY can still be used after all the grouping has occurred, and the ORDER BY clause can order using the calculation we did in the select statement. 
 

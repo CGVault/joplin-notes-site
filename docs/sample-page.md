@@ -6,6 +6,3 @@ Example content.
 
 ## Section Two
 More content.
-
-### Subsection
-Details.

@@ -49,7 +49,7 @@ def slugify(text):
 
 
 # ----------------------
-# BUILD FILE MAP
+# BUILD MAP
 # ----------------------
 
 def build_map(src):
@@ -81,13 +81,24 @@ def build_map(src):
 
 
 # ----------------------
-# COPY ALL JOPLIN RESOURCES (FIXED CORE)
+# FIX CONTENT (IMAGES)
+# ----------------------
+
+def fix_content(content):
+    content = re.sub(
+        r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
+        r'![\1](resources/\2)',
+        content
+    )
+    content = content.replace("_resources/", "resources/")
+    return content
+
+
+# ----------------------
+# RESOURCES
 # ----------------------
 
 def copy_all_resources(src, docs):
-    """
-    Mirror ALL _resources folders into docs/<same folder>/resources
-    """
     for res in src.rglob("_resources"):
         if not res.is_dir():
             continue
@@ -103,22 +114,82 @@ def copy_all_resources(src, docs):
 
 
 # ----------------------
-# CONTENT FIX (IMAGE RESOLUTION FIXED)
+# SAMPLE PAGE
 # ----------------------
 
-def fix_content(content):
+def create_sample_page(docs):
+    sample = docs / "sample-page.md"
 
-    # FIX JOPLIN INLINE IDS
-    content = re.sub(
-        r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
-        r'![\1](resources/\2)',
-        content
-    )
+    if not sample.exists():
+        sample.write_text("""# Sample Page
 
-    # FIX legacy resource paths
-    content = content.replace("_resources/", "resources/")
+This page shows how notes will look in your vault.
 
-    return content
+## Structure Example
+
+### Headings
+Use headings to automatically build the table of contents.
+
+### Example Block
+
+You can write anything here:
+- notes
+- ideas
+- code
+- images
+
+## Why this exists
+
+This is your reference template for all future notes.
+""", encoding="utf-8")
+
+
+# ----------------------
+# HOME PAGE (IMPROVED UX)
+# ----------------------
+
+def create_home_page(docs):
+
+    home = docs / "index.md"
+
+    home.write_text("""# 🧠 Vault Wiki
+
+Welcome to your personal knowledge system.
+
+---
+
+## 🚀 Start Here
+
+This vault is automatically generated from your Joplin notes.
+
+👉 Recommended first step:
+- Open the **Sample Page** to understand structure
+
+---
+
+## 📘 Example Page
+
+- 🧪 [Sample Page](sample-page.md)
+
+---
+
+## 📂 Explore
+
+Use the sidebar to browse your notes, folders, and topics.
+
+Everything is auto-generated from your vault structure.
+
+---
+
+## ✨ Tips
+
+- Use headings in Joplin for automatic TOC generation
+- Prefix folders with numbers (e.g. `01 - Basics`) to control order
+- Images are supported automatically
+
+---
+
+""", encoding="utf-8")
 
 
 # ----------------------
@@ -132,32 +203,7 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    # ----------------------
-    # HOME PAGE
-    # ----------------------
-
-    (docs / "index.md").write_text("""
-# Vault Wiki
-
-Welcome to your knowledge base.
-
----
-
-## 🚀 Start Here
-
-- [Sample Page](sample-page.md)
-- Use sidebar navigation to explore notes
-""")
-
-    # ----------------------
-    # COPY RESOURCES FIRST (CRITICAL FIX)
-    # ----------------------
-
     copy_all_resources(src, docs)
-
-    # ----------------------
-    # WRITE FILES
-    # ----------------------
 
     for orig, new in mapping.items():
 
@@ -170,6 +216,14 @@ Welcome to your knowledge base.
         content = fix_content(content)
 
         dst_file.write_text(content, encoding="utf-8")
+
+
+# ----------------------
+# SAMPLE PAGE HOOK
+# ----------------------
+
+def ensure_sample_page(docs):
+    create_sample_page(docs)
 
 
 # ----------------------
@@ -217,7 +271,7 @@ def generate_folder_indexes(docs):
                 rel = nf.relative_to(docs).as_posix()
                 content += f"- [{name}]({rel})\n"
 
-        (root / "index.md").write_text(content)
+        (root / "index.md").write_text(content, encoding="utf-8")
 
 
 # ----------------------
@@ -248,13 +302,17 @@ def build_nav(docs):
 # ----------------------
 
 def write_mkdocs(docs):
+
     import yaml
 
-    nav = build_nav(docs)
+    nav = [
+        {"🏠 Home": "index.md"},
+        {"🧪 Sample Page": "sample-page.md"},
+        *build_nav(docs)
+    ]
 
     config = {
         "site_name": "Vault Wiki",
-
         "theme": {
             "name": "material",
             "features": [
@@ -266,20 +324,13 @@ def write_mkdocs(docs):
                 "toc.follow"
             ]
         },
-
         "markdown_extensions": [
             {"toc": {"permalink": True}},
             "tables",
             "fenced_code"
         ],
-
         "extra_css": ["stylesheets/extra.css"],
-
-        "nav": [
-            {"🏠 Home": "index.md"},
-            {"🧪 Sample Page": "sample-page.md"},
-            *nav
-        ]
+        "nav": nav
     }
 
     with open("mkdocs.yml", "w") as f:
@@ -298,7 +349,7 @@ def write_css():
 .md-typeset h1 { font-weight: 900; }
 .md-typeset h2 { font-weight: 900; font-size: 2rem; }
 .md-typeset h3 { font-weight: 800; }
-""")
+""", encoding="utf-8")
 
 
 # ----------------------
@@ -307,7 +358,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: fully stable Joplin image system"], check=False)
+    subprocess.run(["git", "commit", "-m", "improve home page + stable vault UI"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -317,6 +368,7 @@ def deploy():
 # ----------------------
 
 def main():
+
     import sys
 
     src = Path(sys.argv[1]).resolve()
@@ -326,11 +378,15 @@ def main():
 
     write_docs(src, docs, mapping)
     generate_folder_indexes(docs)
+    ensure_sample_page(docs)
+
+    create_home_page(docs)
+
     write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FULL FIX COMPLETE: images now work reliably")
+    print("✅ FULL FIX COMPLETE (home page improved + sample page linked)")
 
 
 if __name__ == "__main__":

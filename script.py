@@ -10,7 +10,7 @@ from pathlib import Path
 # CONFIG
 # ----------------------
 
-IGNORE_DIRS = {"resources", "_resources", ".obsidian", ".trash"}
+IGNORE_DIRS = {".obsidian", ".trash"}
 MAX_NAME = 120
 
 
@@ -49,12 +49,11 @@ def slugify(text):
 
 
 # ----------------------
-# BUILD FILE MAP
+# BUILD FILE MAP (FIXED - NO STRUCTURE BREAKING)
 # ----------------------
 
 def build_map(src):
     mapping = {}
-    used = set()
 
     for f in src.rglob("*"):
         if not f.is_file():
@@ -65,23 +64,17 @@ def build_map(src):
         if any(part in IGNORE_DIRS for part in rel.parts):
             continue
 
+        # ONLY rename file, preserve folder structure EXACTLY
         new_name = slugify(f.stem) + f.suffix.lower()
-        new_path = Path(*[slugify(p) for p in rel.parts[:-1]]) / new_name
+        new_rel = rel.with_name(new_name)
 
-        base = new_path
-        i = 1
-        while str(new_path) in used:
-            new_path = base.with_name(f"{base.stem}-{i}{base.suffix}")
-            i += 1
-
-        used.add(str(new_path))
-        mapping[str(rel)] = str(new_path)
+        mapping[rel] = new_rel
 
     return mapping
 
 
 # ----------------------
-# CONTENT FIX (JOPLIN _RESOURCES FIX)
+# CONTENT FIX (IMAGES + HEADINGS)
 # ----------------------
 
 def fix_content(content):
@@ -98,7 +91,7 @@ def fix_content(content):
             continue
 
         # ----------------------
-        # IMAGE PATH FIX (_resources → resources)
+        # IMAGE FIX (JOPLIN _resources)
         # ----------------------
 
         line = line.replace("../../../_resources/", "resources/")
@@ -112,7 +105,7 @@ def fix_content(content):
 
 
 # ----------------------
-# WRITE DOCS
+# WRITE DOCS (FIXED PATH HANDLING)
 # ----------------------
 
 def write_docs(src, docs, mapping):
@@ -122,7 +115,7 @@ def write_docs(src, docs, mapping):
     docs.mkdir(parents=True, exist_ok=True)
 
     # ----------------------
-    # COPY RESOURCES (IMPORTANT FIX)
+    # COPY RESOURCES
     # ----------------------
 
     resources_src = src / "resources"
@@ -174,12 +167,12 @@ Use this page for testing.
 """)
 
     # ----------------------
-    # PROCESS JOPLIN FILES
+    # PROCESS FILES (FIXED PATH LOGIC)
     # ----------------------
 
     for orig, new in mapping.items():
         src_file = src / orig
-        dst_file = docs / new
+        dst_file = docs / new   # ✅ FIXED (NO STRING CONVERSION BUG)
 
         dst_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -313,7 +306,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (PROFESSIONAL STYLE)
+# CSS (MICROSOFT STYLE)
 # ----------------------
 
 def write_css():
@@ -349,7 +342,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: Joplin images + TOC + resources fix"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: stable Joplin pipeline (paths + images + nav)"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -372,7 +365,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Joplin wiki fully rebuilt with working images + TOC + structure")
+    print("✅ Fully stable Joplin → MkDocs pipeline rebuilt")
 
 
 if __name__ == "__main__":

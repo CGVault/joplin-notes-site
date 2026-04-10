@@ -22,7 +22,7 @@ Use the sidebar to browse topics automatically generated from your vault.
 - Instant search system
 - Clean TOC per page
 - Code copy buttons
-- Smooth scrolling navigation
+- Stable MkDocs Material setup
 
 ---
 

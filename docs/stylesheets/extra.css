@@ -4,7 +4,7 @@ body {
     line-height: 1.7;
 }
 
-/* HEADINGS MICROSOFT STYLE */
+/* HEADINGS */
 .md-typeset h1 {
     font-weight: 800;
     border-bottom: 3px solid #2563eb;
@@ -17,7 +17,7 @@ body {
     padding-bottom: 4px;
 }
 
-/* ACTIVE SIDEBAR */
+/* SIDEBAR ACTIVE */
 .md-nav__link--active {
     color: #2563eb !important;
     font-weight: 600;
@@ -25,17 +25,13 @@ body {
     padding-left: 10px;
 }
 
-/* HOVER */
-.md-nav__link:hover {
-    color: #1d4ed8;
-}
-
-/* CODE BLOCKS */
+/* CODE */
 .md-typeset code {
     border-radius: 6px;
 }
 
-/* FIX SPACING */
-.md-typeset h2, .md-typeset h3 {
+/* TOC SCROLL FIX */
+.md-typeset h2,
+.md-typeset h3 {
     scroll-margin-top: 90px;
 }

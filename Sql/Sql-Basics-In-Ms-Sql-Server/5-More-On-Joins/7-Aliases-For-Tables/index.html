@@ -8,8 +8,6 @@
       
       
       
-        <link rel="canonical" href="https://cgvault.github.io/joplin-notes-site/Sql/Sql-Basics-In-Ms-Sql-Server/5-More-On-Joins/7-Aliases-For-Tables/">
-      
       
         <link rel="prev" href="../6-Outer-Join/">
       
@@ -68,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#renaming-tables-for-quicker-reference" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -180,9 +178,7 @@
 
 
 
-  
-
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
@@ -209,7 +205,7 @@
   <span class="md-ellipsis">
     
   
-    🏠 Home Dashboard
+    🏠 Home
   
 
     
@@ -1460,8 +1456,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aliases For Tables
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1479,6 +1491,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1617,6 +1657,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../6-Subqueries/3Subqueries-With-Multiple-Results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3Subqueries With Multiple Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../6-Subqueries/4-Correlated-Subqueries/" class="md-nav__link">
         
   
@@ -1653,34 +1721,6 @@
     
   
     Other Subqueries
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../6-Subqueries/3Subqueries-With-Multiple-Results/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3Subqueries With Multiple Results
   
 
     
@@ -1992,6 +2032,41 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           
             <div class="md-content" data-md-component="content">
@@ -2002,27 +2077,27 @@
 
 
 
-<h1 id="renaming-tables-for-quicker-reference">Renaming tables for quicker reference</h1>
+<h1 id="renaming-tables-for-quicker-reference">Renaming tables for quicker reference<a class="headerlink" href="#renaming-tables-for-quicker-reference" title="Permanent link">&para;</a></h1>
 <p>This has been used in every exercise so far, but referring to tables can be made easier by giving a table a new alias in the FROM clause. No, there is no need to use the AS keyword every time but it is best practice to do so. In small databases using one letter aliases works well, but in complex queries this isn't always best practice so you may need to come up with a shorter but meaningful naming scheme such us cust for customers.</p>
 <p>Example:</p>
 <p><code>select</code><br />
 <code>e.Id, e.Name, r.RoomNumber, r.Beds</code><br />
 <code>from room as r</code><br />
 <code>join equipment as e on e.RoomId=r.Id;</code></p>
-<h1 id="aliases-in-self-joins">Aliases in SELF JOINs</h1>
+<h1 id="aliases-in-self-joins">Aliases in SELF JOINs<a class="headerlink" href="#aliases-in-self-joins" title="Permanent link">&para;</a></h1>
 <p>Self joins are not super typical in live enterprise databases but there are some situations where two different objects we want to compare or match are stored in the same table. Such as a table called person storing children and their parents, or a employees table storing managers and their team members. Because mothers and children are both people, and managers are employees just like their team members, they are stored in the same table.</p>
 <p>This example self joins to find everyone who also have the same RoomId as Jack. The first student table searches for jack specifically, while joining it to itself we filter the second instance of the table to find everyone but himself.</p>
 <p><code>select distinct *</code><br />
 <code>from student a1 join student a2 on a1.RoomId=a2.RoomId</code><br />
 <code>where a1.Name = 'Jack Pearson' and a2.Name != 'Jack Pearson';</code></p>
-<h1 id="joining-more-than-one-table-challenge">Joining more than one table challenge</h1>
+<h1 id="joining-more-than-one-table-challenge">Joining more than one table challenge<a class="headerlink" href="#joining-more-than-one-table-challenge" title="Permanent link">&para;</a></h1>
 <p>Joining more than two tables, and even self joining while doing that is entirely possible. Such queries need careful planning, as they can be complicated but breaking down what you need does help.</p>
 <p>For each room with two beds where there are actually two students, we want to show one row that contains the following information:</p>
 <p>&nbsp;   The name of the first student.<br />
     The name of the second student.<br />
     The room number.</p>
 <p>Don't change any column names. Each pair of students should only be shown once. The student whose name comes first in the alphabet should be shown first.</p>
-<h1 id="my-solution">My solution</h1>
+<h1 id="my-solution">My solution<a class="headerlink" href="#my-solution" title="Permanent link">&para;</a></h1>
 <p><code>select</code><br />
 <code>s1.name,</code><br />
 <code>s2.name,</code><br />
@@ -2032,7 +2107,7 @@
 <code>join student s2 on r.Id=s2.RoomId</code><br />
 <code>where r.Beds=2 and (s1.Name != s2.Name) and (s1.Name &lt; s2.Name)</code></p>
 <p>&nbsp;</p>
-<h1 id="answer">Answer</h1>
+<h1 id="answer">Answer<a class="headerlink" href="#answer" title="Permanent link">&para;</a></h1>
 <p><code>SELECT</code><br />
 <code>S1.Name,</code><br />
 <code>S2.Name,</code><br />
@@ -2045,8 +2120,10 @@
 <code>WHERE S1.Name &lt; S2.Name</code><br />
 <code>AND Beds = 2;</code></p>
 <p>&nbsp;</p>
-<h1 id="explanation">Explanation</h1>
+<h1 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">&para;</a></h1>
 <p>&nbsp;</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Additional details.</p>
 
 
 
@@ -2105,12 +2182,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.top", "navigation.indexes", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.sections", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../../../js/analytics.js"></script>
       
     
   </body>

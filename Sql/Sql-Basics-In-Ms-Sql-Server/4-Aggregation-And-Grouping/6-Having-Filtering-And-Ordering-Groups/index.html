@@ -8,8 +8,6 @@
       
       
       
-        <link rel="canonical" href="https://cgvault.github.io/joplin-notes-site/Sql/Sql-Basics-In-Ms-Sql-Server/4-Aggregation-And-Grouping/6-Having-Filtering-And-Ordering-Groups/">
-      
       
         <link rel="prev" href="../5-Grouping/">
       
@@ -68,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#filtering-the-results-after-grouping-has-occurred" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -180,9 +178,7 @@
 
 
 
-  
-
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
@@ -209,7 +205,7 @@
   <span class="md-ellipsis">
     
   
-    🏠 Home Dashboard
+    🏠 Home
   
 
     
@@ -1163,8 +1159,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Having Filtering And Ordering Groups
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1182,6 +1194,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1617,6 +1657,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../6-Subqueries/3Subqueries-With-Multiple-Results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3Subqueries With Multiple Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../6-Subqueries/4-Correlated-Subqueries/" class="md-nav__link">
         
   
@@ -1653,34 +1721,6 @@
     
   
     Other Subqueries
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../6-Subqueries/3Subqueries-With-Multiple-Results/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3Subqueries With Multiple Results
   
 
     
@@ -1992,6 +2032,41 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           
             <div class="md-content" data-md-component="content">
@@ -2002,7 +2077,7 @@
 
 
 
-<h1 id="filtering-the-results-after-grouping-has-occurred">Filtering the results after grouping has occurred</h1>
+<h1 id="filtering-the-results-after-grouping-has-occurred">Filtering the results after grouping has occurred<a class="headerlink" href="#filtering-the-results-after-grouping-has-occurred" title="Permanent link">&para;</a></h1>
 <p>When making queries with a group by clause, we can always filter the the data coming in before the grouping happens, like filtering according to a column we haven't selected in the SELECT clause such as filtering all data before a certain date.</p>
 <p>However, if we want to filter the data after it has been grouped, like filtering by one of the aggregates we performed, we have to use the HAVING clause. </p>
 <p>In this case, we want filter the number if years an employee has worked, which is something we had to calculate, so we use the HAVING clause after the group by to filter according to our COUNT calculation.</p>
@@ -2021,7 +2096,7 @@
 <code>WHERE year = '2012'</code><br />
 <code>GROUP BY department</code><br />
 <code>HAVING AVG(salary) &gt; 3000;</code></p>
-<h1 id="ordering-groups">Ordering groups</h1>
+<h1 id="ordering-groups">Ordering groups<a class="headerlink" href="#ordering-groups" title="Permanent link">&para;</a></h1>
 <p>ORDER BY can still be used after all the grouping has occurred, and the ORDER BY clause can order using the calculation we did in the select statement. </p>
 <p>This examples group's total employee salaries, and then it filters the total salaries calculated using SUM() in descending order to find the employee with the highest total salary.</p>
 <p><code>SELECT</code><br />
@@ -2032,6 +2107,8 @@
 <code>GROUP BY FIrstName, LastName</code><br />
 <code>ORDER BY SUM(salary) desc;</code></p>
 <p>&nbsp;</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Additional details.</p>
 
 
 
@@ -2090,12 +2167,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.top", "navigation.indexes", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.sections", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../../../js/analytics.js"></script>
       
     
   </body>

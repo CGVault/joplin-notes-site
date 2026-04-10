@@ -8,8 +8,6 @@
       
       
       
-        <link rel="canonical" href="https://cgvault.github.io/joplin-notes-site/Sql/Sql-Basics-In-Ms-Sql-Server/5-More-On-Joins/4-Right-Join/">
-      
       
         <link rel="prev" href="../3-Left-Join/">
       
@@ -68,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#what-is-a-right-join" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -180,9 +178,7 @@
 
 
 
-  
-
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
@@ -209,7 +205,7 @@
   <span class="md-ellipsis">
     
   
-    🏠 Home Dashboard
+    🏠 Home
   
 
     
@@ -1376,8 +1372,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Right Join
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1395,6 +1407,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1617,6 +1657,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../6-Subqueries/3Subqueries-With-Multiple-Results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3Subqueries With Multiple Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../6-Subqueries/4-Correlated-Subqueries/" class="md-nav__link">
         
   
@@ -1653,34 +1721,6 @@
     
   
     Other Subqueries
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../6-Subqueries/3Subqueries-With-Multiple-Results/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3Subqueries With Multiple Results
   
 
     
@@ -1992,6 +2032,41 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           
             <div class="md-content" data-md-component="content">
@@ -2002,7 +2077,7 @@
 
 
 
-<h1 id="what-is-a-right-join">What is a RIGHT JOIN</h1>
+<h1 id="what-is-a-right-join">What is a RIGHT JOIN<a class="headerlink" href="#what-is-a-right-join" title="Permanent link">&para;</a></h1>
 <p>While an INNER JOIN only results in rows where both tables have a matching value in the ON clause equation, a RIGHT JOIN displays all results from the second table no matter what, plus any records from the first table that match with a record from the second table according to the ON clause equation.</p>
 <p>Like the INNER JOIN example, using the tables student and room with the equation s.RoomId=r.Id will result in every room being in the results even if the right side of the equation has a value not found on the left side, which is when a room doesn't have any students assigned to it. The resulting dataset will have all the rooms from the rooms table, and the rooms with a RoomId not found in the student table will also have NULLs for the columns from students table, columns like StudentName will be NULL. Rule of thumb is if the value of the column from the second table is not found somewhere in the corresponding column in the first table, then the attached columns from the first table will be NULL also.</p>
 <p>Most people just stick to LEFT JOINs and flip the tables around. The order matters a lot. A LEFT JOIN B is the same as B RIGHT JOIN A. LEFT JOIN is used to join two tables almost 100% of the time. RIGHT JOIN only really matters when we have a complex use case requiring us to join more than two tables, and even then everybody just flips the tables around and uses LEFT JOIN. </p>
@@ -2218,6 +2293,8 @@
 </tr>
 </tbody>
 </table>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Additional details.</p>
 
 
 
@@ -2276,12 +2353,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.top", "navigation.indexes", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.sections", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../../../js/analytics.js"></script>
       
     
   </body>

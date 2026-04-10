@@ -8,8 +8,6 @@
       
       
       
-        <link rel="canonical" href="https://cgvault.github.io/joplin-notes-site/Sql/Sql-Basics-In-Ms-Sql-Server/4-Aggregation-And-Grouping/5-Grouping/">
-      
       
         <link rel="prev" href="../4-Aggregation/">
       
@@ -68,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#using-group-by-to-get-meaningful-statistics" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -180,9 +178,7 @@
 
 
 
-  
-
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Vault Wiki" class="md-nav__button md-logo" aria-label="Vault Wiki" data-md-component="logo">
       
@@ -209,7 +205,7 @@
   <span class="md-ellipsis">
     
   
-    🏠 Home Dashboard
+    🏠 Home
   
 
     
@@ -1135,8 +1131,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grouping
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1154,6 +1166,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1617,6 +1657,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../6-Subqueries/3Subqueries-With-Multiple-Results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3Subqueries With Multiple Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../6-Subqueries/4-Correlated-Subqueries/" class="md-nav__link">
         
   
@@ -1653,34 +1721,6 @@
     
   
     Other Subqueries
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../6-Subqueries/3Subqueries-With-Multiple-Results/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3Subqueries With Multiple Results
   
 
     
@@ -1992,6 +2032,41 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           
             <div class="md-content" data-md-component="content">
@@ -2002,7 +2077,7 @@
 
 
 
-<h1 id="using-group-by-to-get-meaningful-statistics">Using GROUP BY to get meaningful statistics</h1>
+<h1 id="using-group-by-to-get-meaningful-statistics">Using GROUP BY to get meaningful statistics<a class="headerlink" href="#using-group-by-to-get-meaningful-statistics" title="Permanent link">&para;</a></h1>
 <p>As mentioned on the aggregation page, GROUP BY is required for us to use aggregate functions in a meaningful way.</p>
 <p>This example counts all the employees per department.</p>
 <p><code>select department, count(FirstName) as DepartmentEmployees</code><br />
@@ -2021,7 +2096,7 @@
 <code>AVG(salary) as AvgDepartmentSalary</code><br />
 <code>from Employee where year = '2015'</code><br />
 <code>group by department</code></p>
-<h1 id="grouping-by-more-than-one-column">Grouping by more than one column</h1>
+<h1 id="grouping-by-more-than-one-column">Grouping by more than one column<a class="headerlink" href="#grouping-by-more-than-one-column" title="Permanent link">&para;</a></h1>
 <p>You can also group by more than one column if you want to group by a more specific scenario, such as customers and their orders. Remember, using group by requires you to only select the columns used in the group by clause, selecting additional columns for information won't work here even if SQL let you do it, as the extra information will be collapsed under the grouped columns anyway. </p>
 <p>This fins average salaries of employees, but as you can see all the non columns in the select statement that are not some sort of aggregate command, must be mentioned in the group by clause while the aggregate commands which make new columns don't have to be mentioned in the group by clause.</p>
 <p><code>SELECT</code><br />
@@ -2031,6 +2106,8 @@
 <code>FROM Employee</code><br />
 <code>GROUP BY FirstName, LastName;</code></p>
 <p>&nbsp;</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Additional details.</p>
 
 
 
@@ -2089,12 +2166,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.sections", "navigation.top", "navigation.indexes", "toc.follow", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.sections", "navigation.top", "navigation.indexes", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../../../js/analytics.js"></script>
       
     
   </body>

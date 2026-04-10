@@ -16,6 +16,8 @@ theme:
   - search.suggest
   - search.highlight
   - content.code.copy
+extra:
+  generator: false
 markdown_extensions:
 - toc:
     permalink: true

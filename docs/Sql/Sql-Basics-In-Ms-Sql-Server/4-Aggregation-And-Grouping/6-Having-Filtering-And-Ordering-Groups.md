@@ -9,7 +9,6 @@ altitude: 0.0000
 
 # Filtering the results after grouping has occurred
 
-
 When making queries with a group by clause, we can always filter the the data coming in before the grouping happens, like filtering according to a column we haven't selected in the SELECT clause such as filtering all data before a certain date.
 
 However, if we want to filter the data after it has been grouped, like filtering by one of the aggregates we performed, we have to use the HAVING clause.
@@ -35,7 +34,6 @@ Here is an example where we filter the data before its group, limiting it to a s
 `HAVING AVG(salary) > 3000;`
 
 # Ordering groups
-
 
 ORDER BY can still be used after all the grouping has occurred, and the ORDER BY clause can order using the calculation we did in the select statement.
 

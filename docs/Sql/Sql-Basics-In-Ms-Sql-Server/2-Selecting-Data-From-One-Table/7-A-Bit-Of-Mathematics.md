@@ -9,7 +9,6 @@ altitude: 0.0000
 
 # Basic mathematics in queries
 
-
 You can use +,-,/,\* in conditions to create new values in examples such as:
 `select  from student where (results * 100) > 88%`
 

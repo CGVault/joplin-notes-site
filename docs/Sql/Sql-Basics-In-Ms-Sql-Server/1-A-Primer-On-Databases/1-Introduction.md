@@ -9,7 +9,6 @@ altitude: 0.0000
 
 # Introduction
 
-
 SQL - Structured Query Language
 SQL Server - stores information in a database, uses T-SQL (Transact - Microsoft SQL)
 Tables - A database can have many tables, each one storing data of a similar nature such as records of each student attending a university in a table called students.

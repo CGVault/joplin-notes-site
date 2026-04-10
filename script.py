@@ -82,11 +82,13 @@ def build_map(src):
 
 
 # ----------------------
-# FIX CONTENT (TOC FIX)
+# FIX CONTENT (TOC SAFE FIX)
 # ----------------------
 
 def fix_content(content):
-    # Fix Joplin image links
+    # ----------------------
+    # Fix Joplin images
+    # ----------------------
     content = re.sub(
         r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
         r'![\1](resources/\2)',
@@ -95,39 +97,43 @@ def fix_content(content):
 
     content = content.replace("_resources/", "resources/")
 
-    # Normalize whitespace issues from Joplin
+    # ----------------------
+    # Normalize whitespace (CRITICAL for TOC)
+    # ----------------------
     content = content.replace("\xa0", " ")
     content = re.sub(r'[ \t]+$', '', content, flags=re.MULTILINE)
 
     lines = content.splitlines()
     new_lines = []
 
-    for line in lines:
+    for i, line in enumerate(lines):
         stripped = line.strip()
 
         # Fix "#Heading" → "# Heading"
         if re.match(r'^#{1,6}\S', stripped):
             stripped = re.sub(r'^(#{1,6})(\S)', r'\1 \2', stripped)
 
-        # Normalize headings
+        # If it's a heading
         if stripped.startswith("#"):
             level = len(stripped.split(" ")[0])
             text = stripped[level:].strip()
 
-            # Only allow H1 and H2 for clean TOC
+            # Only allow H1 and H2
             if level >= 3:
                 level = 2
 
-            clean_heading = "#" * level + " " + text
+            clean = "#" * level + " " + text
 
-            # Ensure blank line before
+            # Ensure blank line BEFORE (important for MkDocs)
             if new_lines and new_lines[-1].strip() != "":
                 new_lines.append("")
 
-            new_lines.append(clean_heading)
+            new_lines.append(clean)
 
-            # Ensure blank line after
-            new_lines.append("")
+            # Ensure blank line AFTER
+            if i + 1 < len(lines) and lines[i + 1].strip() != "":
+                new_lines.append("")
+
             continue
 
         new_lines.append(line)
@@ -163,6 +169,8 @@ def create_sample_page(docs):
 
     sample.write_text("""# Sample Page
 
+This page shows how notes should be structured.
+
 ## Headings (TOC Example)
 
 ### Level 3 Heading
@@ -173,6 +181,10 @@ def create_sample_page(docs):
 - images
 - code
 - links
+
+## Purpose
+
+Use this page as a template for all future notes.
 """, encoding="utf-8")
 
 
@@ -188,17 +200,32 @@ def create_home_page(docs):
 
 Welcome to your knowledge base.
 
+---
+
 ## 🚀 Start Here
 
 - 📘 [Sample Page](sample-page.md)
 
+---
+
 ## 📂 Navigation
 
-Use the sidebar to browse topics.
+Use the sidebar to browse topics automatically generated from your vault.
+
+---
+
+## ✨ Features
+
+- Automatic folder → navigation conversion
+- Image support from Joplin resources
+- Clean TOC from headings
+- Stable MkDocs Material layout
+
+---
 
 ## ⚡ Tip
 
-Use proper # and ## headings for TOC.
+Use proper # and ## headings in notes for TOC.
 """, encoding="utf-8")
 
 
@@ -226,6 +253,58 @@ def write_docs(src, docs, mapping):
         content = fix_content(content)
 
         dst_file.write_text(content, encoding="utf-8")
+
+
+# ----------------------
+# FOLDER INDEXES
+# ----------------------
+
+def generate_folder_indexes(docs):
+
+    for root, _, _ in os.walk(docs):
+        root = Path(root)
+
+        if root == docs:
+            continue
+
+        if any(part in IGNORE_DIRS for part in root.parts):
+            continue
+
+        subfolders = []
+        notes = []
+
+        for item in sorted(root.iterdir()):
+
+            if any(part in IGNORE_DIRS for part in item.parts):
+                continue
+
+            if item.is_dir():
+                if (item / "index.md").exists():
+                    subfolders.append(item)
+
+            elif item.suffix == ".md" and item.name != "index.md":
+                notes.append(item)
+
+        folder_name = clean_folder(root.name)
+
+        content = f"# {folder_name}\n\n"
+
+        if subfolders:
+            content += "## Sections\n\n"
+            for sf in subfolders:
+                name = clean_folder(sf.name)
+                rel = sf.relative_to(docs).as_posix()
+                content += f"- [{name}]({rel}/)\n"
+            content += "\n"
+
+        if notes:
+            content += "## Notes\n\n"
+            for nf in notes:
+                name = clean_display(nf.name)
+                rel = nf.relative_to(docs).as_posix()
+                content += f"- [{name}]({rel})\n"
+
+        (root / "index.md").write_text(content, encoding="utf-8")
 
 
 # ----------------------
@@ -308,6 +387,7 @@ def write_css():
     (css_dir / "extra.css").write_text("""
 .md-typeset h1 { font-weight: 900; }
 .md-typeset h2 { font-weight: 900; font-size: 2rem; }
+.md-typeset h3 { font-weight: 800; }
 """, encoding="utf-8")
 
 
@@ -317,7 +397,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix toc parsing"], check=False)
+    subprocess.run(["git", "commit", "-m", "auto update vault"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -336,13 +416,14 @@ def main():
     mapping = build_map(src)
 
     write_docs(src, docs, mapping)
+    generate_folder_indexes(docs)
     create_sample_page(docs)
     create_home_page(docs)
     write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ TOC FIXED (headings now detected correctly)")
+    print("✅ BUILD COMPLETE (TOC fixed without breaking nav)")
 
 
 if __name__ == "__main__":

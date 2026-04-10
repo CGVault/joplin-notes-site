@@ -9,7 +9,6 @@ altitude: 0.0000
 
 # Joining tables the simplest way
 
-
 The easiest way is to mention both tables in the FROM clause.
 `select * from Movie, Director;`
 
@@ -17,7 +16,6 @@ This is the most useless way to join tables, no one uses this method. This simpl
 `select * from Movie cross join Director;`
 
 # JOINs using the WHERE clause
-
 
 Again, another simple but no one uses it method is using the WHERE clause to do what a JOIN and ON clause would do. Not standard but good to know if someone uses this method in their code. This is equivalent to the clause JOIN so its an inner join.
 

@@ -9,7 +9,6 @@ altitude: 0.0000
 
 # NULL values
 
-
 Filtering for NULL values is useful for finding missing information and disregarding records that have incomplete columns/fields. NULL is a void, it is not 0 or an empty string or date, it is a column/field that has not been filled in at all.
 
 In SQL, because NULL doesn't equal 0, records with a 0, like a price for example, won't show up in  the results. NULL is special and will always be excluded from the results unless there is a condition searching for it.

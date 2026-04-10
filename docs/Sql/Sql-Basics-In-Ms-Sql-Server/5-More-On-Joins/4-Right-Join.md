@@ -9,7 +9,6 @@ altitude: 0.0000
 
 # What is a RIGHT JOIN
 
-
 While an INNER JOIN only results in rows where both tables have a matching value in the ON clause equation, a RIGHT JOIN displays all results from the second table no matter what, plus any records from the first table that match with a record from the second table according to the ON clause equation.
 
 Like the INNER JOIN example, using the tables student and room with the equation s.RoomId=r.Id will result in every room being in the results even if the right side of the equation has a value not found on the left side, which is when a room doesn't have any students assigned to it. The resulting dataset will have all the rooms from the rooms table, and the rooms with a RoomId not found in the student table will also have NULLs for the columns from students table, columns like StudentName will be NULL. Rule of thumb is if the value of the column from the second table is not found somewhere in the corresponding column in the first table, then the attached columns from the first table will be NULL also.

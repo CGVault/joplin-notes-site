@@ -2,3 +2,12 @@
 .md-typeset h1 { font-weight: 900; }
 .md-typeset h2 { font-weight: 900; font-size: 2rem; }
 .md-typeset h3 { font-weight: 800; }
+
+body {
+    font-size: 15.5px;
+    line-height: 1.7;
+}
+
+p {
+    margin-bottom: 14px;
+}

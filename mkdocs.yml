@@ -1,13 +1,21 @@
 site_name: Vault Wiki
+plugins:
+- search:
+    separator: '[\s\-\.]+'
+    lang: en
 theme:
   name: material
   features:
   - navigation.instant
+  - navigation.tracking
   - navigation.sections
   - navigation.path
   - navigation.top
   - navigation.indexes
   - toc.follow
+  - search.suggest
+  - search.highlight
+  - content.code.copy
 markdown_extensions:
 - toc:
     permalink: true

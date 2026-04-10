@@ -87,14 +87,8 @@ def build_map(src):
 
 def fix_content(content):
 
-    # ----------------------
-    # REMOVE Joplin frontmatter
-    # ----------------------
     content = re.sub(r'^---\n.*?\n---\n', '', content, flags=re.DOTALL)
 
-    # ----------------------
-    # Fix Joplin images
-    # ----------------------
     content = re.sub(
         r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
         r'![\1](resources/\2)',
@@ -102,10 +96,6 @@ def fix_content(content):
     )
 
     content = content.replace("_resources/", "resources/")
-
-    # ----------------------
-    # Clean whitespace
-    # ----------------------
     content = content.replace("\xa0", " ")
     content = re.sub(r'[ \t]+$', '', content, flags=re.MULTILINE)
 
@@ -115,23 +105,18 @@ def fix_content(content):
     for i, line in enumerate(lines):
         stripped = line.strip()
 
-        # Fix malformed headings (#Heading → # Heading)
         if re.match(r'^#{1,6}\S', stripped):
             stripped = re.sub(r'^(#{1,6})(\S)', r'\1 \2', stripped)
 
-        # Convert ANY heading → H2
         if stripped.startswith("#"):
             text = re.sub(r'^#{1,6}\s*', '', stripped).strip()
-
             clean = f"## {text}"
 
-            # Ensure spacing before
             if new_lines and new_lines[-1].strip() != "":
                 new_lines.append("")
 
             new_lines.append(clean)
 
-            # Ensure spacing after
             if i + 1 < len(lines) and lines[i + 1].strip() != "":
                 new_lines.append("")
 
@@ -194,7 +179,6 @@ Use this page as a template for all future notes.
 # ----------------------
 
 def create_home_page(docs):
-
     home = docs / "index.md"
 
     home.write_text("""# 🧠 Vault Wiki
@@ -220,7 +204,8 @@ Use the sidebar to browse topics automatically generated from your vault.
 - Automatic folder → navigation conversion
 - Image support from Joplin resources
 - Clean TOC from headings
-- Stable MkDocs Material layout
+- Fast search system
+- Microsoft-style navigation layout
 
 ---
 
@@ -254,13 +239,6 @@ def write_docs(src, docs, mapping):
         content = fix_content(content)
 
         dst_file.write_text(content, encoding="utf-8")
-
-
-# ----------------------
-# (REST UNCHANGED — EXACT BASE SCRIPT)
-# ----------------------
-
-# KEEP EVERYTHING BELOW EXACTLY AS YOUR BASE SCRIPT
 
 
 # ----------------------
@@ -318,10 +296,12 @@ def generate_folder_indexes(docs):
 # ----------------------
 
 def build_nav(docs):
+
     def walk(folder):
         items = []
 
         for p in sorted(folder.iterdir()):
+
             if any(part in IGNORE_DIRS for part in p.parts):
                 continue
 
@@ -341,10 +321,11 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG
+# MKDOCS CONFIG (LEVEL 1 UPGRADE)
 # ----------------------
 
 def write_mkdocs(docs):
+
     import yaml
 
     nav = [
@@ -355,23 +336,46 @@ def write_mkdocs(docs):
 
     config = {
         "site_name": "Vault Wiki",
+
+        # ----------------------
+        # SEARCH UPGRADE (LEVEL 1)
+        # ----------------------
+        "plugins": [
+            {
+                "search": {
+                    "separator": "[\\s\\-\\.]+",
+                    "lang": "en"
+                }
+            }
+        ],
+
+        # ----------------------
+        # THEME UPGRADE (NAVIGATION POLISH)
+        # ----------------------
         "theme": {
             "name": "material",
             "features": [
                 "navigation.instant",
+                "navigation.tracking",
                 "navigation.sections",
                 "navigation.path",
                 "navigation.top",
                 "navigation.indexes",
-                "toc.follow"
+                "toc.follow",
+                "search.suggest",
+                "search.highlight",
+                "content.code.copy"
             ]
         },
+
         "markdown_extensions": [
             {"toc": {"permalink": True}},
             "tables",
             "fenced_code"
         ],
+
         "extra_css": ["stylesheets/extra.css"],
+
         "nav": nav
     }
 
@@ -391,6 +395,15 @@ def write_css():
 .md-typeset h1 { font-weight: 900; }
 .md-typeset h2 { font-weight: 900; font-size: 2rem; }
 .md-typeset h3 { font-weight: 800; }
+
+body {
+    font-size: 15.5px;
+    line-height: 1.7;
+}
+
+p {
+    margin-bottom: 14px;
+}
 """, encoding="utf-8")
 
 
@@ -400,7 +413,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "force h2 headings for toc"], check=False)
+    subprocess.run(["git", "commit", "-m", "upgrade search + navigation polish"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -410,6 +423,7 @@ def deploy():
 # ----------------------
 
 def main():
+
     import sys
 
     src = Path(sys.argv[1]).resolve()
@@ -425,7 +439,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ BUILD COMPLETE (FORCED H2 HEADINGS — TOC WORKING)")
+    print("✅ LEVEL 1 UPGRADE COMPLETE (SEARCH + NAV POLISH)")
 
 
 if __name__ == "__main__":

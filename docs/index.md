@@ -21,7 +21,8 @@ Use the sidebar to browse topics automatically generated from your vault.
 - Automatic folder → navigation conversion
 - Image support from Joplin resources
 - Clean TOC from headings
-- Stable MkDocs Material layout
+- Fast search system
+- Microsoft-style navigation layout
 
 ---
 

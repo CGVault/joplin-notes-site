@@ -5,15 +5,17 @@ Welcome to your knowledge base.
 
 ---
 
-## 📌 Quick Start
+## 📌 Start Here
 
-- [📂 Browse All Notes](./)
-- [📁 Example Folder](example-folder/)
-- [🧪 Sample Page](sample-page/)
+These are example entry points into your system:
+
+- [🧠 Notes Overview](notes-overview/)
+- [📁 Folder Structure Guide](folder-guide/)
+- [⚙️ System Information](system-info/)
 
 ---
 
-## 🚀 What is this?
+## 🚀 What this is
 
 This site is automatically generated from your Joplin vault.
 
@@ -21,8 +23,8 @@ Each folder becomes a section with its own landing page.
 
 ---
 
-## 📊 System Status
+## 📊 Status
 
-- MkDocs Material active
 - Auto navigation enabled
-- Cloudflare analytics enabled
+- MkDocs Material theme
+- Cloudflare analytics ready

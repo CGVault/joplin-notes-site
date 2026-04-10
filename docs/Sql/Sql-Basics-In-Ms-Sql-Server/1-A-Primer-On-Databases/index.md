@@ -17,4 +17,4 @@ This section contains notes and sub-sections.
 
 ## 🧭 Navigation
 
-Use the sidebar to explore deeper into this category.
+Use the sidebar to explore this area.

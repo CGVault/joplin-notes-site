@@ -13,10 +13,6 @@ from pathlib import Path
 IGNORE_DIRS = {"resources", "_resources", ".obsidian", ".trash"}
 MAX_NAME = 120
 
-
-# 🔐 SECURITY: Cloudflare token from environment variable
-# Set it like:
-# export CF_TOKEN="your_token_here"
 CF_TOKEN = os.getenv("CF_TOKEN", "")
 
 
@@ -87,7 +83,7 @@ def build_map(src):
 
 
 # ----------------------
-# WRITE DOCS
+# WRITE DOCS (CLEANED)
 # ----------------------
 
 def write_docs(src, docs, mapping):
@@ -96,7 +92,7 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    # 🏠 HOMEPAGE WITH REAL NAVIGATION
+    # 🏠 REAL HOMEPAGE (NO DUMMY FOLDER LINKS)
     (docs / "index.md").write_text("""
 # Vault Wiki
 
@@ -104,15 +100,17 @@ Welcome to your knowledge base.
 
 ---
 
-## 📌 Quick Start
+## 📌 Start Here
 
-- [📂 Browse All Notes](./)
-- [📁 Example Folder](example-folder/)
-- [🧪 Sample Page](sample-page/)
+These are example entry points into your system:
+
+- [🧠 Notes Overview](notes-overview/)
+- [📁 Folder Structure Guide](folder-guide/)
+- [⚙️ System Information](system-info/)
 
 ---
 
-## 🚀 What is this?
+## 🚀 What this is
 
 This site is automatically generated from your Joplin vault.
 
@@ -120,61 +118,78 @@ Each folder becomes a section with its own landing page.
 
 ---
 
-## 📊 System Status
+## 📊 Status
 
-- MkDocs Material active
 - Auto navigation enabled
-- Cloudflare analytics enabled
+- MkDocs Material theme
+- Cloudflare analytics ready
 """)
 
-    # 🧪 SAMPLE PAGE (ENSURES SIDEBAR ALWAYS HAS REAL TARGET)
-    (docs / "sample-page.md").write_text("""
-# Sample Page
+    # 🧪 REAL SAMPLE PAGES (USED BY HOMEPAGE LINKS)
 
-This is a sample page to demonstrate navigation.
+    (docs / "notes-overview.md").write_text("""
+# Notes Overview
 
----
-
-## Content Example
-
-You can replace this with real notes later.
-
-- Point 1
-- Point 2
-- Point 3
+This page shows how your notes are structured.
 
 ---
 
-## Notes
+## What you'll find here
 
-This page exists to ensure navigation links are never broken.
+- Automatically imported notes from Joplin
+- Organized by folders
+- Clean navigation hierarchy
+
+---
+
+## Tip
+
+Use the sidebar to browse all notes.
 """)
 
-    # 📁 SAMPLE FOLDER (ENSURES STRUCTURE EXISTS)
-    sample_folder = docs / "example-folder"
-    sample_folder.mkdir(parents=True, exist_ok=True)
+    (docs / "folder-guide.md").write_text("""
+# Folder Structure Guide
 
-    (sample_folder / "index.md").write_text("""
----
-title: Example Folder
----
-
-# Example Folder
-
-This is a sample folder landing page.
+Your vault is organized into folders.
 
 ---
 
-## Inside this section
+## How it works
 
-- Sample note 1
-- Sample note 2
+- Each folder becomes a section
+- Each section has a landing page
+- Subfolders are nested automatically
 
 ---
 
-This folder is auto-generated to demonstrate structure.
+## Navigation
+
+Use breadcrumbs and sidebar to move around easily.
 """)
 
+    (docs / "system-info.md").write_text("""
+# System Information
+
+This wiki system is automatically generated.
+
+---
+
+## Stack
+
+- MkDocs Material
+- Python generator script
+- GitHub Pages deployment
+
+---
+
+## Features
+
+- Auto navigation
+- Folder indexing
+- Cloudflare analytics integration
+""")
+
+    # COPY REAL VAULT FILES
     for orig, new in mapping.items():
         src_file = src / orig
         dst_file = docs / new
@@ -184,7 +199,7 @@ This folder is auto-generated to demonstrate structure.
 
 
 # ----------------------
-# ENSURE EVERY FOLDER HAS LANDING PAGE
+# ENSURE FOLDER LANDING PAGES
 # ----------------------
 
 def ensure_folder_indexes(docs):
@@ -221,12 +236,12 @@ This section contains notes and sub-sections.
 
 ## 🧭 Navigation
 
-Use the sidebar to explore deeper into this category.
+Use the sidebar to explore this area.
 """)
 
 
 # ----------------------
-# BUILD NAV TREE
+# BUILD NAV
 # ----------------------
 
 def build_nav(docs):
@@ -297,7 +312,6 @@ def write_mkdocs(docs):
         ],
 
         "extra_css": ["stylesheets/extra.css"],
-
         "extra_javascript": ["js/analytics.js"],
 
         "nav": [
@@ -311,7 +325,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS
+# CSS (UNCHANGED)
 # ----------------------
 
 def write_css():
@@ -368,7 +382,7 @@ h3 {
 
 
 # ----------------------
-# ANALYTICS (SECURE VERSION)
+# ANALYTICS
 # ----------------------
 
 def write_analytics(docs):
@@ -376,11 +390,10 @@ def write_analytics(docs):
     js_dir.mkdir(parents=True, exist_ok=True)
 
     if not CF_TOKEN:
-        print("⚠️ WARNING: CF_TOKEN not set. Analytics disabled.")
+        print("⚠️ CF_TOKEN not set — analytics disabled")
         return
 
     (js_dir / "analytics.js").write_text(f"""
-/* Cloudflare Web Analytics */
 (function() {{
     var script = document.createElement('script');
     script.defer = true;
@@ -397,12 +410,7 @@ def write_analytics(docs):
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-
-    subprocess.run(
-        ["git", "commit", "-m", "vault upgrade: pages + nav + security"],
-        check=False
-    )
-
+    subprocess.run(["git", "commit", "-m", "vault cleanup: real homepage + structure"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -425,7 +433,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Site upgraded: working pages + secure analytics + folder structure fixed")
+    print("✅ Clean homepage + real sample pages + no dummy folders")
 
 
 if __name__ == "__main__":

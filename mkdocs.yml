@@ -30,8 +30,8 @@ extra_javascript:
 - js/analytics.js
 nav:
 - "\U0001F3E0 Home Dashboard": index.md
-- example folder: []
-- sample page: sample-page.md
+- folder guide: folder-guide.md
+- notes overview: notes-overview.md
 - Sql:
   - Sql Basics In Ms Sql Server:
     - A Primer On Databases:
@@ -79,3 +79,4 @@ nav:
       - Except: Sql/Sql-Basics-In-Ms-Sql-Server/7-Set-Operations/4-Except.md
     - Quiz:
       - Quiz: Sql/Sql-Basics-In-Ms-Sql-Server/8-Quiz/1-Quiz.md
+- system info: system-info.md

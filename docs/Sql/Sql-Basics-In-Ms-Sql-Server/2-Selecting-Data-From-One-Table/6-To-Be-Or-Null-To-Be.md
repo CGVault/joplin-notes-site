@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# NULL values
+## NULL values
 
 Filtering for NULL values is useful for finding missing information and disregarding records that have incomplete columns/fields. NULL is a void, it is not 0 or an empty string or date, it is a column/field that has not been filled in at all.
 

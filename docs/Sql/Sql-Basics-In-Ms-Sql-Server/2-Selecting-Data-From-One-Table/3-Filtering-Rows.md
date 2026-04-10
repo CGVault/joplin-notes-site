@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Only selecting a few rows
+## Only selecting a few rows
 
 We can use the WHERE keyword to filter rows according to a specific condition. We use it like this `select * from student where name = jack` . The condition can be much more complex than this.
 

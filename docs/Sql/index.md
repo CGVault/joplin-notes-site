@@ -1,6 +1,2 @@
----
-title: Sql
----
-
 # Sql
 

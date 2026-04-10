@@ -1,7 +1,3 @@
----
-title: More On Joins
----
-
 # More On Joins
 
 ## Notes

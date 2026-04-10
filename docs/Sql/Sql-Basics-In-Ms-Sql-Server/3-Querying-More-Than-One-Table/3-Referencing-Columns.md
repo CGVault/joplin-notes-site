@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Columns when using JOIN
+## Columns when using JOIN
 
 Referencing columns in a query requires you to use TABLE.COLUMN to prevent columns of the same name being ambiguous.
 

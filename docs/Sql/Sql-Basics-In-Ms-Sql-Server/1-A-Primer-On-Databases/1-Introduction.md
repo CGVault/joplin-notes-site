@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Introduction
+## Introduction
 
 SQL - Structured Query Language  
 SQL Server - stores information in a database, uses T-SQL (Transact - Microsoft SQL)  

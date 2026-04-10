@@ -81,22 +81,24 @@ def build_map(src):
 
 
 # ----------------------
-# CONTENT FIX (NEW)
+# CONTENT FIX (UPDATED)
 # ----------------------
 
 def fix_content(content):
     lines = content.splitlines()
     fixed = []
-    first_h1 = False
+
+    first_heading_handled = False
 
     for line in lines:
-        # Fix headings for TOC
         if line.startswith("#"):
-            if not first_h1:
-                fixed.append(line)  # keep first H1
-                first_h1 = True
+            if not first_heading_handled:
+                # 🔥 Convert FIRST H1 → H2 (so it appears in TOC)
+                fixed.append(re.sub(r'^# ', '## ', line))
+                first_heading_handled = True
             else:
-                fixed.append(re.sub(r'^# ', '## ', line))  # downgrade others
+                # Keep all others at H2 level
+                fixed.append(re.sub(r'^# ', '## ', line))
         else:
             fixed.append(line)
 
@@ -122,7 +124,7 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    # 🏠 Homepage (UPDATED)
+    # 🏠 Homepage
     (docs / "index.md").write_text("""
 # Vault Wiki
 
@@ -134,18 +136,16 @@ Welcome to your knowledge base.
 
 - [🧪 Open Sample Page](sample-page.md)
 - Use the sidebar to browse all notes
-- Navigate sections like a Microsoft Docs wiki
 
 ---
 
 ## 📊 Overview
 
 - Auto-generated from Joplin
-- Clean navigation + folders
-- Built with MkDocs Material
+- Structured wiki navigation
 """)
 
-    # 🧪 Sample Page (NEW)
+    # 🧪 Sample page
     (docs / "sample-page.md").write_text("""
 # Sample Page
 
@@ -153,10 +153,10 @@ Welcome to your knowledge base.
 Example content.
 
 ## Section Two
-More structured headings = working TOC.
+TOC works here.
 
 ## Section Three
-Use this page to test layouts.
+Use this page for testing.
 """)
 
     for orig, new in mapping.items():
@@ -166,7 +166,7 @@ Use this page to test layouts.
         dst_file.parent.mkdir(parents=True, exist_ok=True)
 
         content = src_file.read_text(encoding="utf-8", errors="ignore")
-        content = fix_content(content)  # ✅ APPLY FIX
+        content = fix_content(content)
 
         dst_file.write_text(content, encoding="utf-8")
 
@@ -201,13 +201,7 @@ def generate_folder_indexes(docs):
 
         folder_name = clean_folder(root.name)
 
-        content = f"""---
-title: {folder_name}
----
-
-# {folder_name}
-
-"""
+        content = f"# {folder_name}\n\n"
 
         if subfolders:
             content += "## Sections\n\n"
@@ -300,7 +294,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS FIX
+# CSS
 # ----------------------
 
 def write_css():
@@ -309,8 +303,8 @@ def write_css():
 
     (css_dir / "extra.css").write_text("""
 .md-typeset h1 { font-weight: 900; }
-.md-typeset h2 { font-weight: 800; }
-.md-typeset h3 { font-weight: 700; }
+.md-typeset h2 { font-weight: 900; font-size: 2rem; }
+.md-typeset h3 { font-weight: 800; }
 """)
 
 
@@ -320,7 +314,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: toc + homepage + sample page"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: include first heading in TOC"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -342,7 +336,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ TOC fixed + homepage updated + sample page added")
+    print("✅ First heading now included in TOC")
 
 
 if __name__ == "__main__":

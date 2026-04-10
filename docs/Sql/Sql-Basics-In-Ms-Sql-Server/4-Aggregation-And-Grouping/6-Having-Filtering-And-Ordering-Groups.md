@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Filtering the results after grouping has occurred
+## Filtering the results after grouping has occurred
 
 When making queries with a group by clause, we can always filter the the data coming in before the grouping happens, like filtering according to a column we haven't selected in the SELECT clause such as filtering all data before a certain date.
 

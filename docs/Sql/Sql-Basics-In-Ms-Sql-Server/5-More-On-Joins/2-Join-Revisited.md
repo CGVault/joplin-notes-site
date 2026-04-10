@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Revising JOINs
+## Revising JOINs
 
 The basic JOIN command just does an inner join, it joins all the records where the table a and table b columns match, adding on the extra information from table b onto the table a records. 
 

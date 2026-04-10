@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Selecting one column
+## Selecting one column
 
 Use `select columnname from table;` to only get one column.
 

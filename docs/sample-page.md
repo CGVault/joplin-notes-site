@@ -5,7 +5,7 @@
 Example content.
 
 ## Section Two
-More structured headings = working TOC.
+TOC works here.
 
 ## Section Three
-Use this page to test layouts.
+Use this page for testing.

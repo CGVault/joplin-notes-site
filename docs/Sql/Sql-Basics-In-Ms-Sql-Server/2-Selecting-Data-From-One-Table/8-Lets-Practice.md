@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Combination of all concepts complex example
+## Combination of all concepts complex example
 
 Here is an example query using best practice coding (as far as I am concerned) combining all the concepts into a complex query.
 

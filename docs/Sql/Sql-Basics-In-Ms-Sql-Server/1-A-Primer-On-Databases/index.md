@@ -1,7 +1,3 @@
----
-title: A Primer On Databases
----
-
 # A Primer On Databases
 
 ## Notes

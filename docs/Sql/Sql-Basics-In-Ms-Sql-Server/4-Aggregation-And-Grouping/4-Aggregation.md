@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Computing basic statistics
+## Computing basic statistics
 
 We can use specific window functions, or commands, to achieve specific statistics in SQL. These commands are more complex than just being simple clauses.
 

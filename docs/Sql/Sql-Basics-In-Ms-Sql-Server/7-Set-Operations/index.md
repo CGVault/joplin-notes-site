@@ -1,7 +1,3 @@
----
-title: Set Operations
----
-
 # Set Operations
 
 ## Notes

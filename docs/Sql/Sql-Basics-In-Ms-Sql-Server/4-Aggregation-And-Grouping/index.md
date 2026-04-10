@@ -1,7 +1,3 @@
----
-title: Aggregation And Grouping
----
-
 # Aggregation And Grouping
 
 ## Notes

@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Renaming tables for quicker reference
+## Renaming tables for quicker reference
 
 This has been used in every exercise so far, but referring to tables can be made easier by giving a table a new alias in the FROM clause. No, there is no need to use the AS keyword every time but it is best practice to do so. In small databases using one letter aliases works well, but in complex queries this isn't always best practice so you may need to come up with a shorter but meaningful naming scheme such us cust for customers.
 

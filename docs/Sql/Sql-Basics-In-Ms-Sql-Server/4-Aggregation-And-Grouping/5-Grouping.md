@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Using GROUP BY to get meaningful statistics
+## Using GROUP BY to get meaningful statistics
 
 As mentioned on the aggregation page, GROUP BY is required for us to use aggregate functions in a meaningful way.
 

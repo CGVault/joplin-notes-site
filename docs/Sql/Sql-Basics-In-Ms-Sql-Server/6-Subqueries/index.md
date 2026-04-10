@@ -1,7 +1,3 @@
----
-title: Subqueries
----
-
 # Subqueries
 
 ## Notes

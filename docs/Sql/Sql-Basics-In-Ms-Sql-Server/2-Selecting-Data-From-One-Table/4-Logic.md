@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Logical operators
+## Logical operators
 
 OR - records that fulfill one or more of the conditions will pass the filter  
 AND - records passing both conditions will pass the filter  

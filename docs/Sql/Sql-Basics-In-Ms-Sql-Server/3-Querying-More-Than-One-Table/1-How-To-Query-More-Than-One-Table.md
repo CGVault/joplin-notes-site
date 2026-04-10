@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-# Joining tables the simplest way
+## Joining tables the simplest way
 
 The easiest way is to mention both tables in the FROM clause.  
 `select * from Movie, Director;` 

@@ -1,35 +1,23 @@
 site_name: Vault Wiki
-site_url: https://cgvault.github.io/joplin-notes-site/
 theme:
   name: material
   features:
   - navigation.instant
-  - navigation.tracking
   - navigation.sections
   - navigation.path
   - navigation.top
   - navigation.indexes
-  - search.suggest
-  - search.highlight
-  - content.code.copy
-  palette:
-  - scheme: default
-    primary: blue
-    accent: indigo
-  font:
-    text: Segoe UI
-    code: Consolas
+  - toc.follow
 markdown_extensions:
-- toc
+- toc:
+    permalink: true
 - tables
 - fenced_code
-- admonition
 extra_css:
 - stylesheets/extra.css
-extra_javascript:
-- js/analytics.js
 nav:
-- "\U0001F3E0 Home Dashboard": index.md
+- "\U0001F3E0 Home": index.md
+- "\U0001F9EA Sample Page": sample-page.md
 - Sql:
   - Sql Basics In Ms Sql Server:
     - A Primer On Databases:

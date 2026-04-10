@@ -81,6 +81,38 @@ def build_map(src):
 
 
 # ----------------------
+# CONTENT FIX (NEW)
+# ----------------------
+
+def fix_content(content):
+    lines = content.splitlines()
+    fixed = []
+    first_h1 = False
+
+    for line in lines:
+        # Fix headings for TOC
+        if line.startswith("#"):
+            if not first_h1:
+                fixed.append(line)  # keep first H1
+                first_h1 = True
+            else:
+                fixed.append(re.sub(r'^# ', '## ', line))  # downgrade others
+        else:
+            fixed.append(line)
+
+    content = "\n".join(fixed)
+
+    # Fix Joplin images
+    content = re.sub(
+        r'!\[.*?\]\(:/([a-zA-Z0-9]+)\)',
+        r'![image](resources/\1.png)',
+        content
+    )
+
+    return content
+
+
+# ----------------------
 # WRITE DOCS
 # ----------------------
 
@@ -90,7 +122,7 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    # 🏠 NEW HOMEPAGE DASHBOARD
+    # 🏠 Homepage (UPDATED)
     (docs / "index.md").write_text("""
 # Vault Wiki
 
@@ -98,27 +130,33 @@ Welcome to your knowledge base.
 
 ---
 
-## 📌 Quick Access
-
-- [📂 Browse Notes](./)
-- [🧠 Latest Content](./)
-- [📁 All Sections](./)
-
----
-
 ## 🚀 Start Here
 
-This wiki is automatically generated from your Joplin vault.
-
-Use the sidebar to navigate folders and notes.
+- [🧪 Open Sample Page](sample-page.md)
+- Use the sidebar to browse all notes
+- Navigate sections like a Microsoft Docs wiki
 
 ---
 
-## 📊 Dashboard
+## 📊 Overview
 
+- Auto-generated from Joplin
+- Clean navigation + folders
 - Built with MkDocs Material
-- Auto-generated structure
-- GitHub Pages deployment
+""")
+
+    # 🧪 Sample Page (NEW)
+    (docs / "sample-page.md").write_text("""
+# Sample Page
+
+## Section One
+Example content.
+
+## Section Two
+More structured headings = working TOC.
+
+## Section Three
+Use this page to test layouts.
 """)
 
     for orig, new in mapping.items():
@@ -126,7 +164,11 @@ Use the sidebar to navigate folders and notes.
         dst_file = docs / new
 
         dst_file.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src_file, dst_file)
+
+        content = src_file.read_text(encoding="utf-8", errors="ignore")
+        content = fix_content(content)  # ✅ APPLY FIX
+
+        dst_file.write_text(content, encoding="utf-8")
 
 
 # ----------------------
@@ -206,7 +248,7 @@ def build_nav(docs):
                 if (p / "index.md").exists():
                     items.append({clean_folder(p.name): walk(p)})
 
-            elif p.suffix == ".md" and p.name != "index.md":
+            elif p.suffix == ".md" and p.name not in {"index.md", "sample-page.md"}:
                 items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
 
         return items
@@ -225,46 +267,30 @@ def write_mkdocs(docs):
 
     config = {
         "site_name": "Vault Wiki",
-        "site_url": "https://cgvault.github.io/joplin-notes-site/",
 
         "theme": {
             "name": "material",
             "features": [
                 "navigation.instant",
-                "navigation.tracking",
                 "navigation.sections",
-
-                # 🧭 UX IMPROVEMENTS
-                "navigation.path",     # breadcrumbs
-                "navigation.top",      # back to top
-                "navigation.indexes",  # folder index behavior
-
-                "search.suggest",
-                "search.highlight",
-                "content.code.copy"
-            ],
-            "palette": [
-                {"scheme": "default", "primary": "blue", "accent": "indigo"}
-            ],
-            "font": {
-                "text": "Segoe UI",
-                "code": "Consolas"
-            }
+                "navigation.path",
+                "navigation.top",
+                "navigation.indexes",
+                "toc.follow"
+            ]
         },
 
         "markdown_extensions": [
-            "toc",
+            {"toc": {"permalink": True}},
             "tables",
-            "fenced_code",
-            "admonition"
+            "fenced_code"
         ],
 
         "extra_css": ["stylesheets/extra.css"],
 
-        "extra_javascript": ["js/analytics.js"],
-
         "nav": [
-            {"🏠 Home Dashboard": "index.md"},
+            {"🏠 Home": "index.md"},
+            {"🧪 Sample Page": "sample-page.md"},
             *nav
         ]
     }
@@ -274,7 +300,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (SIDEBAR UX IMPROVEMENTS)
+# CSS FIX
 # ----------------------
 
 def write_css():
@@ -282,83 +308,9 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-body {
-    background: #ffffff;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    color: #1a1a1a;
-}
-
-/* HEADER */
-.md-header {
-    background: #0078D4 !important;
-}
-
-/* SIDEBAR */
-.md-nav {
-    background: #f5f5f5;
-    border-right: 1px solid #e1e1e1;
-}
-
-/* ACTIVE ITEM (MICROSOFT DOCS STYLE) */
-.md-nav__item--active > .md-nav__link {
-    font-weight: 700;
-    color: #0078D4;
-}
-
-/* LINKS */
-a {
-    color: #0078D4;
-}
-
-/* CONTENT AREA */
-.md-content {
-    padding: 24px 32px;
-    max-width: 900px;
-    margin: auto;
-}
-
-/* HEADINGS */
-h1 {
-    font-size: 2.6rem;
-    font-weight: 900;
-    border-bottom: 4px solid #0078D4;
-}
-
-h2 {
-    font-size: 1.9rem;
-    font-weight: 800;
-}
-
-h3 {
-    font-size: 1.4rem;
-    font-weight: 800;
-}
-
-/* BREADCRUMBS (make visible like MS Docs) */
-.md-path {
-    font-size: 0.85rem;
-    opacity: 0.8;
-}
-""")
-
-
-# ----------------------
-# ANALYTICS (UNCHANGED)
-# ----------------------
-
-def write_analytics(docs):
-    js_dir = docs / "js"
-    js_dir.mkdir(parents=True, exist_ok=True)
-
-    (js_dir / "analytics.js").write_text("""
-/* Cloudflare Web Analytics */
-(function() {
-    var script = document.createElement('script');
-    script.defer = true;
-    script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
-    script.setAttribute('data-cf-beacon', '{"token": "3cc08260ee084ea2988505b82c3fc095"}');
-    document.head.appendChild(script);
-})();
+.md-typeset h1 { font-weight: 900; }
+.md-typeset h2 { font-weight: 800; }
+.md-typeset h3 { font-weight: 700; }
 """)
 
 
@@ -368,12 +320,7 @@ def write_analytics(docs):
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-
-    subprocess.run(
-        ["git", "commit", "-m", "vault wiki upgrade: nav + UX + homepage"],
-        check=False
-    )
-
+    subprocess.run(["git", "commit", "-m", "fix: toc + homepage + sample page"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -392,11 +339,10 @@ def main():
     write_docs(src, docs, mapping)
     generate_folder_indexes(docs)
     write_css()
-    write_analytics(docs)
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Vault Wiki upgraded: breadcrumbs + sidebar UX + homepage redesign")
+    print("✅ TOC fixed + homepage updated + sample page added")
 
 
 if __name__ == "__main__":

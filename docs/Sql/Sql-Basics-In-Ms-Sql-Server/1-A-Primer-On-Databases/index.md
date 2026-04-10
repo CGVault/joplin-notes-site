@@ -1,9 +1,20 @@
+
 ---
 title: A Primer On Databases
 ---
 
 # A Primer On Databases
 
-## Notes
+This is the landing page for **A Primer On Databases**.
 
-- [Introduction](Sql/Sql-Basics-In-Ms-Sql-Server/1-A-Primer-On-Databases/1-Introduction.md)
+---
+
+## 📂 Contents
+
+This section contains notes and sub-sections.
+
+---
+
+## 🧭 Navigation
+
+Use the sidebar to explore deeper into this category.

@@ -1,15 +1,20 @@
+
 ---
 title: More On Joins
 ---
 
 # More On Joins
 
-## Notes
+This is the landing page for **More On Joins**.
 
-- [Get To Know The Data](Sql/Sql-Basics-In-Ms-Sql-Server/5-More-On-Joins/1-Get-To-Know-The-Data.md)
-- [Join Revisited](Sql/Sql-Basics-In-Ms-Sql-Server/5-More-On-Joins/2-Join-Revisited.md)
-- [Left Join](Sql/Sql-Basics-In-Ms-Sql-Server/5-More-On-Joins/3-Left-Join.md)
-- [Right Join](Sql/Sql-Basics-In-Ms-Sql-Server/5-More-On-Joins/4-Right-Join.md)
-- [Full Join](Sql/Sql-Basics-In-Ms-Sql-Server/5-More-On-Joins/5-Full-Join.md)
-- [Outer Join](Sql/Sql-Basics-In-Ms-Sql-Server/5-More-On-Joins/6-Outer-Join.md)
-- [Aliases For Tables](Sql/Sql-Basics-In-Ms-Sql-Server/5-More-On-Joins/7-Aliases-For-Tables.md)
+---
+
+## 📂 Contents
+
+This section contains notes and sub-sections.
+
+---
+
+## 🧭 Navigation
+
+Use the sidebar to explore deeper into this category.

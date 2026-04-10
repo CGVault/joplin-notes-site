@@ -1,12 +1,20 @@
+
 ---
 title: Set Operations
 ---
 
 # Set Operations
 
-## Notes
+This is the landing page for **Set Operations**.
 
-- [Introduction](Sql/Sql-Basics-In-Ms-Sql-Server/7-Set-Operations/1-Introduction.md)
-- [Union](Sql/Sql-Basics-In-Ms-Sql-Server/7-Set-Operations/2-Union.md)
-- [Intersect](Sql/Sql-Basics-In-Ms-Sql-Server/7-Set-Operations/3-Intersect.md)
-- [Except](Sql/Sql-Basics-In-Ms-Sql-Server/7-Set-Operations/4-Except.md)
+---
+
+## 📂 Contents
+
+This section contains notes and sub-sections.
+
+---
+
+## 🧭 Navigation
+
+Use the sidebar to explore deeper into this category.

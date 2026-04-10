@@ -1,9 +1,20 @@
+
 ---
 title: Quiz
 ---
 
 # Quiz
 
-## Notes
+This is the landing page for **Quiz**.
 
-- [Quiz](Sql/Sql-Basics-In-Ms-Sql-Server/8-Quiz/1-Quiz.md)
+---
+
+## 📂 Contents
+
+This section contains notes and sub-sections.
+
+---
+
+## 🧭 Navigation
+
+Use the sidebar to explore deeper into this category.

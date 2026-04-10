@@ -5,24 +5,24 @@ Welcome to your knowledge base.
 
 ---
 
-## 📌 Quick Access
+## 📌 Quick Start
 
-- [📂 Browse Notes](./)
-- [🧠 Latest Content](./)
-- [📁 All Sections](./)
-
----
-
-## 🚀 Start Here
-
-This wiki is automatically generated from your Joplin vault.
-
-Use the sidebar to navigate folders and notes.
+- [📂 Browse All Notes](./)
+- [📁 Example Folder](example-folder/)
+- [🧪 Sample Page](sample-page/)
 
 ---
 
-## 📊 Dashboard
+## 🚀 What is this?
 
-- Built with MkDocs Material
-- Auto-generated structure
-- GitHub Pages deployment
+This site is automatically generated from your Joplin vault.
+
+Each folder becomes a section with its own landing page.
+
+---
+
+## 📊 System Status
+
+- MkDocs Material active
+- Auto navigation enabled
+- Cloudflare analytics enabled

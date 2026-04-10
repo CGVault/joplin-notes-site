@@ -1,20 +1,19 @@
 # Sample Page
 
-This page shows how notes will look in your vault.
+This page shows how notes should be structured.
 
-## Structure Example
+## Headings (TOC Example)
 
-### Headings
-Use headings to automatically build the table of contents.
+### Level 3 Heading
+MkDocs Material automatically builds TOC from headings.
 
-### Example Block
+## Content Example
 
-You can write anything here:
 - notes
-- ideas
-- code
 - images
+- code
+- links
 
-## Why this exists
+## Purpose
 
-This is your reference template for all future notes.
+Use this page as a template for all future notes.

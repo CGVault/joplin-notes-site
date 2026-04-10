@@ -18,7 +18,6 @@ extra_css:
 nav:
 - "\U0001F3E0 Home": index.md
 - "\U0001F9EA Sample Page": sample-page.md
-- Resources: []
 - Sql:
   - Sql Basics In Ms Sql Server:
     - A Primer On Databases:

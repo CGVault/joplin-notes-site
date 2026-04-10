@@ -21,8 +21,8 @@ Use the sidebar to browse topics automatically generated from your vault.
 - Microsoft-style navigation UI
 - Instant search system
 - Clean TOC per page
-- Code copy buttons
-- Stable MkDocs Material setup
+- Joplin image support
+- Structured knowledge base
 
 ---
 

@@ -155,8 +155,6 @@ def create_sample_page(docs):
 
     sample.write_text("""# Sample Page
 
-This page shows how notes should be structured.
-
 ## Headings (TOC Example)
 
 ### Level 3 Heading
@@ -170,7 +168,7 @@ This page shows how notes should be structured.
 
 ## Purpose
 
-Use this page as a template for all future notes.
+Use this page as a template.
 """, encoding="utf-8")
 
 
@@ -181,37 +179,22 @@ Use this page as a template for all future notes.
 def create_home_page(docs):
     home = docs / "index.md"
 
-    home.write_text("""# 🧠 Vault Wiki
+    home.write_text("""# Vault Wiki
 
-Welcome to your knowledge base.
+## Welcome
 
----
+- 📘 Sample Page
 
-## 🚀 Start Here
+## Navigation
 
-- 📘 [Sample Page](sample-page.md)
+Use sidebar to browse notes.
 
----
+## Features
 
-## 📂 Navigation
-
-Use the sidebar to browse topics automatically generated from your vault.
-
----
-
-## ✨ Features
-
-- Microsoft-style navigation UI
-- Instant search system
-- Clean TOC per page
-- Joplin image support
-- Structured knowledge base
-
----
-
-## ⚡ Tip
-
-Use proper headings in notes for TOC.
+- Fast search
+- Clean TOC
+- Joplin support
+- Microsoft-style UI
 """, encoding="utf-8")
 
 
@@ -229,7 +212,6 @@ def write_docs(src, docs, mapping):
     copy_all_resources(src, docs)
 
     for orig, new in mapping.items():
-
         src_file = src / orig
         dst_file = docs / new
 
@@ -296,12 +278,10 @@ def generate_folder_indexes(docs):
 # ----------------------
 
 def build_nav(docs):
-
     def walk(folder):
         items = []
 
         for p in sorted(folder.iterdir()):
-
             if any(part in IGNORE_DIRS for part in p.parts):
                 continue
 
@@ -321,7 +301,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (UI OVERHAUL)
+# MKDOCS CONFIG (SAFE + CLEAN)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -369,7 +349,6 @@ def write_mkdocs(docs):
         ],
 
         "extra_css": ["stylesheets/extra.css"],
-
         "nav": nav
     }
 
@@ -378,7 +357,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (MICROSOFT STYLE OVERHAUL)
+# CSS (MICROSOFT STYLE — CLEAN VERSION)
 # ----------------------
 
 def write_css():
@@ -387,17 +366,12 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-/* =========================
-   MICROSOFT DOCS STYLE UI
-   ========================= */
-
-/* Typography */
 body {
     font-size: 15.5px;
     line-height: 1.7;
 }
 
-/* Headings — Microsoft-style underline accent */
+/* Headings */
 .md-typeset h1 {
     font-weight: 800;
     border-bottom: 3px solid #2563eb;
@@ -408,38 +382,29 @@ body {
     font-weight: 700;
     border-bottom: 2px solid #93c5fd;
     padding-bottom: 4px;
-    margin-top: 1.6em;
 }
 
-/* Sidebar active item (blue bar like Microsoft Docs) */
+/* Active nav item */
 .md-nav__link--active {
     color: #2563eb !important;
     font-weight: 600;
-    border-left: 3px solid #2563eb;
-    padding-left: 10px;
 }
 
-/* Sidebar hover effect */
+/* Hover nav */
 .md-nav__link:hover {
     color: #1d4ed8;
 }
 
-/* Top navigation bar polish */
-.md-header {
-    background: #0f172a;
-}
-
-/* Code blocks feel cleaner */
+/* Code blocks */
 .md-typeset code {
     border-radius: 6px;
 }
 
-/* Paragraph spacing */
+/* Spacing */
 p {
     margin-bottom: 14px;
 }
 
-/* Section spacing */
 .md-typeset h2,
 .md-typeset h3 {
     scroll-margin-top: 80px;
@@ -453,7 +418,7 @@ p {
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "Microsoft-style UI overhaul"], check=False)
+    subprocess.run(["git", "commit", "-m", "clean microsoft UI"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -479,7 +444,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ MICROSOFT UI OVERHAUL COMPLETE")
+    print("✅ CLEAN MICROSOFT UI VERSION COMPLETE")
 
 
 if __name__ == "__main__":

@@ -1,31 +1,16 @@
-# 🧠 Vault Wiki
+# Vault Wiki
 
-Welcome to your knowledge base.
+## Welcome
 
----
+- 📘 Sample Page
 
-## 🚀 Start Here
+## Navigation
 
-- 📘 [Sample Page](sample-page.md)
+Use sidebar to browse notes.
 
----
+## Features
 
-## 📂 Navigation
-
-Use the sidebar to browse topics automatically generated from your vault.
-
----
-
-## ✨ Features
-
-- Microsoft-style navigation UI
-- Instant search system
-- Clean TOC per page
-- Joplin image support
-- Structured knowledge base
-
----
-
-## ⚡ Tip
-
-Use proper headings in notes for TOC.
+- Fast search
+- Clean TOC
+- Joplin support
+- Microsoft-style UI

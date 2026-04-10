@@ -23,7 +23,7 @@
     
     
       
-        <title>6. To be or NULL to be - Vault Wiki</title>
+        <title>To Be Or Null To Be - Vault Wiki</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              6. To be or NULL to be
+              To Be Or Null To Be
             
           </span>
         </div>
@@ -683,8 +683,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    To Be Or Null To Be
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -702,6 +718,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#null-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NULL values
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2042,25 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#null-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NULL values
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,7 +2185,9 @@
 
 
 
-<h1 id="null-values">NULL values<a class="headerlink" href="#null-values" title="Permanent link">&para;</a></h1>
+  <h1>To Be Or Null To Be</h1>
+
+<h2 id="null-values">NULL values<a class="headerlink" href="#null-values" title="Permanent link">&para;</a></h2>
 <p>Filtering for NULL values is useful for finding missing information and disregarding records that have incomplete columns/fields. NULL is a void, it is not 0 or an empty string or date, it is a column/field that has not been filled in at all.</p>
 <p>In SQL, because NULL doesn't equal 0, records with a 0, like a price for example, won't show up in  the results. NULL is special and will always be excluded from the results unless there is a condition searching for it.
 <br/>Furthermore, NULL in T-SQL interestingly doesn't equal itself. NULL = NULL is false.</p>
@@ -2136,9 +2199,6 @@
 
 
 
-
-  
-  
 
 
 

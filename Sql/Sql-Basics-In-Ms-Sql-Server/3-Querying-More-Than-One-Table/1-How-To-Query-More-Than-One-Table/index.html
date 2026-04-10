@@ -23,7 +23,7 @@
     
     
       
-        <title>1. How to query more than one table - Vault Wiki</title>
+        <title>How To Query More Than One Table - Vault Wiki</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              1. How to query more than one table
+              How To Query More Than One Table
             
           </span>
         </div>
@@ -834,8 +834,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How To Query More Than One Table
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -853,6 +869,45 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#joining-tables-the-simplest-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joining tables the simplest way
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#joins-using-the-where-clause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JOINs using the WHERE clause
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2053,36 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#joining-tables-the-simplest-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joining tables the simplest way
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#joins-using-the-where-clause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JOINs using the WHERE clause
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,12 +2207,14 @@
 
 
 
-<h1 id="joining-tables-the-simplest-way">Joining tables the simplest way<a class="headerlink" href="#joining-tables-the-simplest-way" title="Permanent link">&para;</a></h1>
+  <h1>How To Query More Than One Table</h1>
+
+<h2 id="joining-tables-the-simplest-way">Joining tables the simplest way<a class="headerlink" href="#joining-tables-the-simplest-way" title="Permanent link">&para;</a></h2>
 <p>The easiest way is to mention both tables in the FROM clause.
 <code>select * from Movie, Director;</code></p>
 <p>This is the most useless way to join tables, no one uses this method. This simple FROM clause method is the same as using CROSS JOIN because SQL does not know what you want from the data so it just makes every combination between the rows in both tables.
 <code>select * from Movie cross join Director;</code></p>
-<h1 id="joins-using-the-where-clause">JOINs using the WHERE clause<a class="headerlink" href="#joins-using-the-where-clause" title="Permanent link">&para;</a></h1>
+<h2 id="joins-using-the-where-clause">JOINs using the WHERE clause<a class="headerlink" href="#joins-using-the-where-clause" title="Permanent link">&para;</a></h2>
 <p>Again, another simple but no one uses it method is using the WHERE clause to do what a JOIN and ON clause would do. Not standard but good to know if someone uses this method in their code. This is equivalent to the clause JOIN so its an inner join.</p>
 <p><code>select * from movie, director where movie.director_ID = directors.ID</code></p>
 <p>&nbsp;</p>
@@ -2140,9 +2225,6 @@
 
 
 
-
-  
-  
 
 
 

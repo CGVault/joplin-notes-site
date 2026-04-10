@@ -23,7 +23,7 @@
     
     
       
-        <title>3. LEFT JOIN - Vault Wiki</title>
+        <title>Left Join - Vault Wiki</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              3. LEFT JOIN
+              Left Join
             
           </span>
         </div>
@@ -1344,8 +1344,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Left Join
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1363,6 +1379,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-left-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a LEFT JOIN
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2042,25 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-left-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a LEFT JOIN
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,7 +2185,9 @@
 
 
 
-<h1 id="what-is-a-left-join">What is a LEFT JOIN<a class="headerlink" href="#what-is-a-left-join" title="Permanent link">&para;</a></h1>
+  <h1>Left Join</h1>
+
+<h2 id="what-is-a-left-join">What is a LEFT JOIN<a class="headerlink" href="#what-is-a-left-join" title="Permanent link">&para;</a></h2>
 <p>While an INNER JOIN only results in rows where both tables have a matching value in the ON clause equation, a LEFT JOIN displays all results from the first table no matter what, plus any records from the second table that match with a record from the first table according to the ON clause equation.</p>
 <p>Like the INNER JOIN example, using the tables student and room with the equation s.RoomId=r.Id will result in every student being in the results even if the left side of the equation is NULL which is when a student doesn't have a room assigned. The resulting dataset will have all the students from the students table, and the students who have NULL values for their RoomId will also have NULLs for the columns from Rooms table, columns like RoomName will be NULL. Rule of thumb is if the column tested in the equation is NULL for the first table, then the columns attached from the second table will be NULL also.</p>
 <p>Example of what I mean:</p>
@@ -2291,9 +2354,6 @@
 
 
 
-
-  
-  
 
 
 

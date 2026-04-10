@@ -23,7 +23,7 @@
     
     
       
-        <title>5. Grouping - Vault Wiki</title>
+        <title>Grouping - Vault Wiki</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              5. Grouping
+              Grouping
             
           </span>
         </div>
@@ -1131,8 +1131,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grouping
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1150,6 +1166,45 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-group-by-to-get-meaningful-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using GROUP BY to get meaningful statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grouping-by-more-than-one-column" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grouping by more than one column
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2053,36 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-group-by-to-get-meaningful-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using GROUP BY to get meaningful statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grouping-by-more-than-one-column" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grouping by more than one column
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,7 +2207,9 @@
 
 
 
-<h1 id="using-group-by-to-get-meaningful-statistics">Using GROUP BY to get meaningful statistics<a class="headerlink" href="#using-group-by-to-get-meaningful-statistics" title="Permanent link">&para;</a></h1>
+  <h1>Grouping</h1>
+
+<h2 id="using-group-by-to-get-meaningful-statistics">Using GROUP BY to get meaningful statistics<a class="headerlink" href="#using-group-by-to-get-meaningful-statistics" title="Permanent link">&para;</a></h2>
 <p>As mentioned on the aggregation page, GROUP BY is required for us to use aggregate functions in a meaningful way.</p>
 <p>This example counts all the employees per department.</p>
 <p><code>select department, count(FirstName) as DepartmentEmployees</code>
@@ -2143,7 +2228,7 @@
 <code>AVG(salary) as AvgDepartmentSalary</code>
 <code>from Employee where year = '2015'</code>
 <code>group by department</code></p>
-<h1 id="grouping-by-more-than-one-column">Grouping by more than one column<a class="headerlink" href="#grouping-by-more-than-one-column" title="Permanent link">&para;</a></h1>
+<h2 id="grouping-by-more-than-one-column">Grouping by more than one column<a class="headerlink" href="#grouping-by-more-than-one-column" title="Permanent link">&para;</a></h2>
 <p>You can also group by more than one column if you want to group by a more specific scenario, such as customers and their orders. Remember, using group by requires you to only select the columns used in the group by clause, selecting additional columns for information won't work here even if SQL let you do it, as the extra information will be collapsed under the grouped columns anyway.</p>
 <p>This fins average salaries of employees, but as you can see all the non columns in the select statement that are not some sort of aggregate command, must be mentioned in the group by clause while the aggregate commands which make new columns don't have to be mentioned in the group by clause.</p>
 <p><code>SELECT</code>
@@ -2159,9 +2244,6 @@
 
 
 
-
-  
-  
 
 
 

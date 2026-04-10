@@ -23,7 +23,7 @@
     
     
       
-        <title>4. RIGHT JOIN - Vault Wiki</title>
+        <title>Right Join - Vault Wiki</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              4. RIGHT JOIN
+              Right Join
             
           </span>
         </div>
@@ -1372,8 +1372,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Right Join
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1391,6 +1407,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-right-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a RIGHT JOIN
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2042,25 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-right-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a RIGHT JOIN
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,7 +2185,9 @@
 
 
 
-<h1 id="what-is-a-right-join">What is a RIGHT JOIN<a class="headerlink" href="#what-is-a-right-join" title="Permanent link">&para;</a></h1>
+  <h1>Right Join</h1>
+
+<h2 id="what-is-a-right-join">What is a RIGHT JOIN<a class="headerlink" href="#what-is-a-right-join" title="Permanent link">&para;</a></h2>
 <p>While an INNER JOIN only results in rows where both tables have a matching value in the ON clause equation, a RIGHT JOIN displays all results from the second table no matter what, plus any records from the first table that match with a record from the second table according to the ON clause equation.</p>
 <p>Like the INNER JOIN example, using the tables student and room with the equation s.RoomId=r.Id will result in every room being in the results even if the right side of the equation has a value not found on the left side, which is when a room doesn't have any students assigned to it. The resulting dataset will have all the rooms from the rooms table, and the rooms with a RoomId not found in the student table will also have NULLs for the columns from students table, columns like StudentName will be NULL. Rule of thumb is if the value of the column from the second table is not found somewhere in the corresponding column in the first table, then the attached columns from the first table will be NULL also.</p>
 <p>Most people just stick to LEFT JOINs and flip the tables around. The order matters a lot. A LEFT JOIN B is the same as B RIGHT JOIN A. LEFT JOIN is used to join two tables almost 100% of the time. RIGHT JOIN only really matters when we have a complex use case requiring us to join more than two tables, and even then everybody just flips the tables around and uses LEFT JOIN.</p>
@@ -2346,9 +2409,6 @@
 
 
 
-
-  
-  
 
 
 

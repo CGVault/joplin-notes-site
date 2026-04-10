@@ -23,7 +23,7 @@
     
     
       
-        <title>3. Referencing columns - Vault Wiki</title>
+        <title>Referencing Columns - Vault Wiki</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              3. Referencing columns
+              Referencing Columns
             
           </span>
         </div>
@@ -890,8 +890,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referencing Columns
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -909,6 +925,56 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#columns-when-using-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Columns when using JOIN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alias
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-join-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering JOIN queries
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2064,47 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#columns-when-using-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Columns when using JOIN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alias
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtering-join-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering JOIN queries
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,16 +2229,18 @@
 
 
 
-<h1 id="columns-when-using-join">Columns when using JOIN<a class="headerlink" href="#columns-when-using-join" title="Permanent link">&para;</a></h1>
+  <h1>Referencing Columns</h1>
+
+<h2 id="columns-when-using-join">Columns when using JOIN<a class="headerlink" href="#columns-when-using-join" title="Permanent link">&para;</a></h2>
 <p>Referencing columns in a query requires you to use TABLE.COLUMN to prevent columns of the same name being ambiguous.</p>
 <p>No, the columns used in the ON clause do not need to be in the select clause but must still follow the format.</p>
 <p>Maybe if you have a super small database where no tables have columns with the same name you can be lazy in the SELECT clause and just use the names of the columns on their own. Even the ON clause does not need to use the format if the column names are unique. Considering no database put into serious use is this simple, just stick to using the format, its best practice.</p>
-<h1 id="alias">Alias<a class="headerlink" href="#alias" title="Permanent link">&para;</a></h1>
+<h2 id="alias">Alias<a class="headerlink" href="#alias" title="Permanent link">&para;</a></h2>
 <p>You can designate an alias for tables to refer to them quicker. This can be done to columns to rename them in the results of your query.</p>
 <p>While renaming doesn't always require a specific clause, like tables could just be Customers C, its best practice to use the AS clause such as Customers AS C. Renaming in more complex scenarios requires AS to be used, so use it for all renaming purposes.</p>
 <p><code>select c.id as CustomerID, o.id as OrderID from customers as c join orders as o on c.id = o.id where o.id IS NOT '1';</code></p>
 <p>As you can see, once the table alias is made in the from clause, it can be used everywhere else too.</p>
-<h1 id="filtering-join-queries">Filtering JOIN queries<a class="headerlink" href="#filtering-join-queries" title="Permanent link">&para;</a></h1>
+<h2 id="filtering-join-queries">Filtering JOIN queries<a class="headerlink" href="#filtering-join-queries" title="Permanent link">&para;</a></h2>
 <p>Rule of thumb is to join first and then filter, all columns in the WHERE clause must exist within the tables joined together.</p>
 <p><code>select * from Person join Car on Person.ID = Car.OwnerID where Person.age &lt; 25 or Car.OwnderName = 'Max';</code></p>
 <p>&nbsp;</p>
@@ -2144,9 +2251,6 @@
 
 
 
-
-  
-  
 
 
 

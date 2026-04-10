@@ -23,7 +23,7 @@
     
     
       
-        <title>2. JOIN revisited - Vault Wiki</title>
+        <title>Join Revisited - Vault Wiki</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              2. JOIN revisited
+              Join Revisited
             
           </span>
         </div>
@@ -1316,8 +1316,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Join Revisited
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1335,6 +1351,56 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#revising-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revising JOINs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inner-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        INNER JOIN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2064,47 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#revising-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revising JOINs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inner-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        INNER JOIN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,7 +2229,9 @@
 
 
 
-<h1 id="revising-joins">Revising JOINs<a class="headerlink" href="#revising-joins" title="Permanent link">&para;</a></h1>
+  <h1>Join Revisited</h1>
+
+<h2 id="revising-joins">Revising JOINs<a class="headerlink" href="#revising-joins" title="Permanent link">&para;</a></h2>
 <p>The basic JOIN command just does an inner join, it joins all the records where the table a and table b columns match, adding on the extra information from table b onto the table a records.</p>
 <p><code>SELECT</code>
   <code>*</code>
@@ -2138,14 +2245,14 @@
 <code>FROM Student s</code>
 <code>JOIN Room r</code>
   <code>ON s.RoomId=r.Id ;</code></p>
-<h1 id="inner-join">INNER JOIN<a class="headerlink" href="#inner-join" title="Permanent link">&para;</a></h1>
+<h2 id="inner-join">INNER JOIN<a class="headerlink" href="#inner-join" title="Permanent link">&para;</a></h2>
 <p>The normal JOIN clause is just the shorthand way of typing INNER JOIN, they do the exact same thing. Its best to use INNER JOIN for clarity especially in large queries.</p>
 <p><code>SELECT</code>
   <code>*</code>
 <code>FROM Equipment e</code>
 <code>INNER JOIN Room r</code>
   <code>ON e.RoomId=r.Id ;</code></p>
-<h1 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <p>INNER JOIN only joins the records which match both columns from the two tables being joined. So if the student and room tables are connected using s.RoomId=r.Id then students not assigned to a room (the first half of the equation would be NULL) then it doesn't show up in the results. Conversely, if there is a room that is not assigned to any students (the second half of the equation would be NULL) then that room does not show up in the results.</p>
 <p><img alt="effdb026b7a904261d9904ad272a5f1e.png" src="../../../../resources/effdb026b7a904261d9904ad272a5f1e.png" /></p>
 <p>&nbsp;</p>
@@ -2155,9 +2262,6 @@
 
 
 
-
-  
-  
 
 
 

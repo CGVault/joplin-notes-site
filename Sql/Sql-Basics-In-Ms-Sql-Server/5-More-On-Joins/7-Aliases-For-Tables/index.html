@@ -23,7 +23,7 @@
     
     
       
-        <title>7. Aliases for tables - Vault Wiki</title>
+        <title>Aliases For Tables - Vault Wiki</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              7. Aliases for tables
+              Aliases For Tables
             
           </span>
         </div>
@@ -1456,8 +1456,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aliases For Tables
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1475,6 +1491,89 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#renaming-tables-for-quicker-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renaming tables for quicker reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aliases-in-self-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aliases in SELF JOINs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#joining-more-than-one-table-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joining more than one table challenge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#my-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        My solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Answer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explanation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explanation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2097,80 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#renaming-tables-for-quicker-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renaming tables for quicker reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aliases-in-self-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aliases in SELF JOINs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#joining-more-than-one-table-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joining more than one table challenge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#my-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        My solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Answer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explanation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explanation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,27 +2295,29 @@
 
 
 
-<h1 id="renaming-tables-for-quicker-reference">Renaming tables for quicker reference<a class="headerlink" href="#renaming-tables-for-quicker-reference" title="Permanent link">&para;</a></h1>
+  <h1>Aliases For Tables</h1>
+
+<h2 id="renaming-tables-for-quicker-reference">Renaming tables for quicker reference<a class="headerlink" href="#renaming-tables-for-quicker-reference" title="Permanent link">&para;</a></h2>
 <p>This has been used in every exercise so far, but referring to tables can be made easier by giving a table a new alias in the FROM clause. No, there is no need to use the AS keyword every time but it is best practice to do so. In small databases using one letter aliases works well, but in complex queries this isn't always best practice so you may need to come up with a shorter but meaningful naming scheme such us cust for customers.</p>
 <p>Example:</p>
 <p><code>select</code>
         <code>e.Id, e.Name, r.RoomNumber, r.Beds</code>
 <code>from room as r</code>
 <code>join equipment as e on e.RoomId=r.Id;</code></p>
-<h1 id="aliases-in-self-joins">Aliases in SELF JOINs<a class="headerlink" href="#aliases-in-self-joins" title="Permanent link">&para;</a></h1>
+<h2 id="aliases-in-self-joins">Aliases in SELF JOINs<a class="headerlink" href="#aliases-in-self-joins" title="Permanent link">&para;</a></h2>
 <p>Self joins are not super typical in live enterprise databases but there are some situations where two different objects we want to compare or match are stored in the same table. Such as a table called person storing children and their parents, or a employees table storing managers and their team members. Because mothers and children are both people, and managers are employees just like their team members, they are stored in the same table.</p>
 <p>This example self joins to find everyone who also have the same RoomId as Jack. The first student table searches for jack specifically, while joining it to itself we filter the second instance of the table to find everyone but himself.</p>
 <p><code>select distinct *</code>
 <code>from student a1 join student a2 on a1.RoomId=a2.RoomId</code>
 <code>where a1.Name = 'Jack Pearson' and a2.Name != 'Jack Pearson';</code></p>
-<h1 id="joining-more-than-one-table-challenge">Joining more than one table challenge<a class="headerlink" href="#joining-more-than-one-table-challenge" title="Permanent link">&para;</a></h1>
+<h2 id="joining-more-than-one-table-challenge">Joining more than one table challenge<a class="headerlink" href="#joining-more-than-one-table-challenge" title="Permanent link">&para;</a></h2>
 <p>Joining more than two tables, and even self joining while doing that is entirely possible. Such queries need careful planning, as they can be complicated but breaking down what you need does help.</p>
 <p>For each room with two beds where there are actually two students, we want to show one row that contains the following information:</p>
 <p>&nbsp;   The name of the first student.
     The name of the second student.
     The room number.</p>
 <p>Don't change any column names. Each pair of students should only be shown once. The student whose name comes first in the alphabet should be shown first.</p>
-<h1 id="my-solution">My solution<a class="headerlink" href="#my-solution" title="Permanent link">&para;</a></h1>
+<h2 id="my-solution">My solution<a class="headerlink" href="#my-solution" title="Permanent link">&para;</a></h2>
 <p><code>select</code>
 <code>s1.name,</code>
 <code>s2.name,</code>
@@ -2154,7 +2327,7 @@
 <code>join student s2 on r.Id=s2.RoomId</code>
 <code>where r.Beds=2 and (s1.Name != s2.Name) and (s1.Name &lt; s2.Name)</code></p>
 <p>&nbsp;</p>
-<h1 id="answer">Answer<a class="headerlink" href="#answer" title="Permanent link">&para;</a></h1>
+<h2 id="answer">Answer<a class="headerlink" href="#answer" title="Permanent link">&para;</a></h2>
 <p><code>SELECT</code>
       <code>S1.Name,</code>
       <code>S2.Name,</code>
@@ -2167,7 +2340,7 @@
 <code>WHERE S1.Name &lt; S2.Name</code>
       <code>AND Beds = 2;</code></p>
 <p>&nbsp;</p>
-<h1 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">&para;</a></h1>
+<h2 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">&para;</a></h2>
 <p>&nbsp;</p>
 
 
@@ -2175,9 +2348,6 @@
 
 
 
-
-  
-  
 
 
 

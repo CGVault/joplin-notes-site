@@ -23,7 +23,7 @@
     
     
       
-        <title>4. Logic - Vault Wiki</title>
+        <title>Logic - Vault Wiki</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              4. Logic
+              Logic
             
           </span>
         </div>
@@ -627,8 +627,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logic
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -646,6 +662,45 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#logical-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logical operators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complex-conditioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complex conditioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2053,36 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#logical-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logical operators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complex-conditioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complex conditioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,13 +2207,15 @@
 
 
 
-<h1 id="logical-operators">Logical operators<a class="headerlink" href="#logical-operators" title="Permanent link">&para;</a></h1>
+  <h1>Logic</h1>
+
+<h2 id="logical-operators">Logical operators<a class="headerlink" href="#logical-operators" title="Permanent link">&para;</a></h2>
 <p>OR - records that fulfill one or more of the conditions will pass the filter
 AND - records passing both conditions will pass the filter
 BETWEEN - records falling between two numbers pass the filter, this is the clause equivalent of doing =&gt; AND &lt;=. <code>where results between 90 and 100</code>
 NOT - flips the filter so the results become opposite of what the filter passes. <code>where results not between 90 and 100</code>
 <br/></p>
-<h1 id="complex-conditioning">Complex conditioning<a class="headerlink" href="#complex-conditioning" title="Permanent link">&para;</a></h1>
+<h2 id="complex-conditioning">Complex conditioning<a class="headerlink" href="#complex-conditioning" title="Permanent link">&para;</a></h2>
 <p>Combining conditions can be complex, messy, and hard to create from scratch. Its better to use brackets () to group conditions, and then stack them using AND/OR depending on your use case.</p>
 <p>Example:
 <code>select results from student where (mark &gt; 70 AND mark &lt; 99) AND (rank not between 80 and 100) OR (subject = 'Math' OR subject = 'Science')</code></p>
@@ -2142,9 +2227,6 @@ NOT - flips the filter so the results become opposite of what the filter passes.
 
 
 
-
-  
-  
 
 
 

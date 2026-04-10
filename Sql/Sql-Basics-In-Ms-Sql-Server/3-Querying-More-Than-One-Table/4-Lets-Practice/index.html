@@ -23,7 +23,7 @@
     
     
       
-        <title>4. Lets practice - Vault Wiki</title>
+        <title>Lets Practice - Vault Wiki</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              4. Lets practice
+              Lets Practice
             
           </span>
         </div>
@@ -918,8 +918,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lets Practice
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -937,6 +953,45 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#complex-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complex practice
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#an-even-more-complex-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An even more complex query
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1998,8 +2053,36 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#complex-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complex practice
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#an-even-more-complex-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An even more complex query
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2124,7 +2207,9 @@
 
 
 
-<h1 id="complex-practice">Complex practice<a class="headerlink" href="#complex-practice" title="Permanent link">&para;</a></h1>
+  <h1>Lets Practice</h1>
+
+<h2 id="complex-practice">Complex practice<a class="headerlink" href="#complex-practice" title="Permanent link">&para;</a></h2>
 <p>A complex example combining concepts so far:</p>
 <p><code>SELECT</code>
   <code>m.Title,</code>
@@ -2137,7 +2222,7 @@
 <code>WHERE m.ProductionYear - d.BirthYear &lt; 40;</code></p>
 <p>Learning observations:
 Renaming a column so its displayed differently in the results does not allow you to refer to that column using its alias in other areas like the WHERE clause. Tables can but columns cannot.</p>
-<h1 id="an-even-more-complex-query">An even more complex query<a class="headerlink" href="#an-even-more-complex-query" title="Permanent link">&para;</a></h1>
+<h2 id="an-even-more-complex-query">An even more complex query<a class="headerlink" href="#an-even-more-complex-query" title="Permanent link">&para;</a></h2>
 <p>This goes back and includes all the concepts up until now:</p>
 <p><code>SELECT</code>
   <code>m.Id,</code>
@@ -2160,9 +2245,6 @@ Filters often have use cases where they are grouped, so you need to put scenario
 
 
 
-
-  
-  
 
 
 

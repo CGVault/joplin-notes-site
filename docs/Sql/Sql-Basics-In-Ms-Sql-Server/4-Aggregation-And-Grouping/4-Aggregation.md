@@ -9,21 +9,22 @@ altitude: 0.0000
 
 # Computing basic statistics
 
+
 We can use specific window functions, or commands, to achieve specific statistics in SQL. These commands are more complex than just being simple clauses.
 
 COUNT() - used to count the total number of whatever column is specified
 
-`select count(*) as EmployeeNumber from Employee `     
+`select count(*) as EmployeeNumber from Employee `
 This counts all the rows in a table, not very useful but you get the idea, its used in the select clause and should be renamed to something meaningful.
 
-`select count(role) as RoleCount from teachers `     
+`select count(role) as RoleCount from teachers `
 Using specific columns in count(), allows you to count all the records where that column is filled in. It will not count NULLs.
 
-`select count(distinct customerID) as DISTCustomer from order`   
+`select count(distinct customerID) as DISTCustomer from order`
 DISTINCT should be used within the aggregate if you want that specific calculation to be only include the unique values.
 
-Those examples represent the possible syntax to use but a common use of count() would look like this:  
-`select id, name, count(OrderNumber) as OrderCount from orders; ` 
+Those examples represent the possible syntax to use but a common use of count() would look like this:
+`select id, name, count(OrderNumber) as OrderCount from orders; `
 
 That would make a new column and after each order, there would be a count for how many orders that person has done. This will not filter the results down to unique values, so every single order will have the same number in the OrderCount column for the same ID.
 
@@ -32,6 +33,7 @@ To use aggregates properly in SQL, and for them to be more meaningful, we have t
 All columns which are not aggregates (the ones not using counts and commands like that) need to be added to the GROUP BY section, which makes aggregating useful but more annoying as you can't just use \* to pull in every column, you need to mention them all specifically.
 
 # Others
+
 
 Apart from count we also have:
 

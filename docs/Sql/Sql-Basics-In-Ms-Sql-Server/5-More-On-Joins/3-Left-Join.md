@@ -9,17 +9,18 @@ altitude: 0.0000
 
 # What is a LEFT JOIN
 
-While an INNER JOIN only results in rows where both tables have a matching value in the ON clause equation, a LEFT JOIN displays all results from the first table no matter what, plus any records from the second table that match with a record from the first table according to the ON clause equation. 
 
-Like the INNER JOIN example, using the tables student and room with the equation s.RoomId=r.Id will result in every student being in the results even if the left side of the equation is NULL which is when a student doesn't have a room assigned. The resulting dataset will have all the students from the students table, and the students who have NULL values for their RoomId will also have NULLs for the columns from Rooms table, columns like RoomName will be NULL. Rule of thumb is if the column tested in the equation is NULL for the first table, then the columns attached from the second table will be NULL also. 
+While an INNER JOIN only results in rows where both tables have a matching value in the ON clause equation, a LEFT JOIN displays all results from the first table no matter what, plus any records from the second table that match with a record from the first table according to the ON clause equation.
+
+Like the INNER JOIN example, using the tables student and room with the equation s.RoomId=r.Id will result in every student being in the results even if the left side of the equation is NULL which is when a student doesn't have a room assigned. The resulting dataset will have all the students from the students table, and the students who have NULL values for their RoomId will also have NULLs for the columns from Rooms table, columns like RoomName will be NULL. Rule of thumb is if the column tested in the equation is NULL for the first table, then the columns attached from the second table will be NULL also.
 
 Example of what I mean:
 
-`SELECT`  
-  `  *`  
-`FROM student s`  
-`LEFT JOIN room r`  
-  `  ON s.RoomId=r.Id`  
+`SELECT`
+  `  *`
+`FROM student s`
+`LEFT JOIN room r`
+  `  ON s.RoomId=r.Id`
 `order by s.RoomId;`
 
 Results:

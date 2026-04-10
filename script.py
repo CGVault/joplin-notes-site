@@ -82,7 +82,7 @@ def build_map(src):
 
 
 # ----------------------
-# FIX CONTENT (ROBUST HEADING FIX)
+# FIX CONTENT (FORCE H2 TITLES)
 # ----------------------
 
 def fix_content(content):
@@ -105,8 +105,8 @@ def fix_content(content):
     for i, line in enumerate(lines):
         stripped = line.strip()
 
-        # FIX: broken markdown headings (no space after #)
-        stripped = re.sub(r'^(#{1,6})(\S)', r'\1 \2', stripped)
+        if re.match(r'^#{1,6}\S', stripped):
+            stripped = re.sub(r'^(#{1,6})(\S)', r'\1 \2', stripped)
 
         if stripped.startswith("#"):
             text = re.sub(r'^#{1,6}\s*', '', stripped).strip()
@@ -124,11 +124,7 @@ def fix_content(content):
 
         new_lines.append(line)
 
-    # FIX: ensure headings are separated properly (critical for TOC generation)
-    content = "\n".join(new_lines)
-    content = re.sub(r'([^\n])\n(#{1,6} )', r'\1\n\n\2', content)
-
-    return content
+    return "\n".join(new_lines)
 
 
 # ----------------------
@@ -325,88 +321,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# JS FIX (ROBUST SCROLLSPY FIX)
-# ----------------------
-
-def write_js():
-    js_dir = Path("docs/javascripts")
-    js_dir.mkdir(parents=True, exist_ok=True)
-
-    (js_dir / "toc-fix.js").write_text("""
-(function () {
-    const OFFSET = 140;
-
-    function getHeadings() {
-        return Array.from(document.querySelectorAll(".md-content h1, .md-content h2, .md-content h3, .md-content h4"));
-    }
-
-    function getLinks() {
-        return Array.from(document.querySelectorAll(".md-sidebar--secondary a, .md-nav--secondary a"));
-    }
-
-    function clear() {
-        getLinks().forEach(l => l.classList.remove("toc-active"));
-    }
-
-    function activate(link) {
-        if (link) link.classList.add("toc-active");
-    }
-
-    function findLink(id) {
-        return document.querySelector(
-            `.md-sidebar--secondary a[href="#${id}"], .md-nav--secondary a[href="#${id}"]`
-        );
-    }
-
-    function getCurrent(headings, scrollPos) {
-        let current = headings[0];
-
-        for (let h of headings) {
-            const top = h.getBoundingClientRect().top + window.scrollY;
-            if (top - OFFSET <= scrollPos) {
-                current = h;
-            }
-        }
-
-        return current;
-    }
-
-    function onScroll() {
-        const headings = getHeadings();
-        if (!headings.length) return;
-
-        const scrollPos = window.scrollY;
-
-        const current = getCurrent(headings, scrollPos);
-
-        clear();
-        activate(findLink(current.id));
-
-        // FIX: reliable bottom detection
-        const docHeight = Math.max(
-            document.body.scrollHeight,
-            document.documentElement.scrollHeight
-        );
-
-        const atBottom = (window.innerHeight + window.scrollY) >= (docHeight - 10);
-
-        if (atBottom) {
-            const last = headings[headings.length - 1];
-            clear();
-            activate(findLink(last.id));
-        }
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("load", onScroll);
-    window.addEventListener("resize", onScroll);
-    document.addEventListener("DOMContentLoaded", onScroll);
-})();
-""", encoding="utf-8")
-
-
-# ----------------------
-# MKDOCS CONFIG
+# MKDOCS CONFIG (UI OVERHAUL)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -454,7 +369,6 @@ def write_mkdocs(docs):
         ],
 
         "extra_css": ["stylesheets/extra.css"],
-        "extra_javascript": ["javascripts/toc-fix.js"],
 
         "nav": nav
     }
@@ -464,7 +378,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS
+# CSS (MICROSOFT STYLE OVERHAUL)
 # ----------------------
 
 def write_css():
@@ -473,11 +387,17 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
+/* =========================
+   MICROSOFT DOCS STYLE UI
+   ========================= */
+
+/* Typography */
 body {
     font-size: 15.5px;
     line-height: 1.7;
 }
 
+/* Headings — Microsoft-style underline accent */
 .md-typeset h1 {
     font-weight: 800;
     border-bottom: 3px solid #2563eb;
@@ -491,6 +411,7 @@ body {
     margin-top: 1.6em;
 }
 
+/* Sidebar active item (blue bar like Microsoft Docs) */
 .md-nav__link--active {
     color: #2563eb !important;
     font-weight: 600;
@@ -498,24 +419,44 @@ body {
     padding-left: 10px;
 }
 
-.md-nav--secondary a.toc-active {
-    color: #2563eb !important;
-    font-weight: 700;
+/* Sidebar hover effect */
+.md-nav__link:hover {
+    color: #1d4ed8;
 }
 
+/* Top navigation bar polish */
 .md-header {
     background: #0f172a;
 }
 
+/* Code blocks feel cleaner */
+.md-typeset code {
+    border-radius: 6px;
+}
+
+/* Paragraph spacing */
+p {
+    margin-bottom: 14px;
+}
+
+/* Section spacing */
 .md-typeset h2,
 .md-typeset h3 {
-    scroll-margin-top: 100px;
+    scroll-margin-top: 80px;
 }
+
+/* =========================
+   REMOVE MKDOCS FOOTER BRANDING
+   ========================= */
 
 .md-footer,
 .md-footer-meta,
 .md-footer__inner,
-.md-copyright,
+.md-copyright {
+    display: none !important;
+}
+
+/* Remove "Made with Material for MkDocs" style badges if present */
 footer {
     display: none !important;
 }
@@ -528,7 +469,7 @@ footer {
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "TOC + scrollspy FIX (stable)"], check=False)
+    subprocess.run(["git", "commit", "-m", "Microsoft-style UI overhaul"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -551,11 +492,10 @@ def main():
     create_sample_page(docs)
     create_home_page(docs)
     write_css()
-    write_js()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ TOC + NAV + SCROLLSPY FULL FIX COMPLETE")
+    print("✅ MICROSOFT UI OVERHAUL COMPLETE")
 
 
 if __name__ == "__main__":

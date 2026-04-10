@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-## Ordering results
+# Ordering results
 
 Results without an order is useless for reporting, so after all the selecting, filtering, any aggregation, we sort the results by a specific column. The ORDER BY clause arranges all the records according to the column chosen. By default its ASC (ascending) so you do not need to type it out each time but its best practice to do so, DESC flips it to descending order. Not all SQL servers are setup the same and this is why we explicitly code in everything even if it takes longer.
 
@@ -17,7 +17,7 @@ Filter first:
 
 `select * from Employee where Employee.Year = 2011 order by salary desc ` 
 
-## Multi ordering
+# Multi ordering
 
 You can order by multiple columns, and in different orders. The first column will take priority with the columns used afterwards proceeding with their sorting in the order that they are written.
 

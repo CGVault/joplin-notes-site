@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-## Conditions using strings
+# Conditions using strings
 
 Conditions created with the where clause can also filter according to strings. Examples include
 

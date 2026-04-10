@@ -7,7 +7,7 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-## Complex practice
+# Complex practice
 
 A complex example combining concepts so far:
 
@@ -24,7 +24,7 @@ A complex example combining concepts so far:
 Learning observations:  
 Renaming a column so its displayed differently in the results does not allow you to refer to that column using its alias in other areas like the WHERE clause. Tables can but columns cannot. 
 
-## An even more complex query
+# An even more complex query
 
 This goes back and includes all the concepts up until now:
 

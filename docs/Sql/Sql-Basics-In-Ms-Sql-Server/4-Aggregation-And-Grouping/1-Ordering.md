@@ -17,7 +17,7 @@ Filter first:
 
 `select * from Employee where Employee.Year = 2011 order by salary desc ` 
 
-## Multi ordering
+# Multi ordering
 
 You can order by multiple columns, and in different orders. The first column will take priority with the columns used afterwards proceeding with their sorting in the order that they are written.
 

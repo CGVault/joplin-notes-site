@@ -15,7 +15,7 @@ No, the columns used in the ON clause do not need to be in the select clause but
 
 Maybe if you have a super small database where no tables have columns with the same name you can be lazy in the SELECT clause and just use the names of the columns on their own. Even the ON clause does not need to use the format if the column names are unique. Considering no database put into serious use is this simple, just stick to using the format, its best practice.
 
-## Alias
+# Alias
 
 You can designate an alias for tables to refer to them quicker. This can be done to columns to rename them in the results of your query.
 
@@ -25,7 +25,7 @@ While renaming doesn't always require a specific clause, like tables could just 
 
 As you can see, once the table alias is made in the from clause, it can be used everywhere else too.
 
-## Filtering JOIN queries
+# Filtering JOIN queries
 
 Rule of thumb is to join first and then filter, all columns in the WHERE clause must exist within the tables joined together.
 

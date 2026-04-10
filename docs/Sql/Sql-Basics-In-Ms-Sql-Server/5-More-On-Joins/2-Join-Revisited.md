@@ -26,7 +26,7 @@ Using JOINs with specific columns:
 `JOIN Room r`  
   `  ON s.RoomId=r.Id ;`
 
-## INNER JOIN
+# INNER JOIN
 
 The normal JOIN clause is just the shorthand way of typing INNER JOIN, they do the exact same thing. Its best to use INNER JOIN for clarity especially in large queries. 
 
@@ -36,7 +36,7 @@ The normal JOIN clause is just the shorthand way of typing INNER JOIN, they do t
 `INNER JOIN Room r`  
   `  ON e.RoomId=r.Id ;`
 
-## How it works
+# How it works
 
 INNER JOIN only joins the records which match both columns from the two tables being joined. So if the student and room tables are connected using s.RoomId=r.Id then students not assigned to a room (the first half of the equation would be NULL) then it doesn't show up in the results. Conversely, if there is a room that is not assigned to any students (the second half of the equation would be NULL) then that room does not show up in the results.
 

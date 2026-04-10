@@ -11,12 +11,12 @@ altitude: 0.0000
 
 We can use the WHERE keyword to filter rows according to a specific condition. We use it like this `select * from student where name = jack` . The condition can be much more complex than this.
 
-## Conditional operators
+# Conditional operators
 
 You can use the usual mathematics symbols like less than, greater than, equals, plus, minus, etc to make other conditions.  
 Keywords like NOT can be used in SQL to flip results but for us the mathematics equivalent of this would be !=.
 
-## Combining conditions and columns
+# Combining conditions and columns
 
 You can select specific columns while using conditions to limit results further. For example we can use `select id, name from student where not name = james` to selected everyone who is not James. Using `where name != james` does the same.
 

@@ -34,7 +34,7 @@ Average salary per department
 `from Employee where year = '2015'`  
 `group by department`
 
-## Grouping by more than one column
+# Grouping by more than one column
 
 You can also group by more than one column if you want to group by a more specific scenario, such as customers and their orders. Remember, using group by requires you to only select the columns used in the group by clause, selecting additional columns for information won't work here even if SQL let you do it, as the extra information will be collapsed under the grouped columns anyway. 
 

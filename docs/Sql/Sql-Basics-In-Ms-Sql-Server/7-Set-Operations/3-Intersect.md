@@ -1,5 +1,3 @@
-# Intersect
-
 ---
 title: 3. INTERSECT
 updated: 2026-04-04 05:48:18Z
@@ -9,8 +7,3 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-
-
-## Overview
-
-Additional details.

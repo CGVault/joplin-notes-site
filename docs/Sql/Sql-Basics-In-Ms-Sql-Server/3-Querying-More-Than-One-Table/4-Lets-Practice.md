@@ -45,7 +45,3 @@ Learning observations:
 Filters often have use cases where they are grouped, so you need to put scenario 1 all in brackets and then us OR with scenario 2 in brackets. If need be you can double bracket (()) longer scenarios you want to test for complex use cases. 
 
 &nbsp;
-
-## Overview
-
-Additional details.

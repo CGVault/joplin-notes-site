@@ -38,7 +38,3 @@ Or if orders are sorted by ID, and price, and all the prices are unique, then yo
 &nbsp;
 
 &nbsp;
-
-## Overview
-
-Additional details.

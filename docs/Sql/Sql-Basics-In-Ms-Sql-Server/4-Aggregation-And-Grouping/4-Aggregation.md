@@ -46,7 +46,3 @@ AVG() - finds the average of all the values in a column
 Note: in real life these commands won't usually be used on the entire column, it will be used for use cases such as the average salary by department for example, this is where the GROUP BY clause comes into play. It basically says "use this command on each of these groups", such as grouping by department name will use the average command on the salary column and give an average for each departments separately.
 
 &nbsp;
-
-## Overview
-
-Additional details.

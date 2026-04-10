@@ -43,7 +43,3 @@ INNER JOIN only joins the records which match both columns from the two tables b
 ![effdb026b7a904261d9904ad272a5f1e.png](../../../_resources/effdb026b7a904261d9904ad272a5f1e.png)
 
 &nbsp;
-
-## Overview
-
-Additional details.

@@ -1,5 +1,3 @@
-# Correlated Subqueries
-
 ---
 title: 4. Correlated subqueries
 updated: 2026-04-04 05:47:46Z
@@ -9,8 +7,3 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-
-
-## Overview
-
-Additional details.

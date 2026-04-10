@@ -5,7 +5,7 @@
 Example content.
 
 ## Section Two
-More structured content.
+More content.
 
 ### Subsection
-Deep content.
+Details.

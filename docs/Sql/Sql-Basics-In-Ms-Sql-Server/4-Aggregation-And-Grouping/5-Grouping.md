@@ -48,7 +48,3 @@ This fins average salaries of employees, but as you can see all the non columns 
 `GROUP BY FirstName, LastName;`
 
 &nbsp;
-
-## Overview
-
-Additional details.

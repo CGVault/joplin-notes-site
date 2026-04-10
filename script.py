@@ -83,23 +83,7 @@ def build_map(src):
 
 
 # ----------------------
-# FORCE STRUCTURED HEADINGS
-# ----------------------
-
-def enhance_content(content, title):
-    # Ensure H1 exists
-    if not re.search(r'^# ', content, re.MULTILINE):
-        content = f"# {title}\n\n" + content
-
-    # Ensure at least one H2 exists → forces TOC to render
-    if not re.search(r'^## ', content, re.MULTILINE):
-        content += "\n\n## Overview\n\nAdditional details.\n"
-
-    return content
-
-
-# ----------------------
-# WRITE DOCS
+# WRITE DOCS (NO CONTENT MODIFICATION)
 # ----------------------
 
 def write_docs(src, docs, mapping):
@@ -112,13 +96,13 @@ def write_docs(src, docs, mapping):
     (docs / "index.md").write_text("""
 # Vault Wiki
 
-## Overview
-
 Welcome to your knowledge base.
 
-## Navigation
+---
 
 Use the sidebar to explore your notes.
+
+---
 
 ## Example
 
@@ -133,25 +117,19 @@ Use the sidebar to explore your notes.
 Example content.
 
 ## Section Two
-More structured content.
+More content.
 
 ### Subsection
-Deep content.
+Details.
 """)
 
-    # COPY + FIX CONTENT
+    # COPY FILES EXACTLY (NO MODIFICATION)
     for orig, new in mapping.items():
         src_file = src / orig
         dst_file = docs / new
 
         dst_file.parent.mkdir(parents=True, exist_ok=True)
-
-        content = src_file.read_text(encoding="utf-8", errors="ignore")
-        title = clean_display(Path(new).name)
-
-        content = enhance_content(content, title)
-
-        dst_file.write_text(content, encoding="utf-8")
+        shutil.copy2(src_file, dst_file)
 
 
 # ----------------------
@@ -175,8 +153,6 @@ def ensure_folder_indexes(docs):
 
             index.write_text(f"""
 # {name}
-
-## Overview
 
 This section contains related notes.
 """)
@@ -207,7 +183,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG (FORCED TOC)
+# MKDOCS CONFIG (REAL TOC FIX)
 # ----------------------
 
 def write_mkdocs(docs):
@@ -229,12 +205,7 @@ def write_mkdocs(docs):
         },
 
         "markdown_extensions": [
-            {
-                "toc": {
-                    "permalink": True,
-                    "toc_depth": "2-4"
-                }
-            },
+            "toc",  # IMPORTANT: this is what generates TOC from headings
             "tables",
             "fenced_code",
             "admonition"
@@ -254,7 +225,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# PROFESSIONAL CSS (MICROSOFT-STYLE)
+# PROFESSIONAL CSS
 # ----------------------
 
 def write_css():
@@ -266,49 +237,43 @@ def write_css():
     --md-text-font: "Segoe UI", system-ui, sans-serif;
 }
 
-/* Content width */
+/* Layout */
 .md-content {
     max-width: 920px;
     margin: auto;
 }
 
-/* Headings - Microsoft style */
+/* H1 - strong Microsoft style */
 h1 {
-    font-size: 2.4rem;
-    font-weight: 700;
+    font-size: 2.5rem;
+    font-weight: 800;  /* 🔥 strong bold */
     letter-spacing: -0.02em;
-    margin-top: 1.2em;
-    border-bottom: 2px solid #e5e5e5;
+    border-bottom: 2px solid #e6e6e6;
     padding-bottom: 0.3em;
 }
 
+/* H2 */
 h2 {
     font-size: 1.8rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-top: 1.5em;
 }
 
+/* H3 */
 h3 {
     font-size: 1.3rem;
     font-weight: 600;
-    margin-top: 1.2em;
 }
 
-/* Improve readability */
+/* Paragraph readability */
 p {
     line-height: 1.7;
-    font-size: 1rem;
 }
 
-/* Sidebar polish */
-.md-nav__link--active {
-    font-weight: 600;
-}
-
-/* TOC styling */
+/* TOC sidebar */
 .md-sidebar--secondary {
     border-left: 1px solid #eee;
-    padding-left: 10px;
+    padding-left: 12px;
 }
 """)
 
@@ -319,7 +284,7 @@ p {
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "feat: enforce TOC + professional styling"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: proper TOC using real headings"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -341,7 +306,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ TOC fixed + professional styling applied")
+    print("✅ TOC now reflects real Joplin headings")
 
 
 if __name__ == "__main__":

@@ -1,5 +1,3 @@
-# Introduction
-
 ---
 title: 1. Introduction
 updated: 2026-04-04 05:46:52Z
@@ -9,8 +7,3 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-
-
-## Overview
-
-Additional details.

@@ -1,5 +1,3 @@
-# 3Subqueries With Multiple Results
-
 ---
 title: 3.Subqueries with multiple results
 updated: 2026-04-04 05:47:34Z
@@ -9,8 +7,3 @@ longitude: 151.20929550
 altitude: 0.0000
 ---
 
-
-
-## Overview
-
-Additional details.

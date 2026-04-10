@@ -27,7 +27,3 @@ _ - one unknown character
 &nbsp;
 
 NOTE: You do not need to use unicode strings for each and every query, but its a good habit to do so. Best practice mostly if data has a likely possibility of special characters like emojis or icons for representing columns using ticks and crosses.
-
-## Overview
-
-Additional details.

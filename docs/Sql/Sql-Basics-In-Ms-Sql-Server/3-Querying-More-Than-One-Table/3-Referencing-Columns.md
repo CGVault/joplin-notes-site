@@ -34,7 +34,3 @@ Rule of thumb is to join first and then filter, all columns in the WHERE clause 
 &nbsp;
 
 &nbsp;
-
-## Overview
-
-Additional details.

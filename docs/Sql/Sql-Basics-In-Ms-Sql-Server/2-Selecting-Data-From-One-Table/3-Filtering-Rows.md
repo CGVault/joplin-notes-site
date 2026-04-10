@@ -25,7 +25,3 @@ You can use a WHERE clause to filter according to a column that has not been lis
 &nbsp;
 
 &nbsp;
-
-## Overview
-
-Additional details.

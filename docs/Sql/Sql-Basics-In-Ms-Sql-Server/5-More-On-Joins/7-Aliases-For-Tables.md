@@ -72,7 +72,3 @@ Don't change any column names. Each pair of students should only be shown once. 
 # Explanation
 
 &nbsp;
-
-## Overview
-
-Additional details.

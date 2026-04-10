@@ -25,7 +25,3 @@ Example:
 &nbsp;
 
 &nbsp;
-
-## Overview
-
-Additional details.

@@ -41,7 +41,3 @@ Results:
 | 13  | Oscar Walls | 10  | 10  | 301 | 4   | 3   |
 | 14  | Luke Wild | 11  | 11  | 302 | 1   | 3   |
 | 3   | Ethan Wright | 15  | 15  | 403 | 1   | 4   |
-
-## Overview
-
-Additional details.

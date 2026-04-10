@@ -6,16 +6,12 @@ import shutil
 import subprocess
 from pathlib import Path
 
-# ----------------------
-# CONFIG
-# ----------------------
-
 IGNORE_DIRS = {"resources", "_resources", ".obsidian", ".trash"}
 MAX_NAME = 120
 
 
 # ----------------------
-# ORDER PARSING
+# CLEANING
 # ----------------------
 
 def parse_order(name):
@@ -35,10 +31,6 @@ def clean_folder(name):
     return title.replace("-", " ").strip()
 
 
-# ----------------------
-# SLUGIFY
-# ----------------------
-
 def slugify(text):
     text = text.strip()
     text = re.sub(r'[^\w\s-]', '', text)
@@ -49,7 +41,7 @@ def slugify(text):
 
 
 # ----------------------
-# BUILD MAP
+# MAP
 # ----------------------
 
 def build_map(src):
@@ -81,12 +73,11 @@ def build_map(src):
 
 
 # ----------------------
-# FIX CONTENT (IMAGES + TOC SAFE HEADINGS)
+# CONTENT FIX (TOC SAFE)
 # ----------------------
 
 def fix_content(content):
 
-    # Fix Joplin image links
     content = re.sub(
         r'!\[([^\]]*)\]\(:/([a-zA-Z0-9]+)\)',
         r'![\1](resources/\2)',
@@ -95,14 +86,14 @@ def fix_content(content):
 
     content = content.replace("_resources/", "resources/")
 
-    # Ensure proper heading spacing for TOC stability
+    # FIX TOC: ensure space after #
     content = re.sub(r'^(#{1,6})([^ #])', r'\1 \2', content, flags=re.MULTILINE)
 
     return content
 
 
 # ----------------------
-# RESOURCES COPY (HIDDEN FROM NAV)
+# RESOURCES (HIDDEN)
 # ----------------------
 
 def copy_all_resources(src, docs):
@@ -125,31 +116,19 @@ def copy_all_resources(src, docs):
 # ----------------------
 
 def create_sample_page(docs):
-    sample = docs / "sample-page.md"
-
-    sample.write_text("""---
+    (docs / "sample-page.md").write_text("""---
 title: Sample Page
 ---
 
 # Sample Page
 
-This page shows how notes will look in your vault.
+## Headings
+Use headings for TOC generation.
 
-## Structure Example
-
-### Headings
-Use headings to automatically build the table of contents.
-
-### Example Block
-
+## Example
 - notes
-- ideas
-- code
 - images
-
-## Why this exists
-
-This is your reference template for all future notes.
+- code
 """, encoding="utf-8")
 
 
@@ -158,49 +137,24 @@ This is your reference template for all future notes.
 # ----------------------
 
 def create_home_page(docs):
-
-    home = docs / "index.md"
-
-    home.write_text("""---
-title: Home
+    (docs / "index.md").write_text("""---
+title: Vault Wiki
 ---
 
 # 🧠 Vault Wiki
 
-Welcome to your personal knowledge system.
+Welcome
 
----
+## Start Here
+- [Sample Page](sample-page.md)
 
-## 🚀 Start Here
-
-- Open the **Sample Page** to learn structure
-
----
-
-## 📘 Example Page
-
-- 🧪 [Sample Page](sample-page.md)
-
----
-
-## 📂 Explore
-
-Use the sidebar to browse your notes and folders.
-
-Everything is auto-generated.
-
----
-
-## ✨ Tips
-
-- Use headings for automatic TOC
-- Prefix folders with numbers for ordering
-- Images are supported automatically
+## Explore
+Use sidebar for notes.
 """, encoding="utf-8")
 
 
 # ----------------------
-# WRITE DOCS
+# DOC WRITING
 # ----------------------
 
 def write_docs(src, docs, mapping):
@@ -226,7 +180,7 @@ def write_docs(src, docs, mapping):
 
 
 # ----------------------
-# FOLDER INDEXES (EXCLUDE RESOURCES)
+# INDEXES (SAFE)
 # ----------------------
 
 def generate_folder_indexes(docs):
@@ -255,35 +209,28 @@ def generate_folder_indexes(docs):
         if not subfolders and not notes:
             continue
 
-        folder_name = clean_folder(root.name)
-
-        content = f"# {folder_name}\n\n"
+        content = f"# {clean_folder(root.name)}\n\n"
 
         if subfolders:
             content += "## Sections\n\n"
             for sf in subfolders:
-                name = clean_folder(sf.name)
                 rel = sf.relative_to(docs).as_posix()
-                content += f"- [{name}]({rel}/)\n"
-            content += "\n"
+                content += f"- [{clean_folder(sf.name)}]({rel}/)\n"
 
         if notes:
             content += "## Notes\n\n"
             for nf in notes:
-                name = clean_display(nf.name)
                 rel = nf.relative_to(docs).as_posix()
-                content += f"- [{name}]({rel})\n"
+                content += f"- [{clean_display(nf.name)}]({rel})\n"
 
         (root / "index.md").write_text(content, encoding="utf-8")
 
 
 # ----------------------
-# NAV TREE (DEDUP + NO RESOURCES + NO DUP SAMPLE)
+# NAV (FIXED + NO DUPLICATES)
 # ----------------------
 
 def build_nav(docs):
-
-    seen = set()
 
     def walk(folder):
         items = []
@@ -297,14 +244,13 @@ def build_nav(docs):
                 if (p / "index.md").exists():
                     items.append({clean_folder(p.name): walk(p)})
 
-            elif p.suffix == ".md" and p.name != "index.md":
-                rel = p.relative_to(docs).as_posix()
+            elif p.suffix == ".md":
 
-                if rel in seen:
+                # HARD BLOCK duplicates
+                if p.name in {"index.md", "sample-page.md"}:
                     continue
 
-                seen.add(rel)
-                items.append({clean_display(p.name): rel})
+                items.append({clean_display(p.name): p.relative_to(docs).as_posix()})
 
         return items
 
@@ -312,7 +258,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# MKDOCS CONFIG
+# MKDOCS
 # ----------------------
 
 def write_mkdocs(docs):
@@ -343,7 +289,6 @@ def write_mkdocs(docs):
             "tables",
             "fenced_code"
         ],
-        "extra_css": ["stylesheets/extra.css"],
         "nav": nav
     }
 
@@ -352,27 +297,12 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS
-# ----------------------
-
-def write_css():
-    css_dir = Path("docs/stylesheets")
-    css_dir.mkdir(parents=True, exist_ok=True)
-
-    (css_dir / "extra.css").write_text("""
-.md-typeset h1 { font-weight: 900; }
-.md-typeset h2 { font-weight: 900; font-size: 2rem; }
-.md-typeset h3 { font-weight: 800; }
-""", encoding="utf-8")
-
-
-# ----------------------
 # DEPLOY
 # ----------------------
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix nav duplication + hide resources + restore TOC"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix navigation stability"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -396,11 +326,10 @@ def main():
     create_sample_page(docs)
     create_home_page(docs)
 
-    write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ FIX COMPLETE: TOC + NAV + RESOURCES + SAMPLE DUP REMOVED")
+    print("✅ NAV FIXED + STABLE + NO DUPLICATES")
 
 
 if __name__ == "__main__":

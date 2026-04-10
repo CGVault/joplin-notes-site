@@ -81,81 +81,50 @@ def build_map(src):
 
 
 # ----------------------
-# BUILD RESOURCE MAP (🔥 NEW FIX)
+# CONTENT FIX (UPDATED)
 # ----------------------
 
-def build_resource_map(src):
-    """
-    Maps Joplin resource IDs → real filenames
-    """
-    resource_map = {}
-
-    resources_dir = src / "resources"
-    if not resources_dir.exists():
-        return resource_map
-
-    for f in resources_dir.rglob("*"):
-        if f.is_file():
-            resource_map[f.stem] = f.name
-
-    return resource_map
-
-
-# ----------------------
-# CONTENT FIX (IMAGES + HEADINGS)
-# ----------------------
-
-def fix_content(content, resource_map):
+def fix_content(content):
     lines = content.splitlines()
     fixed = []
 
     first_heading_handled = False
 
     for line in lines:
-
-        # ----------------------
-        # HEADINGS (TOC FIX)
-        # ----------------------
         if line.startswith("#"):
-            fixed.append(re.sub(r'^#', '##', line))
-            continue
-
-        # ----------------------
-        # IMAGES (REAL FIX)
-        # ----------------------
-        def replace_image(match):
-            res_id = match.group(1)
-            filename = resource_map.get(res_id)
-
-            if filename:
-                return f"![image](resources/{filename})"
+            if not first_heading_handled:
+                # 🔥 Convert FIRST H1 → H2 (so it appears in TOC)
+                fixed.append(re.sub(r'^# ', '## ', line))
+                first_heading_handled = True
             else:
-                return "![missing image](resources/missing.png)"
+                # Keep all others at H2 level
+                fixed.append(re.sub(r'^# ', '## ', line))
+        else:
+            fixed.append(line)
 
-        line = re.sub(
-            r'!\[.*?\]\(:/([a-zA-Z0-9]+)\)',
-            replace_image,
-            line
-        )
+    content = "\n".join(fixed)
 
-        fixed.append(line)
+    # Fix Joplin images
+    content = re.sub(
+        r'!\[.*?\]\(:/([a-zA-Z0-9]+)\)',
+        r'![image](resources/\1.png)',
+        content
+    )
 
-    return "\n".join(fixed)
+    return content
 
 
 # ----------------------
 # WRITE DOCS
 # ----------------------
 
-def write_docs(src, docs, mapping, resource_map):
+def write_docs(src, docs, mapping):
     if docs.exists():
         shutil.rmtree(docs)
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    # ----------------------
-    # HOME PAGE
-    # ----------------------
+    # 🏠 Homepage
     (docs / "index.md").write_text("""
 # Vault Wiki
 
@@ -176,9 +145,7 @@ Welcome to your knowledge base.
 - Structured wiki navigation
 """)
 
-    # ----------------------
-    # SAMPLE PAGE
-    # ----------------------
+    # 🧪 Sample page
     (docs / "sample-page.md").write_text("""
 # Sample Page
 
@@ -192,9 +159,6 @@ TOC works here.
 Use this page for testing.
 """)
 
-    # ----------------------
-    # JOPLIN FILES
-    # ----------------------
     for orig, new in mapping.items():
         src_file = src / orig
         dst_file = docs / new
@@ -202,13 +166,13 @@ Use this page for testing.
         dst_file.parent.mkdir(parents=True, exist_ok=True)
 
         content = src_file.read_text(encoding="utf-8", errors="ignore")
-        content = fix_content(content, resource_map)
+        content = fix_content(content)
 
         dst_file.write_text(content, encoding="utf-8")
 
 
 # ----------------------
-# FOLDER INDEX PAGES
+# FOLDER LANDING PAGES
 # ----------------------
 
 def generate_folder_indexes(docs):
@@ -258,11 +222,10 @@ def generate_folder_indexes(docs):
 
 
 # ----------------------
-# NAVIGATION TREE
+# BUILD NAV TREE
 # ----------------------
 
 def build_nav(docs):
-
     def walk(folder):
         items = []
 
@@ -331,7 +294,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS (PROFESSIONAL LOOK)
+# CSS
 # ----------------------
 
 def write_css():
@@ -339,25 +302,9 @@ def write_css():
     css_dir.mkdir(parents=True, exist_ok=True)
 
     (css_dir / "extra.css").write_text("""
-.md-typeset h1 {
-    font-weight: 900;
-    font-size: 2.4rem;
-}
-
-.md-typeset h2 {
-    font-weight: 800;
-    font-size: 2rem;
-}
-
-.md-typeset h3 {
-    font-weight: 700;
-}
-
-.md-typeset h1, 
-.md-typeset h2, 
-.md-typeset h3 {
-    letter-spacing: -0.02em;
-}
+.md-typeset h1 { font-weight: 900; }
+.md-typeset h2 { font-weight: 900; font-size: 2rem; }
+.md-typeset h3 { font-weight: 800; }
 """)
 
 
@@ -367,7 +314,7 @@ def write_css():
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "fix: joplin images + TOC + styling"], check=False)
+    subprocess.run(["git", "commit", "-m", "fix: include first heading in TOC"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -383,15 +330,13 @@ def main():
     docs = Path("docs")
 
     mapping = build_map(src)
-    resource_map = build_resource_map(src)
-
-    write_docs(src, docs, mapping, resource_map)
+    write_docs(src, docs, mapping)
     generate_folder_indexes(docs)
     write_css()
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Joplin wiki fully rebuilt (TOC + images + styling fixed)")
+    print("✅ First heading now included in TOC")
 
 
 if __name__ == "__main__":

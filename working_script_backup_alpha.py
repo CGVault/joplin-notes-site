@@ -90,7 +90,36 @@ def write_docs(src, docs, mapping):
 
     docs.mkdir(parents=True, exist_ok=True)
 
-    (docs / "index.md").write_text("# Vault Wiki\n\nWelcome")
+    # 🏠 NEW HOMEPAGE DASHBOARD
+    (docs / "index.md").write_text("""
+# Vault Wiki
+
+Welcome to your knowledge base.
+
+---
+
+## 📌 Quick Access
+
+- [📂 Browse Notes](./)
+- [🧠 Latest Content](./)
+- [📁 All Sections](./)
+
+---
+
+## 🚀 Start Here
+
+This wiki is automatically generated from your Joplin vault.
+
+Use the sidebar to navigate folders and notes.
+
+---
+
+## 📊 Dashboard
+
+- Built with MkDocs Material
+- Auto-generated structure
+- GitHub Pages deployment
+""")
 
     for orig, new in mapping.items():
         src_file = src / orig
@@ -204,6 +233,12 @@ def write_mkdocs(docs):
                 "navigation.instant",
                 "navigation.tracking",
                 "navigation.sections",
+
+                # 🧭 UX IMPROVEMENTS
+                "navigation.path",     # breadcrumbs
+                "navigation.top",      # back to top
+                "navigation.indexes",  # folder index behavior
+
                 "search.suggest",
                 "search.highlight",
                 "content.code.copy"
@@ -226,11 +261,10 @@ def write_mkdocs(docs):
 
         "extra_css": ["stylesheets/extra.css"],
 
-        # ✅ ANALYTICS FILE
         "extra_javascript": ["js/analytics.js"],
 
         "nav": [
-            {"Home": "index.md"},
+            {"🏠 Home Dashboard": "index.md"},
             *nav
         ]
     }
@@ -240,7 +274,7 @@ def write_mkdocs(docs):
 
 
 # ----------------------
-# CSS
+# CSS (SIDEBAR UX IMPROVEMENTS)
 # ----------------------
 
 def write_css():
@@ -254,25 +288,36 @@ body {
     color: #1a1a1a;
 }
 
+/* HEADER */
 .md-header {
     background: #0078D4 !important;
 }
 
+/* SIDEBAR */
 .md-nav {
     background: #f5f5f5;
     border-right: 1px solid #e1e1e1;
 }
 
+/* ACTIVE ITEM (MICROSOFT DOCS STYLE) */
+.md-nav__item--active > .md-nav__link {
+    font-weight: 700;
+    color: #0078D4;
+}
+
+/* LINKS */
 a {
     color: #0078D4;
 }
 
+/* CONTENT AREA */
 .md-content {
     padding: 24px 32px;
     max-width: 900px;
     margin: auto;
 }
 
+/* HEADINGS */
 h1 {
     font-size: 2.6rem;
     font-weight: 900;
@@ -288,11 +333,17 @@ h3 {
     font-size: 1.4rem;
     font-weight: 800;
 }
+
+/* BREADCRUMBS (make visible like MS Docs) */
+.md-path {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
 """)
 
 
 # ----------------------
-# WRITE ANALYTICS SCRIPT (REAL ONE)
+# ANALYTICS (UNCHANGED)
 # ----------------------
 
 def write_analytics(docs):
@@ -319,7 +370,7 @@ def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
 
     subprocess.run(
-        ["git", "commit", "-m", "sync full vault + docs + analytics"],
+        ["git", "commit", "-m", "vault wiki upgrade: nav + UX + homepage"],
         check=False
     )
 
@@ -341,11 +392,11 @@ def main():
     write_docs(src, docs, mapping)
     generate_folder_indexes(docs)
     write_css()
-    write_analytics(docs)   # ✅ uses your real script
+    write_analytics(docs)
     write_mkdocs(docs)
     deploy()
 
-    print("✅ Cloudflare analytics fully integrated and live")
+    print("✅ Vault Wiki upgraded: breadcrumbs + sidebar UX + homepage redesign")
 
 
 if __name__ == "__main__":

@@ -82,7 +82,7 @@ def build_map(src):
 
 
 # ----------------------
-# FIX CONTENT (FORCE H2 TITLES)
+# FIX CONTENT (ROBUST HEADING FIX)
 # ----------------------
 
 def fix_content(content):
@@ -105,8 +105,8 @@ def fix_content(content):
     for i, line in enumerate(lines):
         stripped = line.strip()
 
-        if re.match(r'^#{1,6}\S', stripped):
-            stripped = re.sub(r'^(#{1,6})(\S)', r'\1 \2', stripped)
+        # FIX: broken markdown headings (no space after #)
+        stripped = re.sub(r'^(#{1,6})(\S)', r'\1 \2', stripped)
 
         if stripped.startswith("#"):
             text = re.sub(r'^#{1,6}\s*', '', stripped).strip()
@@ -124,7 +124,11 @@ def fix_content(content):
 
         new_lines.append(line)
 
-    return "\n".join(new_lines)
+    # FIX: ensure headings are separated properly (critical for TOC generation)
+    content = "\n".join(new_lines)
+    content = re.sub(r'([^\n])\n(#{1,6} )', r'\1\n\n\2', content)
+
+    return content
 
 
 # ----------------------
@@ -321,7 +325,7 @@ def build_nav(docs):
 
 
 # ----------------------
-# JS FIX (TOC + LAST SECTION HIGHLIGHT)
+# JS FIX (ROBUST SCROLLSPY FIX)
 # ----------------------
 
 def write_js():
@@ -336,27 +340,25 @@ def write_js():
         return Array.from(document.querySelectorAll(".md-content h1, .md-content h2, .md-content h3, .md-content h4"));
     }
 
-    function getTOCLinks() {
+    function getLinks() {
         return Array.from(document.querySelectorAll(".md-sidebar--secondary a, .md-nav--secondary a"));
     }
 
     function clear() {
-        getTOCLinks().forEach(a => a.classList.remove("toc-active"));
+        getLinks().forEach(l => l.classList.remove("toc-active"));
     }
 
     function activate(link) {
-        if (!link) return;
-        link.classList.add("toc-active");
+        if (link) link.classList.add("toc-active");
     }
 
-    function findLinkById(id) {
-        if (!id) return null;
+    function findLink(id) {
         return document.querySelector(
             `.md-sidebar--secondary a[href="#${id}"], .md-nav--secondary a[href="#${id}"]`
         );
     }
 
-    function getCurrentHeading(headings, scrollPos) {
+    function getCurrent(headings, scrollPos) {
         let current = headings[0];
 
         for (let h of headings) {
@@ -375,12 +377,12 @@ def write_js():
 
         const scrollPos = window.scrollY;
 
-        const current = getCurrentHeading(headings, scrollPos);
+        const current = getCurrent(headings, scrollPos);
 
         clear();
-        activate(findLinkById(current.id));
+        activate(findLink(current.id));
 
-        // 🔥 FIX: robust bottom detection (not fragile scrollHeight check)
+        // FIX: reliable bottom detection
         const docHeight = Math.max(
             document.body.scrollHeight,
             document.documentElement.scrollHeight
@@ -391,16 +393,13 @@ def write_js():
         if (atBottom) {
             const last = headings[headings.length - 1];
             clear();
-            activate(findLinkById(last.id));
+            activate(findLink(last.id));
         }
     }
 
-    // run often enough for Material instant navigation
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("load", onScroll);
     window.addEventListener("resize", onScroll);
-
-    // 🔥 FIX: Material instant reload support
     document.addEventListener("DOMContentLoaded", onScroll);
 })();
 """, encoding="utf-8")
@@ -529,7 +528,7 @@ footer {
 
 def deploy():
     subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", "TOC + scrollspy fix + UI polish"], check=False)
+    subprocess.run(["git", "commit", "-m", "TOC + scrollspy FIX (stable)"], check=False)
     subprocess.run(["git", "push"], check=True)
     subprocess.run(["mkdocs", "gh-deploy", "--force"], check=True)
 
@@ -556,7 +555,7 @@ def main():
     write_mkdocs(docs)
     deploy()
 
-    print("✅ TOC + NAV FIX COMPLETE")
+    print("✅ TOC + NAV + SCROLLSPY FULL FIX COMPLETE")
 
 
 if __name__ == "__main__":
